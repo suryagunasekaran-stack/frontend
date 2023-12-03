@@ -1,0 +1,47 @@
+
+# Node.js
+node_modules/
+npm-debug.log
+.env
+.DS_Store
+# Logs
+logs
+*.log
+# Dependency directories
+jspm_packages/
+bower_components/
+# Build files
+build/
+dist/
+out/
+# Testing
+test/
+# IDE
+.idea/
+.vscode/
+# OS
+Thumbs.db
+.DS_Store
+# Editor
+*.swp
+*~
+# Temporary files
+.tmp/
+.temp/
+# Compiled binary files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
