@@ -1,0 +1,45 @@
+/* LoginPage.css */
+
+.login-container {
+    height: 100vh;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; /* Added padding for smaller screens */
+  }
+  
+  .login-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%; /* Full width on smaller screens */
+    max-width: 500px; /* Maximum width to avoid too wide on larger screens */
+  }
+  
+  .form-control, .btn {
+    border-radius: 4px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .login-form {
+      padding: 15px;
+    }
+  
+    .form-control, .btn {
+      font-size: 14px; /* Adjust font size for smaller screens */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .login-form {
+      padding: 10px;
+    }
+  
+    .form-control, .btn {
+      font-size: 12px; /* Further adjust for very small screens */
+    }
+  }
+  
+  
