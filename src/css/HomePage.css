@@ -1,0 +1,18 @@
+.homepage {
+    height: 100vh;
+}
+
+.homepagerow {
+    height: 100vh;
+}
+
+.css-1wvake5 {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+}
