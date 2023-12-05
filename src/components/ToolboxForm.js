@@ -10,10 +10,12 @@ const ToolboxForm = () => {
         sigCanvasRef.current.clear();
     };
 
-const saveSignature = () => {
-    const signature = sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png');
-    console.log(signature);
-};
+    const saveSignature = () => {
+        if (sigCanvasRef.current) {
+            const signature = sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png');
+            // Use this signature data as needed
+        }
+    };
     const onSubmit = data => console.log(data);
     const { fields, append, remove } = useFieldArray({
         control,
@@ -22,7 +24,7 @@ const saveSignature = () => {
 
     return (
         <Container>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form className='pt-4' onSubmit={handleSubmit(onSubmit)}>
                 <Row>
                     <Col>
                         <Form.Group>
@@ -88,15 +90,15 @@ const saveSignature = () => {
                 </Row>
 
                 {fields.map((item, index) => (
-                <Row key={item.id}>
-                    <Col xs={1}>{index + 1}</Col>
-                    <Col>
+                <Row className='pt-5' key={item.id}>
+                    <Col className='d-flex justify-content-center align-items-center' xs={1} md={1} lg={1} xl={1}>{index + 1}</Col>
+                    <Col className='d-flex justify-content-center align-items-center'>
                         <Form.Group controlId={`PermitNumber-${index}`}>
                             <Form.Label>Permit Number</Form.Label>
                             <Form.Control type="text" {...register(`items[${index}].permitNumber`)} />
                         </Form.Group>
                     </Col>
-                    <Col>
+                    <Col className='d-flex justify-content-center align-items-center'>
                         <Form.Group controlId={`Name-${index}`}>
                             <Form.Label>Name</Form.Label>
                             <Form.Control type="text" {...register(`items[${index}].name`)} />
@@ -133,7 +135,7 @@ const saveSignature = () => {
             
 ))}
 
-<Button type="button" onClick={() => append({ permitNumber: '', name: '', ppe: {}, signature: '' })}>
+<Button type="button" onClick={() => append({ permitNumber: '', name: '', ppe: {}, signature: '' })} className="me-2" >
     Add More
 </Button>
 

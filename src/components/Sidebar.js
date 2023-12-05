@@ -16,7 +16,7 @@ const Sidebarr = () => {
 
     return (
         <Sidebar collapsed={collapsed}>
-            <button onClick={handleToggleSidebar}>Toggle Sidebar</button>
+            <button onClick={handleToggleSidebar} style={{width:"100%"}}>{collapsed ? "Expand" : "Collapse"}</button>
             <Menu>
                 <SubMenu icon={<FaTools />} label="Daily Toolbox Record">
                     <MenuItem component={<Link to="/ToolboxCreate" />}>Enter New Record</MenuItem>
@@ -25,9 +25,8 @@ const Sidebarr = () => {
                 <MenuItem icon={<FaAnchor />}>Anchorage Record </MenuItem>
                 <MenuItem icon={<FaHelmetSafety />}>Mass Safety Briefing Record</MenuItem>
                 <MenuItem icon={<RiPassExpiredFill />}>Toolbox Expiry</MenuItem>
-                <div className="sidebar-footer">
-                    <MenuItem icon={<IoLogOut />}> Logout </MenuItem>
-                </div>
+                <MenuItem icon={<IoLogOut />}> Logout </MenuItem>
+
                 {/* More menu items... */}
             </Menu>
 
