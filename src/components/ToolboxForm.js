@@ -12,6 +12,7 @@ const ToolboxForm = () => {
 
     const saveSignature = () => {
         if (sigCanvasRef.current) {
+            // eslint-disable-next-line
             const signature = sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png');
             // Use this signature data as needed
         }
