@@ -6,6 +6,7 @@ import { FaAnchor } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
 import { RiPassExpiredFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebarr = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -13,6 +14,23 @@ const Sidebarr = () => {
     const handleToggleSidebar = () => {
         setCollapsed(!collapsed);
     };
+
+    const handleLogout = async () => {
+        // Clear local sessions
+        localStorage.clear();
+    
+        // Make POST request to server for logout
+        await fetch('http://localhost:3000/logout', {
+            method: 'POST',
+            // Include credentials if your backend requires them
+            credentials: 'include',
+        });
+    
+        // Navigate to '/'
+        navigate('/');
+    };
+    
+    const navigate = useNavigate();
 
     return (
         <Sidebar collapsed={collapsed}>
@@ -22,10 +40,13 @@ const Sidebarr = () => {
                     <MenuItem component={<Link to="/ToolboxCreate" />}>Enter New Record</MenuItem>
                     <MenuItem>View Past Record</MenuItem>
                 </SubMenu>
-                <MenuItem icon={<FaAnchor />}>Anchorage Record </MenuItem>
+                <SubMenu icon={<FaAnchor />} label="Anchorage Record">
+                    <MenuItem component={<Link to="/AnchoragePreForm" />}>Enter New Record</MenuItem>
+                    <MenuItem>View Past Record</MenuItem>
+                </SubMenu>
                 <MenuItem icon={<FaHelmetSafety />}>Mass Safety Briefing Record</MenuItem>
                 <MenuItem icon={<RiPassExpiredFill />}>Toolbox Expiry</MenuItem>
-                <MenuItem icon={<IoLogOut />}> Logout </MenuItem>
+                <MenuItem icon={<IoLogOut />} onClick={handleLogout}> Logout </MenuItem>
 
                 {/* More menu items... */}
             </Menu>
