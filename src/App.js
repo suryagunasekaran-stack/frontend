@@ -7,7 +7,8 @@ import { Navigate } from 'react-router-dom';
 import Sidebarr from './components/Sidebar';
 import ToolboxForm from './components/ToolboxForm';
 import TaskArrangementForm from './components/AnchoragePreForm';
-
+import RecordsViewer from './components/ViewToolbox';
+import NotificationBell from './components/Notifcations';
 const Layout = () => {
   const location = useLocation();
 
@@ -29,10 +30,12 @@ const Layout = () => {
                   <Route path="/" element={<LoginPage />} />
                   <Route path="/HomePage" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
                   <Route path="/ToolboxCreate" element={<ProtectedRoute><ToolboxForm /></ProtectedRoute>} />
+                  <Route path="/ToolboxView" element={<ProtectedRoute><RecordsViewer /></ProtectedRoute>} />
                   <Route path="/AnchoragePreForm" element={<ProtectedRoute><TaskArrangementForm /></ProtectedRoute>} />
                   {/* ... other routes ... */}
               </Routes>
           </div>
+          {location.pathname !== '/' && <NotificationBell />}
       </div>
   );
 };

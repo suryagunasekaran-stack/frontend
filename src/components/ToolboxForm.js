@@ -17,11 +17,38 @@ const ToolboxForm = () => {
             // Use this signature data as needed
         }
     };
-    const onSubmit = data => console.log(data);
+    
+    const onSubmit = async (data) => {
+        try {
+            const response = await fetch('http://localhost:3000/toolboxformsubmit', { // Replace with your server URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+    
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Server response:', responseData);
+                alert('Success: Operation completed successfully.');
+            } else {
+                console.error('Server error:', response.status);
+                alert('Error: Operation failed. Status code: ' + response.status);
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+        }
+    };
+    
+
+
     const { fields, append, remove } = useFieldArray({
         control,
         name: "items",
     });
+
+
 
     return (
         <Container>
@@ -31,8 +58,12 @@ const ToolboxForm = () => {
                         <Form.Group>
                             <Form.Label>Department:</Form.Label>
                             <Form.Control as="select" {...register('department', { required: true })}>
-                                <option value="electrical">Electrical</option>
-                                <option value="mechanical">Mechanical</option>
+                                <option value="Electrical">Electrical</option>
+                                <option value="Mechanical">Mechanical</option>
+                                <option value="Piping">Piping</option>
+                                <option value="Engine">Engine</option>
+                                <option value="Mechanical">Mechanical</option>
+                                <option value="Machine Shop">Machine Shop</option>
                             </Form.Control>
                             {errors.department && <p>This field is required</p>}
                         </Form.Group>
@@ -46,6 +77,20 @@ const ToolboxForm = () => {
                             <Form.Control as="select" {...register('location', { required: true })}>
                                 <option value="workshop">Workshop</option>
                                 <option value="changi">Changi</option>
+                            </Form.Control>
+                            {errors.location && <p>This field is required</p>}
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Type:</Form.Label>
+                            <Form.Control as="select" {...register('type', { required: true })}>
+                                <option value="dailymeeting">DAILY TOOLBOX MEETING AND PPE RECORD</option>
+                                <option value="contractorsmeeting">CONTRACTORS TOOLBOX MEETING AND PPE RECORD</option>
+                                <option value="tansportmeeting">TRANSPORT MEETING RECORD</option>
                             </Form.Control>
                             {errors.location && <p>This field is required</p>}
                         </Form.Group>
@@ -126,21 +171,78 @@ const ToolboxForm = () => {
                                 penColor='black'
                                 canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                             />
-                            <Button onClick={clearSignature}>Clear Signature</Button>
+                            <Button style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={clearSignature}>Clear Signature</Button>
                         </Form.Group>
                     </Col>
                     <Col className='d-flex justify-content-center align-items-center'>
-                        <Button type="button" onClick={() => remove(index)}>Remove</Button>
+                        <Button style={{ backgroundColor: 'red', borderColor: 'red' }} type="button" onClick={() => remove(index)}>Remove</Button>
                     </Col>
                 </Row>
             
 ))}
-
-<Button type="button" onClick={() => append({ permitNumber: '', name: '', ppe: {}, signature: '' })} className="me-2" >
+<Col className="d-flex justify-content-end"  style={{ paddingTop: '20px' }}>
+<Button type="button" style={{ backgroundColor: 'light-green', borderColor: 'light-green' }} onClick={() => append({ permitNumber: '', name: '', ppe: {}, signature: '' })} className="me-2" >
     Add More
 </Button>
+</Col>
 
-    <Button type="submit">Submit</Button>
+
+<Row>
+                <Col>
+                    I herby Acknowledge that the above statements are true and correct to the best of my knowledge.
+                </Col>
+                <Col>
+                        <Form.Group>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                <Form.Label>Created by:</Form.Label>
+                                <Form.Control 
+                                    type="text"
+                                    value={localStorage.getItem('username')}
+                                    disabled
+                                />
+
+                                <input 
+                                        type="hidden" 
+                                        {...register('author')}
+                                        value={localStorage.getItem('username')}
+                                    />
+
+                                {errors.createdBy && <p>This field is required</p>}
+                                </Form.Group>
+                            </Col>
+                            </Row>
+                            <br></br>
+                            <SignatureCanvas ref={sigCanvasRef}
+                            onEnd={saveSignature}
+                                penColor='black'
+                                canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
+                            />
+                            <Button onClick={clearSignature} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
+                        </Form.Group>
+                </Col>
+                <Col>
+                        <Form.Group>
+                            <Form.Label>Trade Supervisor</Form.Label>
+                            <Form.Label>Name </Form.Label>
+                            <Form.Control type="text" {...register(`.nameSupervisor`)} />
+                            <br></br>
+                            <SignatureCanvas ref={sigCanvasRef}
+                            onEnd={saveSignature}
+                                penColor='black'
+                                canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
+                            />
+                            <Button onClick={clearSignature} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
+                        </Form.Group>
+                </Col>
+            </Row>
+    <Row>
+        <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }}>
+            <Button type="submit">Submit For Approval</Button>
+        </Col>
+    </Row>
+
             </Form>
         </Container>
     );
