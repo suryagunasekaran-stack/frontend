@@ -1,13 +1,30 @@
 
 import React from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import '../css/HomePage.css';
 
 const HomePage = () => {
-  return (
+const username = localStorage.getItem('username');
+
+  const Dashboard = () => (
     <div>
-      <h1>Welcome</h1>
-      <p>It's a welcome page!</p>
+        {/* Dashboard content goes here */}
+        <h1>Welcome {username}</h1>
+        <h2>Daily Safety Update</h2>
     </div>
-  );
+);
+
+
+
+return (
+  <Container fluid className='homepage'>
+      <Row className='homepagerow'>
+          <Col className='d-flex justify-content-left align-items-left p-3' >
+              <Dashboard />
+          </Col>
+      </Row>
+  </Container>
+);
 };
 
 export default HomePage;
