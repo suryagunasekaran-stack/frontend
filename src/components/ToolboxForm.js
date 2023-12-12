@@ -5,6 +5,7 @@ import SignatureCanvas from 'react-signature-canvas';
 
 const ToolboxForm = () => {
     const { register, control, handleSubmit, formState: { errors } } = useForm();
+    const token = localStorage.getItem('token');
     const sigCanvasRef = useRef({});
     const clearSignature = () => {
         sigCanvasRef.current.clear();
@@ -24,6 +25,7 @@ const ToolboxForm = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(data)
             });
@@ -41,8 +43,6 @@ const ToolboxForm = () => {
         }
     };
     
-
-
     const { fields, append, remove } = useFieldArray({
         control,
         name: "items",

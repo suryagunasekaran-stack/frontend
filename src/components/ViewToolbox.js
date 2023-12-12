@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
+import PdfGenerator from './Pdfgenarator'
 
 
 const RecordsViewer = () => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const token = localStorage.getItem('token'); // Retrieve the stored token from localStorage
 
     const fetchData = async () => {
         try {
@@ -13,7 +15,8 @@ const RecordsViewer = () => {
             const response = await fetch('http://localhost:3000/gettoolboxrecordsbyauthor', { // Update with your server URL
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({ author: authorUsername }) // Send the author's username in the request body
             });
@@ -33,10 +36,12 @@ const RecordsViewer = () => {
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line
     }, []);
 
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error loading data: {error}</p>;
+    console.log(records)
 
     return (
 <Container>
@@ -51,6 +56,7 @@ const RecordsViewer = () => {
                             {record.type === 'contractorsmeeting' && 'CONTRACTORS TOOLBOX MEETING AND PPE RECORD'}
                             {record.type === 'transportmeeting' && 'TRANSPORT MEETING RECORD'}
                         </h4>
+                        {/* <Row className="card-text"><Col xs={6} className="text-left">Document ID:</Col> <Col xs={6} className="text-left">{record._id}</Col></Row> */}
                         <Row className="card-text"><Col xs={6} className="text-left">Department:</Col> <Col xs={6} className="text-left">{record.department}</Col></Row>
                         <Row className="card-text"><Col xs={6} className="text-left">Date & Time:</Col> <Col xs={6} className="text-left">{new Date(record.dateTime).toLocaleString()}</Col></Row>
                         <Row className="card-text"><Col xs={6} className="text-left">Author:</Col> <Col xs={6} className="text-left">{record.author}</Col></Row>
@@ -59,7 +65,7 @@ const RecordsViewer = () => {
                         <Row className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
 
                         <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }} >
-                            <Button style={{ backgroundColor: 'green', borderColor: 'green' }}> View PDF</Button>
+                            <PdfGenerator {...record} />
                         </Col>
                     </div>
                 </div>

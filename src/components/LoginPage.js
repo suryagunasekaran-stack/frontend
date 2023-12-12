@@ -32,9 +32,9 @@ const handleSubmit = async (e) => {
         });
 
         const data = await response.json();
-        console.log(data); // Handle the response data as needed
         if (data.message === "Login successful") {
-            localStorage.setItem('username', data.username);
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('username', data.username)
           navigate('/HomePage');
         }
 

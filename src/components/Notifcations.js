@@ -10,10 +10,12 @@ const NotificationBell = () => {
     const fetchNotifications = async () => {
         try {
             const username = localStorage.getItem('username');
+            const token = localStorage.getItem('token'); // Retrieve the stored token from localStorage
             const response = await fetch('http://localhost:3000/notifications', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Add the Authorization header with the token
                     'Username': username
                 }
             });

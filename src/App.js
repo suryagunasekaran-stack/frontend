@@ -9,6 +9,10 @@ import ToolboxForm from './components/ToolboxForm';
 import TaskArrangementForm from './components/AnchoragePreForm';
 import RecordsViewer from './components/ViewToolbox';
 import NotificationBell from './components/Notifcations';
+import { jwtDecode } from "jwt-decode"
+
+
+
 const Layout = () => {
   const location = useLocation();
 
@@ -17,9 +21,23 @@ const Layout = () => {
   };
 
   const isAuthenticated = () => {
-    // Check for authentication logic
-    // For example, check if a session token is present in the cookies
-    return document.cookie.includes('sessionToken');
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    try {
+        const {exp} = jwtDecode(token);
+        
+        // Check if the token is expired
+        if (exp < Date.now() / 1000) {
+            localStorage.removeItem('token'); // Token has expired, remove it
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+      console.log(error);
+        return false; // If there's an error, consider the user not authenticated
+    }
 };
 
   return (
