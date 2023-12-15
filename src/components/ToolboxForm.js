@@ -21,6 +21,13 @@ const ToolboxForm = () => {
     
     const onSubmit = async (data) => {
         try {
+            const transformedData = data.items.map(item => {
+                const selectedPPE = Object.keys(item.ppe).filter(ppeKey => item.ppe[ppeKey]);
+                return { ...item, ppe: selectedPPE };
+            });
+        
+            data.items = transformedData;
+            console.log('Data to be submitted:', data);
             const response = await fetch('http://localhost:3000/toolboxformsubmit', { // Replace with your server URL
                 method: 'POST',
                 headers: {
@@ -75,8 +82,9 @@ const ToolboxForm = () => {
                         <Form.Group>
                             <Form.Label>Location:</Form.Label>
                             <Form.Control as="select" {...register('location', { required: true })}>
-                                <option value="workshop">Workshop</option>
-                                <option value="changi">Changi</option>
+                                <option value="Tuas">Tuas</option>
+                                <option value="Yard">Yard</option>
+                                <option value="Changi">Changi</option>
                             </Form.Control>
                             {errors.location && <p>This field is required</p>}
                         </Form.Group>
@@ -88,9 +96,9 @@ const ToolboxForm = () => {
                         <Form.Group>
                             <Form.Label>Type:</Form.Label>
                             <Form.Control as="select" {...register('type', { required: true })}>
-                                <option value="dailymeeting">DAILY TOOLBOX MEETING AND PPE RECORD</option>
-                                <option value="contractorsmeeting">CONTRACTORS TOOLBOX MEETING AND PPE RECORD</option>
-                                <option value="tansportmeeting">TRANSPORT MEETING RECORD</option>
+                                <option value="Daily Meeting">DAILY TOOLBOX MEETING AND PPE RECORD</option>
+                                <option value="Contractors Meeting">CONTRACTORS TOOLBOX MEETING AND PPE RECORD</option>
+                                <option value="Transport Meeting">TRANSPORT MEETING RECORD</option>
                             </Form.Control>
                             {errors.location && <p>This field is required</p>}
                         </Form.Group>
