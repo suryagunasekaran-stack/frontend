@@ -11,7 +11,9 @@ const PdfGenerator = ({
   raNumber,
   author,
   nameSupervisor,
-  items
+  items,
+  authorSignature,
+  supervisorSignature
 }) => {
   const createPdf = async () => {
 
@@ -224,23 +226,47 @@ const PdfGenerator = ({
         var y = lineYBelowRaNo - 10; // Adjust the space above the line as needed
 
         const addText = (text, yOffset = 20) => {
-        page.drawText(text, {
-            x: 50,
-            y: y -= yOffset,
-            size: 12,
-            font,
-            color: rgb(0, 0, 0)
-        });
+            page.drawText(text, {
+                x: 50,
+                y: y -= yOffset,
+                size: 12,
+                font,
+                color: rgb(0, 0, 0)
+            });
         };
-
-        items.forEach((item, index) => {
-        addText(`${index + 1}: ${item.permitNumber} - ${item.name}`, 30);
-        addText(`PPE: ${item.ppe.join(', ')}`, 15);
-        // Add signature if exists
-        if (item.signature) {
-            // Code to handle the signature display (if needed)
-            // addText(`Signature: ${item.signature}`);
-        }
+        
+        const addSignature = async (base64String, xOffset = 50) => {
+            // Convert Base64 signature to Uint8Array
+            const signatureBytes = Uint8Array.from(atob(base64String.split(',')[1]), c => c.charCodeAt(0));
+        
+            // Embed the signature image in the document
+            const signatureImage = await pdfDoc.embedPng(signatureBytes);
+        
+            // Calculate the size and position of the signature
+            const signatureMaxWidth = 50; // Smaller width
+            const signatureAspectRatio = signatureImage.width / signatureImage.height;
+            const signatureWidth = Math.min(signatureMaxWidth, signatureImage.width);
+            const signatureHeight = signatureWidth / signatureAspectRatio;
+            const signatureX = page.getWidth() - signatureWidth - xOffset; // Right aligned
+            const signatureY = y - (signatureHeight / 2); // Centered vertically on the current line
+        
+            // Draw the signature image
+            page.drawImage(signatureImage, {
+                x: signatureX,
+                y: signatureY,
+                width: signatureWidth,
+                height: signatureHeight
+            });
+        };
+        
+        items.forEach(async (item, index) => {
+            addText(`${index + 1}: ${item.permitNumber} - ${item.name}`, 30);
+            addText(`PPE: ${item.ppe.join(', ')}`, 15);
+            
+            // Add signature if exists
+            if (item.signature) {
+                await addSignature(item.signature);
+            }
         });
 
         const footerText1 = "The above employees have attended the toolbox meeting and provided with the PPE as mentioned. (mandatory PPE such as Safety Helmet, Safety Shoes, Safety Belt, Safety Spectacles & Ear Plug were Permanently provided)";
@@ -292,8 +318,30 @@ const PdfGenerator = ({
         color: rgb(0, 0, 0)
     });
 
+    const addSignature2 = async (base64String, x, y, maxWidth = 50) => {
+        // Convert Base64 signature to Uint8Array
+        const signatureBytes = Uint8Array.from(atob(base64String.split(',')[1]), c => c.charCodeAt(0));
+    
+        // Embed the signature image in the document
+        const signatureImage = await pdfDoc.embedPng(signatureBytes);
+    
+        // Calculate the size and position of the signature
+        const signatureAspectRatio = signatureImage.width / signatureImage.height;
+        const signatureWidth = Math.min(maxWidth, signatureImage.width);
+        const signatureHeight = signatureWidth / signatureAspectRatio;
+    
+        // Draw the signature image
+        page.drawImage(signatureImage, {
+            x: x,
+            y: y - signatureHeight, // Adjust Y position to align top of the image
+            width: signatureWidth,
+            height: signatureHeight
+        });
+    };
+
     // Define the text for "Name:" and "Signature:"
-    const nameText = "Name:";
+    const nameText = "Name: " + author;
+    const nameText2 = "Name: " + nameSupervisor;
     const signatureText = "Signature:";
 
     // Calculate the Y position for "Name:" and "Signature:", positioned below "Conducted by:"
@@ -310,8 +358,8 @@ const PdfGenerator = ({
 
     // Draw the right aligned "Name:"
     const nameTextWidth = font.widthOfTextAtSize(nameText, infoFontSize);
-    page.drawText(nameText, {
-        x: width - padding - nameTextWidth - 10,
+    page.drawText(nameText2, {
+        x: width - padding - nameTextWidth - 65,
         y: nameSignatureTextY,
         size: infoFontSize,
         font: font,
@@ -333,12 +381,20 @@ const PdfGenerator = ({
     // Draw the right aligned "Signature:"
     const signatureTextWidth = font.widthOfTextAtSize(signatureText, infoFontSize);
     page.drawText(signatureText, {
-        x: width - padding - signatureTextWidth - 10,
+        x: width - padding - signatureTextWidth - 70,
         y: signatureTextY,
         size: infoFontSize,
         font: font,
         color: rgb(0, 0, 0)
     });
+
+    const authorSignatureX = padding + 10 + font.widthOfTextAtSize(nameText, infoFontSize) + 10; // Adjust as needed
+    await addSignature2(authorSignature, authorSignatureX, nameSignatureTextY - 10);
+
+    // Place supervisor signature after "Name: Supervisor"
+    const supervisorSignatureX = width - padding - nameTextWidth - 10 - font.widthOfTextAtSize(nameText2, infoFontSize) - 50; // Adjust as needed
+    await addSignature2(supervisorSignature, supervisorSignatureX + 140, nameSignatureTextY - 10);
+
 
     // Define the centered message
     const centerMessage = "Safety Starts With Me - Together We Care";

@@ -7,15 +7,14 @@ const ToolboxForm = () => {
     const { register, control, handleSubmit, formState: { errors } } = useForm();
     const token = localStorage.getItem('token');
     const sigCanvasRef = useRef({});
-    const clearSignature = () => {
-        sigCanvasRef.current.clear();
-    };
+    const authorSigRef = useRef(null);
+    const supervisorSigRef = useRef(null);
 
-    const saveSignature = () => {
-        if (sigCanvasRef.current) {
-            // eslint-disable-next-line
-            const signature = sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png');
-            // Use this signature data as needed
+    // Function to clear a specific signature
+    // eslint-disable-next-line
+    const clearSignature = (index) => {
+        if (sigCanvasRef.current[index]) {
+            sigCanvasRef.current[index].clear();
         }
     };
     
@@ -25,16 +24,34 @@ const ToolboxForm = () => {
                 const selectedPPE = Object.keys(item.ppe).filter(ppeKey => item.ppe[ppeKey]);
                 return { ...item, ppe: selectedPPE };
             });
-        
             data.items = transformedData;
-            console.log('Data to be submitted:', data);
+            
+            const itemsWithSignatures = data.items.map((item, index) => {
+                let signature = '';
+                if (sigCanvasRef.current[index]) {
+                    signature = sigCanvasRef.current[index].getTrimmedCanvas().toDataURL('image/png');
+                }
+                return { ...item, signature };
+            });
+            
+            const authorSignature = authorSigRef.current?.getTrimmedCanvas().toDataURL('image/png');
+            const supervisorSignature = supervisorSigRef.current?.getTrimmedCanvas().toDataURL('image/png');
+
+
+            const formData = {
+                ...data,
+                items: itemsWithSignatures,
+                authorSignature,
+                supervisorSignature
+            };
+
             const response = await fetch('http://localhost:3000/toolboxformsubmit', { // Replace with your server URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(formData)
             });
     
             if (response.ok) {
@@ -173,14 +190,14 @@ const ToolboxForm = () => {
                     </Col>
                     <Col>
                         <Form.Group>
-                            <Form.Label>Signature</Form.Label>
-                            <SignatureCanvas ref={sigCanvasRef}
-                            onEnd={saveSignature}
-                                penColor='black'
-                                canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
-                            />
-                            <Button style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={clearSignature}>Clear Signature</Button>
-                        </Form.Group>
+                                <Form.Label>Signature</Form.Label>
+                                <SignatureCanvas
+                                    ref={(el) => sigCanvasRef.current[index] = el}
+                                    penColor='black'
+                                    canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
+                                />
+                                <Button style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={() => sigCanvasRef.current[index].clear()}>Clear Signature</Button>
+                            </Form.Group>
                     </Col>
                     <Col className='d-flex justify-content-center align-items-center'>
                         <Button style={{ backgroundColor: 'red', borderColor: 'red' }} type="button" onClick={() => remove(index)}>Remove</Button>
@@ -222,12 +239,11 @@ const ToolboxForm = () => {
                             </Col>
                             </Row>
                             <br></br>
-                            <SignatureCanvas ref={sigCanvasRef}
-                            onEnd={saveSignature}
+                            <SignatureCanvas ref={authorSigRef}
                                 penColor='black'
                                 canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                             />
-                            <Button onClick={clearSignature} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
+                            <Button onClick={() => authorSigRef.current.clear()} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
                         </Form.Group>
                 </Col>
                 <Col>
@@ -236,12 +252,11 @@ const ToolboxForm = () => {
                             <Form.Label>Name </Form.Label>
                             <Form.Control type="text" {...register(`.nameSupervisor`)} />
                             <br></br>
-                            <SignatureCanvas ref={sigCanvasRef}
-                            onEnd={saveSignature}
+                            <SignatureCanvas ref={supervisorSigRef}
                                 penColor='black'
                                 canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                             />
-                            <Button onClick={clearSignature} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
+                            <Button onClick={() => supervisorSigRef.current.clear()} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
                         </Form.Group>
                 </Col>
             </Row>
