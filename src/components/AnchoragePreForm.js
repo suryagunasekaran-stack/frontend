@@ -6,19 +6,46 @@ import SignatureCanvas from 'react-signature-canvas';
 const TaskArrangementForm = () => {
     // eslint-disable-next-line
     const { register, control, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data); // Replace with your submit logic
-    const sigCanvasRef = useRef({});
+    const authorSigRef = useRef(null);
+    const supervisorSigRef = useRef(null);
     const clearSignature = () => {
-        sigCanvasRef.current.clear();
+        authorSigRef.current.clear();
     };
 
-    const saveSignature = () => {
-        if (sigCanvasRef.current) {
-            // eslint-disable-next-line
-            const signature = sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png');
-            // Use this signature data as needed
+    const onSubmit = async (data) => {
+        try {
+            const authorSignature = authorSigRef.current?.getTrimmedCanvas().toDataURL('image/png');
+            const supervisorSignature = supervisorSigRef.current?.getTrimmedCanvas().toDataURL('image/png');
+            const token = localStorage.getItem('token');
+
+            const formData = {
+                ...data,
+                authorSignature,
+                supervisorSignature
+            };
+
+            const response = await fetch('http://localhost:3000/anchorpreformsubmit', { // Replace with your server URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(formData)
+            });
+    
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Server response:', responseData);
+                alert('Success: Operation completed successfully.');
+            } else {
+                console.error('Server error:', response.status);
+                alert('Error: Operation failed. Status code: ' + response.status);
+            }
+        } catch (error) {
+            console.error('Network error:', error);
         }
     };
+
     return (
         <Container>
             <Form className='pt-4' onSubmit={handleSubmit(onSubmit)}>
@@ -93,28 +120,30 @@ const TaskArrangementForm = () => {
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
+                            name="toolboxRAAttendanceRecord"
                             id="formHorizontalRadios1"
+                            value="YES"
+                            {...register("toolboxRAAttendanceRecord")}
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
+                            name="toolboxRAAttendanceRecord"
                             id="formHorizontalRadios2"
+                            value="NO"
+                            {...register("toolboxRAAttendanceRecord")}
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
+                            name="toolboxRAAttendanceRecord"
                             id="formHorizontalRadios3"
+                            value="N/A"
+                            {...register("toolboxRAAttendanceRecord")}
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -126,28 +155,30 @@ const TaskArrangementForm = () => {
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="LifevestforEmbarkation"
+                            id="LifevestforEmbarkation1"
+                            {...register("LifevestforEmbarkation")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="LifevestforEmbarkation"
+                            id="LifevestforEmbarkation2"
+                            {...register("LifevestforEmbarkation")}
+                            value="NO" 
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="LifevestforEmbarkation"
+                            id="LifevestforEmbarkation3"
+                            {...register("LifevestforEmbarkation")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -159,28 +190,30 @@ const TaskArrangementForm = () => {
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Toolsbag"
+                            id="Toolsbag1"
+                            {...register("Toolsbag")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Toolsbag"
+                            id="Toolsbag2"
+                            {...register("Toolsbag")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Toolsbag"
+                            id="Toolsbag3"
+                            {...register("Toolsbag")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -193,28 +226,30 @@ const TaskArrangementForm = () => {
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Helmetwithchin"
+                            id="Helmetwithchin1"
+                            {...register("Helmetwithchin")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Helmetwithchin"
+                            id="Helmetwithchin2"
+                            {...register("Helmetwithchin")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Helmetwithchin"
+                            id="Helmetwithchin3"
+                            {...register("Helmetwithchin")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -227,28 +262,30 @@ const TaskArrangementForm = () => {
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Allelectricaltools"
+                            id="Allelectricaltools1"
+                            {...register("Allelectricaltools")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Allelectricaltools"
+                            id="Allelectricaltools2"
+                            {...register("Allelectricaltools")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Allelectricaltools"
+                            id="Allelectricaltools3"
+                            {...register("Allelectricaltools")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -260,28 +297,30 @@ const TaskArrangementForm = () => {
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="HotworkPermit"
+                            id="HotworkPermit1"
+                            {...register("HotworkPermit")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="HotworkPermit"
+                            id="HotworkPermit2"
+                            {...register("HotworkPermit")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="HotworkPermit"
+                            id="HotworkPermit3"
+                            {...register("HotworkPermit")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -294,28 +333,30 @@ const TaskArrangementForm = () => {
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Gashoses"
+                            id="Gashoses1"
+                            {...register("Gashoses")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Gashoses"
+                            id="Gashoses2"
+                            {...register("Gashoses")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Gashoses"
+                            id="Gashoses3"
+                            {...register("Gashoses")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -328,28 +369,30 @@ and placed together in a pallet with valid tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Gascylinders"
+                            id="Gascylinders1"
+                            {...register("Gascylinders")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Gascylinders"
+                            id="Gascylinders2"
+                            {...register("Gascylinders")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Gascylinders"
+                            id="Gascylinders3"
+                            {...register("Gascylinders")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -361,28 +404,30 @@ and placed together in a pallet with valid tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="sparkigniter"
+                            id="sparkigniter1"
+                            {...register("sparkigniter")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="sparkigniter"
+                            id="sparkigniter2"
+                            {...register("sparkigniter")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="sparkigniter"
+                            id="sparkigniter3"
+                            {...register("sparkigniter")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -394,28 +439,30 @@ and placed together in a pallet with valid tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Reflectivevest"
+                            id="Reflectivevest1"
+                            {...register("Reflectivevest")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Reflectivevest"
+                            id="Reflectivevest2"
+                            {...register("Reflectivevest")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Reflectivevest"
+                            id="Reflectivevest3"
+                            {...register("Reflectivevest")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -427,28 +474,30 @@ and placed together in a pallet with valid tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Entryintoconfined"
+                            id="Entryintoconfined1"
+                            {...register("Entryintoconfined")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Entryintoconfined"
+                            id="Entryintoconfined2"
+                            {...register("Entryintoconfined")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Entryintoconfined"
+                            id="Entryintoconfined3"
+                            {...register("Entryintoconfined")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -461,28 +510,30 @@ and placed together in a pallet with valid tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="AppropriatePortable"
+                            id="AppropriatePortable1"
+                            {...register("AppropriatePortable")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="AppropriatePortable"
+                            id="AppropriatePortable2"
+                            {...register("AppropriatePortable")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="AppropriatePortable"
+                            id="AppropriatePortable3"
+                            {...register("AppropriatePortable")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -495,28 +546,30 @@ record</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="ConfinedSpace"
+                            id="ConfinedSpace1"
+                            {...register("ConfinedSpace")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="ConfinedSpace"
+                            id="ConfinedSpace2"
+                            {...register("ConfinedSpace")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="ConfinedSpace"
+                            id="ConfinedSpace3"
+                            {...register("ConfinedSpace")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -528,28 +581,30 @@ record</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Ventilationequipment"
+                            id="Ventilationequipment1"
+                            {...register("Ventilationequipment")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Ventilationequipment"
+                            id="Ventilationequipment2"
+                            {...register("Ventilationequipment")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Ventilationequipment"
+                            id="Ventilationequipment3"
+                            {...register("Ventilationequipment")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -561,28 +616,29 @@ record</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Lightingequipment"
+                            id="Lightingequipment1"
+                            {...register("Lightingequipment")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Lightingequipment"
+                            id="Lightingequipment2"
+                            {...register("Lightingequipment")}
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Lightingequipment"
+                            id="Lightingequipment3"
+                            {...register("Lightingequipment")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -594,28 +650,30 @@ record</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Fireproof"
+                            id="Fireproof1"
+                            {...register("Fireproof")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Fireproof"
+                            id="Fireproof2"
+                            {...register("Fireproof")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Fireproof"
+                            id="Fireproof3"
+                            {...register("Fireproof")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -628,28 +686,30 @@ tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="AllLifting"
+                            id="AllLifting1"
+                            {...register("AllLifting")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="AllLifting"
+                            id="AllLifting2"
+                            {...register("AllLifting")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="AllLifting"
+                            id="AllLifting3"
+                            {...register("AllLifting")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -661,28 +721,30 @@ tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="MaterialHandling"
+                            id="MaterialHandling1"
+                            {...register("MaterialHandling")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="MaterialHandling"
+                            id="MaterialHandling2"
+                            {...register("MaterialHandling")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="MaterialHandling"
+                            id="MaterialHandling3"
+                            {...register("MaterialHandling")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -694,28 +756,30 @@ tag</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Usetag"
+                            id="Usetag1"
+                            {...register("Usetag")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Usetag"
+                            id="Usetag2"
+                            {...register("Usetag")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Usetag"
+                            id="Usetag3"
+                            {...register("Usetag")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -728,28 +792,30 @@ before use.</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Alllifting"
+                            id="Alllifting1"
+                            {...register("Alllifting")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Alllifting"
+                            id="Alllifting2"
+                            {...register("Alllifting")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Alllifting"
+                            id="Alllifting3"
+                            {...register("Alllifting")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -762,28 +828,30 @@ areas of potential impact.</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Allpeople"
+                            id="Allpeople1"
+                            {...register("Allpeople")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Allpeople"
+                            id="Allpeople2"
+                            {...register("Allpeople")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Allpeople"
+                            id="Allpeople3"
+                            {...register("Allpeople")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -796,28 +864,30 @@ to a suitable anchor point.)</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Fullbodyharness"
+                            id="Fullbodyharness1"
+                            {...register("Fullbodyharness")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Fullbodyharness"
+                            id="Fullbodyharness2"
+                            {...register("Fullbodyharness")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Fullbodyharness"
+                            id="Fullbodyharness3"
+                            {...register("Fullbodyharness")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -830,28 +900,30 @@ a maximum of 6kN</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="RetractableLife"
+                            id="RetractableLife1"
+                            {...register("RetractableLife")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="RetractableLife"
+                            id="RetractableLife2"
+                            {...register("RetractableLife")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="RetractableLife"
+                            id="RetractableLife3"
+                            {...register("RetractableLife")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -864,28 +936,30 @@ sheet available if chemicals involved</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Corrosivematerial"
+                            id="Corrosivematerial1"
+                            {...register("Corrosivematerial")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Corrosivematerial"
+                            id="Corrosivematerial2"
+                            {...register("Corrosivematerial")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Corrosivematerial"
+                            id="Corrosivematerial3"
+                            {...register("Corrosivematerial")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
 
                 <Row className='pt-3'>
@@ -897,28 +971,30 @@ sheet available if chemicals involved</Col>
                         <Form.Check 
                             type="radio"
                             label="YES"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios1"
+                            name="Chemicalresistant"
+                            id="Chemicalresistant1"
+                            {...register("Chemicalresistant")}
+                            value="YES"
                         />
                         <Form.Check
                             type="radio"
                             label="NO"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios2"
+                            name="Chemicalresistant"
+                            id="Chemicalresistant2"
+                            {...register("Chemicalresistant")}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
-                            name="formHorizontalRadios"
-                            id="formHorizontalRadios3"
+                            name="Chemicalresistant"
+                            id="Chemicalresistant3"
+                            {...register("Chemicalresistant")}
+                            value="N/A"
                         />
                 </Form.Group>
                 </Col>
-                    <Col >
-                        <Form.Group>
-                            <Form.Control type="text" {...register('remark')} />
-                        </Form.Group>            
-                    </Col>
+ 
                 </Row>
             <Row>
                 <Col>
@@ -930,8 +1006,7 @@ sheet available if chemicals involved</Col>
                             <Form.Label>Name </Form.Label>
                             <Form.Control type="text" {...register(`.nameCoordinator`)} />
                             <br></br>
-                            <SignatureCanvas ref={sigCanvasRef}
-                            onEnd={saveSignature}
+                            <SignatureCanvas ref={authorSigRef}
                                 penColor='black'
                                 canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                             />
@@ -944,8 +1019,7 @@ sheet available if chemicals involved</Col>
                             <Form.Label>Name </Form.Label>
                             <Form.Control type="text" {...register(`.nameSupervisor`)} />
                             <br></br>
-                            <SignatureCanvas ref={sigCanvasRef}
-                            onEnd={saveSignature}
+                            <SignatureCanvas ref={supervisorSigRef}
                                 penColor='black'
                                 canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                             />
