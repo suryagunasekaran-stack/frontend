@@ -1,16 +1,26 @@
 import React,  {useRef} from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm,  useFieldArray } from 'react-hook-form';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import SignatureCanvas from 'react-signature-canvas';
 
 const TaskArrangementForm = () => {
     // eslint-disable-next-line
-    const { register, control, handleSubmit, formState: { errors } } = useForm();
     const authorSigRef = useRef(null);
     const supervisorSigRef = useRef(null);
     const clearSignature = () => {
         authorSigRef.current.clear();
     };
+
+    const { control, register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+          items: [{}]
+        }
+      });
+    
+      const { fields } = useFieldArray({
+        control,
+        name: "items",
+      });
 
     const onSubmit = async (data) => {
         try {
@@ -38,6 +48,7 @@ const TaskArrangementForm = () => {
                 console.log('Server response:', responseData);
                 alert('Success: Operation completed successfully.');
             } else {
+                console.log(response)
                 console.error('Server error:', response.status);
                 alert('Error: Operation failed. Status code: ' + response.status);
             }
@@ -108,10 +119,11 @@ const TaskArrangementForm = () => {
                     <Col ></Col>
                     <Col ></Col>
                     <Col ></Col>
-                    <Col >Remark</Col>
                 </Row>
 
-                <Row className='pt-3'>
+                {fields.map((item, index) => (
+                <Row className='pt-3' >
+                    <Row className='pt-3' >
                     <Col xs={2} md={2} lg={2} xl={2} > 1 </Col>
                     <Col > Toolbox / RA briefing attendance record </Col>
                     <Col className='d-flex justify-content-center align-items-center'>
@@ -123,7 +135,7 @@ const TaskArrangementForm = () => {
                             name="toolboxRAAttendanceRecord"
                             id="formHorizontalRadios1"
                             value="YES"
-                            {...register("toolboxRAAttendanceRecord")}
+                            {...register(`items[${index}].ToolboxRAAttendanceRecord`)}
                         />
                         <Form.Check
                             type="radio"
@@ -131,7 +143,7 @@ const TaskArrangementForm = () => {
                             name="toolboxRAAttendanceRecord"
                             id="formHorizontalRadios2"
                             value="NO"
-                            {...register("toolboxRAAttendanceRecord")}
+                             {...register(`items[${index}].ToolboxRAAttendanceRecord`)}
                         />
                         <Form.Check
                             type="radio"
@@ -139,11 +151,10 @@ const TaskArrangementForm = () => {
                             name="toolboxRAAttendanceRecord"
                             id="formHorizontalRadios3"
                             value="N/A"
-                            {...register("toolboxRAAttendanceRecord")}
+                             {...register(`items[${index}].ToolboxRAAttendanceRecord`)}
                         />
                 </Form.Group>
                 </Col>
- 
                 </Row>
 
                 <Row className='pt-3'>
@@ -157,7 +168,7 @@ const TaskArrangementForm = () => {
                             label="YES"
                             name="LifevestforEmbarkation"
                             id="LifevestforEmbarkation1"
-                            {...register("LifevestforEmbarkation")}
+                            {...register(`items[${index}].LifevestforEmbarkation`)}
                             value="YES"
                         />
                         <Form.Check
@@ -165,7 +176,7 @@ const TaskArrangementForm = () => {
                             label="NO"
                             name="LifevestforEmbarkation"
                             id="LifevestforEmbarkation2"
-                            {...register("LifevestforEmbarkation")}
+                            {...register(`items[${index}].LifevestforEmbarkation`)}
                             value="NO" 
                         />
                         <Form.Check
@@ -173,7 +184,7 @@ const TaskArrangementForm = () => {
                             label="N/A"
                             name="LifevestforEmbarkation"
                             id="LifevestforEmbarkation3"
-                            {...register("LifevestforEmbarkation")}
+                            {...register(`items[${index}].LifevestforEmbarkation`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -192,7 +203,7 @@ const TaskArrangementForm = () => {
                             label="YES"
                             name="Toolsbag"
                             id="Toolsbag1"
-                            {...register("Toolsbag")}
+                            {...register(`items[${index}].Toolsbag`)}
                             value="YES"
                         />
                         <Form.Check
@@ -200,7 +211,7 @@ const TaskArrangementForm = () => {
                             label="NO"
                             name="Toolsbag"
                             id="Toolsbag2"
-                            {...register("Toolsbag")}
+                            {...register(`items[${index}].Toolsbag`)}
                             value="NO"
                         />
                         <Form.Check
@@ -208,7 +219,7 @@ const TaskArrangementForm = () => {
                             label="N/A"
                             name="Toolsbag"
                             id="Toolsbag3"
-                            {...register("Toolsbag")}
+                            {...register(`items[${index}].Toolsbag`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -228,7 +239,7 @@ const TaskArrangementForm = () => {
                             label="YES"
                             name="Helmetwithchin"
                             id="Helmetwithchin1"
-                            {...register("Helmetwithchin")}
+                            {...register(`items[${index}].Helmetwithchin`)}
                             value="YES"
                         />
                         <Form.Check
@@ -236,7 +247,7 @@ const TaskArrangementForm = () => {
                             label="NO"
                             name="Helmetwithchin"
                             id="Helmetwithchin2"
-                            {...register("Helmetwithchin")}
+                            {...register(`items[${index}].Helmetwithchin`)}
                             value="NO"
                         />
                         <Form.Check
@@ -244,7 +255,7 @@ const TaskArrangementForm = () => {
                             label="N/A"
                             name="Helmetwithchin"
                             id="Helmetwithchin3"
-                            {...register("Helmetwithchin")}
+                            {...register(`items[${index}].Helmetwithchin`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -264,7 +275,7 @@ const TaskArrangementForm = () => {
                             label="YES"
                             name="Allelectricaltools"
                             id="Allelectricaltools1"
-                            {...register("Allelectricaltools")}
+                            {...register(`items[${index}].Allelectricaltools`)}
                             value="YES"
                         />
                         <Form.Check
@@ -272,7 +283,7 @@ const TaskArrangementForm = () => {
                             label="NO"
                             name="Allelectricaltools"
                             id="Allelectricaltools2"
-                            {...register("Allelectricaltools")}
+                            {...register(`items[${index}].Allelectricaltools`)}
                             value="NO"
                         />
                         <Form.Check
@@ -280,7 +291,7 @@ const TaskArrangementForm = () => {
                             label="N/A"
                             name="Allelectricaltools"
                             id="Allelectricaltools3"
-                            {...register("Allelectricaltools")}
+                            {...register(`items[${index}].Allelectricaltools`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -299,7 +310,7 @@ const TaskArrangementForm = () => {
                             label="YES"
                             name="HotworkPermit"
                             id="HotworkPermit1"
-                            {...register("HotworkPermit")}
+                            {...register(`items[${index}].HotworkPermit`)}
                             value="YES"
                         />
                         <Form.Check
@@ -307,7 +318,7 @@ const TaskArrangementForm = () => {
                             label="NO"
                             name="HotworkPermit"
                             id="HotworkPermit2"
-                            {...register("HotworkPermit")}
+                            {...register(`items[${index}].HotworkPermit`)}
                             value="NO"
                         />
                         <Form.Check
@@ -315,7 +326,7 @@ const TaskArrangementForm = () => {
                             label="N/A"
                             name="HotworkPermit"
                             id="HotworkPermit3"
-                            {...register("HotworkPermit")}
+                            {...register(`items[${index}].HotworkPermit`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -335,7 +346,7 @@ const TaskArrangementForm = () => {
                             label="YES"
                             name="Gashoses"
                             id="Gashoses1"
-                            {...register("Gashoses")}
+                            {...register(`items[${index}].Gashoses`)}
                             value="YES"
                         />
                         <Form.Check
@@ -343,7 +354,7 @@ const TaskArrangementForm = () => {
                             label="NO"
                             name="Gashoses"
                             id="Gashoses2"
-                            {...register("Gashoses")}
+                            {...register(`items[${index}].Gashoses`)}
                             value="NO"
                         />
                         <Form.Check
@@ -351,7 +362,7 @@ const TaskArrangementForm = () => {
                             label="N/A"
                             name="Gashoses"
                             id="Gashoses3"
-                            {...register("Gashoses")}
+                            {...register(`items[${index}].Gashoses`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -371,7 +382,7 @@ and placed together in a pallet with valid tag</Col>
                             label="YES"
                             name="Gascylinders"
                             id="Gascylinders1"
-                            {...register("Gascylinders")}
+                            {...register(`items[${index}].Gascylinders`)}
                             value="YES"
                         />
                         <Form.Check
@@ -379,7 +390,7 @@ and placed together in a pallet with valid tag</Col>
                             label="NO"
                             name="Gascylinders"
                             id="Gascylinders2"
-                            {...register("Gascylinders")}
+                            {...register(`items[${index}].Gascylinders`)}
                             value="NO"
                         />
                         <Form.Check
@@ -387,7 +398,7 @@ and placed together in a pallet with valid tag</Col>
                             label="N/A"
                             name="Gascylinders"
                             id="Gascylinders3"
-                            {...register("Gascylinders")}
+                            {...register(`items[${index}].Gascylinders`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -406,7 +417,7 @@ and placed together in a pallet with valid tag</Col>
                             label="YES"
                             name="sparkigniter"
                             id="sparkigniter1"
-                            {...register("sparkigniter")}
+                            {...register(`items[${index}].sparkigniter`)}
                             value="YES"
                         />
                         <Form.Check
@@ -414,7 +425,7 @@ and placed together in a pallet with valid tag</Col>
                             label="NO"
                             name="sparkigniter"
                             id="sparkigniter2"
-                            {...register("sparkigniter")}
+                            {...register(`items[${index}].sparkigniter`)}
                             value="NO"
                         />
                         <Form.Check
@@ -422,7 +433,7 @@ and placed together in a pallet with valid tag</Col>
                             label="N/A"
                             name="sparkigniter"
                             id="sparkigniter3"
-                            {...register("sparkigniter")}
+                            {...register(`items[${index}].sparkigniter`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -441,7 +452,7 @@ and placed together in a pallet with valid tag</Col>
                             label="YES"
                             name="Reflectivevest"
                             id="Reflectivevest1"
-                            {...register("Reflectivevest")}
+                            {...register(`items[${index}].Reflectivevest`)}
                             value="YES"
                         />
                         <Form.Check
@@ -449,7 +460,7 @@ and placed together in a pallet with valid tag</Col>
                             label="NO"
                             name="Reflectivevest"
                             id="Reflectivevest2"
-                            {...register("Reflectivevest")}
+                            {...register(`items[${index}].Reflectivevest`)}
                             value="NO"
                         />
                         <Form.Check
@@ -457,7 +468,7 @@ and placed together in a pallet with valid tag</Col>
                             label="N/A"
                             name="Reflectivevest"
                             id="Reflectivevest3"
-                            {...register("Reflectivevest")}
+                            {...register(`items[${index}].Reflectivevest`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -476,7 +487,7 @@ and placed together in a pallet with valid tag</Col>
                             label="YES"
                             name="Entryintoconfined"
                             id="Entryintoconfined1"
-                            {...register("Entryintoconfined")}
+                            {...register(`items[${index}].Entryintoconfined`)}
                             value="YES"
                         />
                         <Form.Check
@@ -484,7 +495,7 @@ and placed together in a pallet with valid tag</Col>
                             label="NO"
                             name="Entryintoconfined"
                             id="Entryintoconfined2"
-                            {...register("Entryintoconfined")}
+                            {...register(`items[${index}].Entryintoconfined`)}
                             value="NO"
                         />
                         <Form.Check
@@ -492,7 +503,7 @@ and placed together in a pallet with valid tag</Col>
                             label="N/A"
                             name="Entryintoconfined"
                             id="Entryintoconfined3"
-                            {...register("Entryintoconfined")}
+                            {...register(`items[${index}].Entryintoconfined`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -512,7 +523,7 @@ and placed together in a pallet with valid tag</Col>
                             label="YES"
                             name="AppropriatePortable"
                             id="AppropriatePortable1"
-                            {...register("AppropriatePortable")}
+                            {...register(`items[${index}].AppropriatePortable`)}
                             value="YES"
                         />
                         <Form.Check
@@ -520,7 +531,7 @@ and placed together in a pallet with valid tag</Col>
                             label="NO"
                             name="AppropriatePortable"
                             id="AppropriatePortable2"
-                            {...register("AppropriatePortable")}
+                            {...register(`items[${index}].AppropriatePortable`)}
                             value="NO"
                         />
                         <Form.Check
@@ -528,7 +539,7 @@ and placed together in a pallet with valid tag</Col>
                             label="N/A"
                             name="AppropriatePortable"
                             id="AppropriatePortable3"
-                            {...register("AppropriatePortable")}
+                            {...register(`items[${index}].AppropriatePortable`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -548,7 +559,7 @@ record</Col>
                             label="YES"
                             name="ConfinedSpace"
                             id="ConfinedSpace1"
-                            {...register("ConfinedSpace")}
+                            {...register(`items[${index}].ConfinedSpace`)}
                             value="YES"
                         />
                         <Form.Check
@@ -556,7 +567,7 @@ record</Col>
                             label="NO"
                             name="ConfinedSpace"
                             id="ConfinedSpace2"
-                            {...register("ConfinedSpace")}
+                            {...register(`items[${index}].ConfinedSpace`)}
                             value="NO"
                         />
                         <Form.Check
@@ -564,7 +575,7 @@ record</Col>
                             label="N/A"
                             name="ConfinedSpace"
                             id="ConfinedSpace3"
-                            {...register("ConfinedSpace")}
+                            {...register(`items[${index}].ConfinedSpace`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -583,7 +594,7 @@ record</Col>
                             label="YES"
                             name="Ventilationequipment"
                             id="Ventilationequipment1"
-                            {...register("Ventilationequipment")}
+                            {...register(`items[${index}].Ventilationequipment`)}
                             value="YES"
                         />
                         <Form.Check
@@ -591,7 +602,7 @@ record</Col>
                             label="NO"
                             name="Ventilationequipment"
                             id="Ventilationequipment2"
-                            {...register("Ventilationequipment")}
+                            {...register(`items[${index}].Ventilationequipment`)}
                             value="NO"
                         />
                         <Form.Check
@@ -599,7 +610,7 @@ record</Col>
                             label="N/A"
                             name="Ventilationequipment"
                             id="Ventilationequipment3"
-                            {...register("Ventilationequipment")}
+                            {...register(`items[${index}].Ventilationequipment`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -618,7 +629,7 @@ record</Col>
                             label="YES"
                             name="Lightingequipment"
                             id="Lightingequipment1"
-                            {...register("Lightingequipment")}
+                            {...register(`items[${index}].Lightingequipment`)}
                             value="YES"
                         />
                         <Form.Check
@@ -626,14 +637,15 @@ record</Col>
                             label="NO"
                             name="Lightingequipment"
                             id="Lightingequipment2"
-                            {...register("Lightingequipment")}
+                            {...register(`items[${index}].Lightingequipment`)}
+                            value="NO"
                         />
                         <Form.Check
                             type="radio"
                             label="N/A"
                             name="Lightingequipment"
                             id="Lightingequipment3"
-                            {...register("Lightingequipment")}
+                            {...register(`items[${index}].Lightingequipment`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -652,7 +664,7 @@ record</Col>
                             label="YES"
                             name="Fireproof"
                             id="Fireproof1"
-                            {...register("Fireproof")}
+                            {...register(`items[${index}].Fireproof`)}
                             value="YES"
                         />
                         <Form.Check
@@ -660,7 +672,7 @@ record</Col>
                             label="NO"
                             name="Fireproof"
                             id="Fireproof2"
-                            {...register("Fireproof")}
+                            {...register(`items[${index}].Fireproof`)}
                             value="NO"
                         />
                         <Form.Check
@@ -668,7 +680,7 @@ record</Col>
                             label="N/A"
                             name="Fireproof"
                             id="Fireproof3"
-                            {...register("Fireproof")}
+                            {...register(`items[${index}].Fireproof`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -688,7 +700,7 @@ tag</Col>
                             label="YES"
                             name="AllLifting"
                             id="AllLifting1"
-                            {...register("AllLifting")}
+                            {...register(`items[${index}].AllLifting`)}
                             value="YES"
                         />
                         <Form.Check
@@ -696,7 +708,7 @@ tag</Col>
                             label="NO"
                             name="AllLifting"
                             id="AllLifting2"
-                            {...register("AllLifting")}
+                            {...register(`items[${index}].AllLifting`)}
                             value="NO"
                         />
                         <Form.Check
@@ -704,7 +716,7 @@ tag</Col>
                             label="N/A"
                             name="AllLifting"
                             id="AllLifting3"
-                            {...register("AllLifting")}
+                            {...register(`items[${index}].AllLifting`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -723,7 +735,7 @@ tag</Col>
                             label="YES"
                             name="MaterialHandling"
                             id="MaterialHandling1"
-                            {...register("MaterialHandling")}
+                           {...register(`items[${index}].MaterialHandling`)}
                             value="YES"
                         />
                         <Form.Check
@@ -731,7 +743,7 @@ tag</Col>
                             label="NO"
                             name="MaterialHandling"
                             id="MaterialHandling2"
-                            {...register("MaterialHandling")}
+                           {...register(`items[${index}].MaterialHandling`)}
                             value="NO"
                         />
                         <Form.Check
@@ -739,7 +751,7 @@ tag</Col>
                             label="N/A"
                             name="MaterialHandling"
                             id="MaterialHandling3"
-                            {...register("MaterialHandling")}
+                           {...register(`items[${index}].MaterialHandling`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -758,7 +770,7 @@ tag</Col>
                             label="YES"
                             name="Usetag"
                             id="Usetag1"
-                            {...register("Usetag")}
+                            {...register(`items[${index}].Usetag`)}
                             value="YES"
                         />
                         <Form.Check
@@ -766,7 +778,7 @@ tag</Col>
                             label="NO"
                             name="Usetag"
                             id="Usetag2"
-                            {...register("Usetag")}
+                            {...register(`items[${index}].Usetag`)}
                             value="NO"
                         />
                         <Form.Check
@@ -774,7 +786,7 @@ tag</Col>
                             label="N/A"
                             name="Usetag"
                             id="Usetag3"
-                            {...register("Usetag")}
+                            {...register(`items[${index}].Usetag`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -794,7 +806,7 @@ before use.</Col>
                             label="YES"
                             name="Alllifting"
                             id="Alllifting1"
-                            {...register("Alllifting")}
+                            {...register(`items[${index}].Alllifting`)}
                             value="YES"
                         />
                         <Form.Check
@@ -802,7 +814,7 @@ before use.</Col>
                             label="NO"
                             name="Alllifting"
                             id="Alllifting2"
-                            {...register("Alllifting")}
+                            {...register(`items[${index}].Alllifting`)}
                             value="NO"
                         />
                         <Form.Check
@@ -810,7 +822,7 @@ before use.</Col>
                             label="N/A"
                             name="Alllifting"
                             id="Alllifting3"
-                            {...register("Alllifting")}
+                            {...register(`items[${index}].Alllifting`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -830,7 +842,7 @@ areas of potential impact.</Col>
                             label="YES"
                             name="Allpeople"
                             id="Allpeople1"
-                            {...register("Allpeople")}
+                            {...register(`items[${index}].Allpeople`)}
                             value="YES"
                         />
                         <Form.Check
@@ -838,7 +850,7 @@ areas of potential impact.</Col>
                             label="NO"
                             name="Allpeople"
                             id="Allpeople2"
-                            {...register("Allpeople")}
+                            {...register(`items[${index}].Allpeople`)}
                             value="NO"
                         />
                         <Form.Check
@@ -846,7 +858,7 @@ areas of potential impact.</Col>
                             label="N/A"
                             name="Allpeople"
                             id="Allpeople3"
-                            {...register("Allpeople")}
+                            {...register(`items[${index}].Allpeople`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -866,7 +878,7 @@ to a suitable anchor point.)</Col>
                             label="YES"
                             name="Fullbodyharness"
                             id="Fullbodyharness1"
-                            {...register("Fullbodyharness")}
+                           {...register(`items[${index}].Fullbodyharness`)}
                             value="YES"
                         />
                         <Form.Check
@@ -874,7 +886,7 @@ to a suitable anchor point.)</Col>
                             label="NO"
                             name="Fullbodyharness"
                             id="Fullbodyharness2"
-                            {...register("Fullbodyharness")}
+                           {...register(`items[${index}].Fullbodyharness`)}
                             value="NO"
                         />
                         <Form.Check
@@ -882,7 +894,7 @@ to a suitable anchor point.)</Col>
                             label="N/A"
                             name="Fullbodyharness"
                             id="Fullbodyharness3"
-                            {...register("Fullbodyharness")}
+                           {...register(`items[${index}].Fullbodyharness`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -902,7 +914,7 @@ a maximum of 6kN</Col>
                             label="YES"
                             name="RetractableLife"
                             id="RetractableLife1"
-                            {...register("RetractableLife")}
+                            {...register(`items[${index}].RetractableLife`)}
                             value="YES"
                         />
                         <Form.Check
@@ -910,7 +922,7 @@ a maximum of 6kN</Col>
                             label="NO"
                             name="RetractableLife"
                             id="RetractableLife2"
-                            {...register("RetractableLife")}
+                            {...register(`items[${index}].RetractableLife`)}
                             value="NO"
                         />
                         <Form.Check
@@ -918,7 +930,7 @@ a maximum of 6kN</Col>
                             label="N/A"
                             name="RetractableLife"
                             id="RetractableLife3"
-                            {...register("RetractableLife")}
+                            {...register(`items[${index}].RetractableLife`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -938,7 +950,7 @@ sheet available if chemicals involved</Col>
                             label="YES"
                             name="Corrosivematerial"
                             id="Corrosivematerial1"
-                            {...register("Corrosivematerial")}
+                            {...register(`items[${index}].Corrosivematerial`)}
                             value="YES"
                         />
                         <Form.Check
@@ -946,7 +958,7 @@ sheet available if chemicals involved</Col>
                             label="NO"
                             name="Corrosivematerial"
                             id="Corrosivematerial2"
-                            {...register("Corrosivematerial")}
+                            {...register(`items[${index}].Corrosivematerial`)}
                             value="NO"
                         />
                         <Form.Check
@@ -954,7 +966,7 @@ sheet available if chemicals involved</Col>
                             label="N/A"
                             name="Corrosivematerial"
                             id="Corrosivematerial3"
-                            {...register("Corrosivematerial")}
+                            {...register(`items[${index}].Corrosivematerial`)}
                             value="N/A"
                         />
                 </Form.Group>
@@ -973,7 +985,7 @@ sheet available if chemicals involved</Col>
                             label="YES"
                             name="Chemicalresistant"
                             id="Chemicalresistant1"
-                            {...register("Chemicalresistant")}
+                            {...register(`items[${index}].Chemicalresistant`)}
                             value="YES"
                         />
                         <Form.Check
@@ -981,7 +993,7 @@ sheet available if chemicals involved</Col>
                             label="NO"
                             name="Chemicalresistant"
                             id="Chemicalresistant2"
-                            {...register("Chemicalresistant")}
+                            {...register(`items[${index}].Chemicalresistant`)}
                             value="NO"
                         />
                         <Form.Check
@@ -989,13 +1001,19 @@ sheet available if chemicals involved</Col>
                             label="N/A"
                             name="Chemicalresistant"
                             id="Chemicalresistant3"
-                            {...register("Chemicalresistant")}
+                            {...register(`items[${index}].Chemicalresistant`)}
                             value="N/A"
                         />
                 </Form.Group>
                 </Col>
  
                 </Row>
+
+                </Row>
+            ))}
+
+
+                
             <Row>
                 <Col>
                     I herby Acknowledge that the above statements are true and correct to the best of my knowledge.
@@ -1004,7 +1022,17 @@ sheet available if chemicals involved</Col>
                         <Form.Group>
                             <Form.Label>Name & Signature Job Coordinator</Form.Label>
                             <Form.Label>Name </Form.Label>
-                            <Form.Control type="text" {...register(`.nameCoordinator`)} />
+                            <Form.Control 
+                                    type="text"
+                                    value={localStorage.getItem('username')}
+                                    disabled
+                                />
+
+                                <input 
+                                        type="hidden" 
+                                        {...register('author')}
+                                        value={localStorage.getItem('username')}
+                                    />
                             <br></br>
                             <SignatureCanvas ref={authorSigRef}
                                 penColor='black'

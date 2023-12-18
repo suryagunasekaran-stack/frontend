@@ -10,6 +10,7 @@ import TaskArrangementForm from './components/AnchoragePreForm';
 import RecordsViewer from './components/ViewToolbox';
 import NotificationBell from './components/Notifcations';
 import { jwtDecode } from "jwt-decode"
+import AnchorageViewer from './components/ViewAnchorform';
 
 
 
@@ -49,6 +50,7 @@ const Layout = () => {
                   <Route path="/HomePage" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
                   <Route path="/ToolboxCreate" element={<ProtectedRoute><ToolboxForm /></ProtectedRoute>} />
                   <Route path="/ToolboxView" element={<ProtectedRoute><RecordsViewer /></ProtectedRoute>} />
+                  <Route path="/AnchorView" element={<ProtectedRoute><AnchorageViewer /></ProtectedRoute>} />
                   <Route path="/AnchoragePreForm" element={<ProtectedRoute><TaskArrangementForm /></ProtectedRoute>} />
                   {/* ... other routes ... */}
               </Routes>
