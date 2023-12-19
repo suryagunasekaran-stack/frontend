@@ -417,7 +417,7 @@ and placed together in a pallet with valid tag</Col>
                             label="YES"
                             name="sparkigniter"
                             id="sparkigniter1"
-                            {...register(`items[${index}].sparkigniter`)}
+                            {...register(`items[${index}].Sparkigniter`)}
                             value="YES"
                         />
                         <Form.Check
@@ -425,7 +425,7 @@ and placed together in a pallet with valid tag</Col>
                             label="NO"
                             name="sparkigniter"
                             id="sparkigniter2"
-                            {...register(`items[${index}].sparkigniter`)}
+                            {...register(`items[${index}].Sparkigniter`)}
                             value="NO"
                         />
                         <Form.Check
@@ -433,7 +433,7 @@ and placed together in a pallet with valid tag</Col>
                             label="N/A"
                             name="sparkigniter"
                             id="sparkigniter3"
-                            {...register(`items[${index}].sparkigniter`)}
+                            {...register(`items[${index}].Sparkigniter`)}
                             value="N/A"
                         />
                 </Form.Group>

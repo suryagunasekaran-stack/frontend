@@ -1,0 +1,12 @@
+.gradient-pending {
+    background: linear-gradient(to bottom, #ffffe0, #ffffff); /* Light yellow to white */
+}
+
+.gradient-rejected {
+    background: linear-gradient(to bottom, #ffcccc, #ffffff); /* Light red to white */
+}
+
+.gradient-approved {
+    background: linear-gradient(to bottom, #ccffcc, #ffffff); /* Light green to white */
+}
+

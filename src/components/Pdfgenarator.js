@@ -1,5 +1,7 @@
 import React from 'react';
 import { PDFDocument, rgb, PageSizes, StandardFonts } from 'pdf-lib';
+import { Button } from 'react-bootstrap';
+
 
 const PdfGenerator = ({
   department,
@@ -303,7 +305,7 @@ const PdfGenerator = ({
             thickness: 1
         });
 
-        const conductedByText = "Conducted by:";
+    const conductedByText = "Conducted by:";
     const conductedByFontSize = 12; // Adjust the font size as needed
 
     // Calculate the Y position for "Conducted by:", positioned below the line
@@ -423,7 +425,7 @@ const PdfGenerator = ({
     window.open(url, '_blank');
   };
 
-  return <button onClick={createPdf}>Create PDF</button>;
+  return <Button onClick={createPdf}>View PDF</Button>;
 };
 
 export default PdfGenerator;

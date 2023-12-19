@@ -6,7 +6,7 @@ const PdfAnchor = (props) => {
 
 
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage(PageSizes.A4);
+    var page = pdfDoc.addPage(PageSizes.A4);
     const width = page.getWidth();
     const height = page.getHeight();
     const padding = 30;
@@ -122,7 +122,93 @@ const PdfAnchor = (props) => {
             color: rgb(0, 0, 0)
         });
 
-        const darray =  ["hello", "world", "test", "test2"];
+        const darray =  ["Toolbox / RA briefing attendance record", "Life vest for Embarkation/Disembarkation/Work", "Tools bag (Loose items are packed in bags)", "PPE's - Helmet with chin strap, Life vest, Gloves, Coverall, Slip-resistant shoes", "All electrical tools, equipment’s and cables in good working Condition and tested", "Hot work Permit with MPA Gas free certificate arranged", "Gas hoses, pressure regulator fitted with flash back arrestor & non-return valve, welding cables in good condition and tested", "Gas cylinders secured in upright position, use lashing straps and placed together in a pallet with valid tag", "Fire-cloth, spark igniter gun, and soap solution to do leak test", "Reflective vest (Fire watch, CSA, Lifting crew)", "Entry into confined space permit arranged", "Appropriate Portable Gas Detector in good condition and calibrated", "Confined Space Attendant with walkie talkie and attendance record","Ventilation equipment arranged","Lighting equipment arranged","Fire proof lighting for explosive atmosphere","All Lifting Appliances and Gears have test certificate and valid tag","Material Handling (Lifting aids, Team/buddy lifting)","Use tag ropes to control the load swing","All lifting devices and equipment shall be visually examined before use.", "All people shall be kept clear of overhead (suspended) loads and areas of potential impact.", "Full body harness (double lanyard with shock absorber attached to a suitable anchor point.)", "Self-Retractable Life Line shall lock and limit the arrest force to a maximum of 6kN", "Hazardous / Volatile / Corrosive material and solvent safety data sheet available if chemicals involved", "Chemical resistant suit / Apron / Gloves / Respirator"];
+
+        let entries = Object.entries(props.items[0]);
+        console.log(entries);
+
+        var y = vesselY - 80;
+        const addText = (text, text2, yOffset = 20) => {
+            const maxWidth = 400; // Adjust this value as needed
+            const minY = 50; // Minimum y value before creating a new page, adjust as needed
+            const words = text.split(' ');
+            let currentLine = '';
+        
+            // Function to handle new page creation
+            const createNewPage = () => {
+                page = pdfDoc.addPage(PageSizes.A4); // Assume pdfDoc is your PDFDocument instance
+                y = page.getHeight() - padding - 30; // Reset y to top of new page, adjust padding as needed
+                page.drawRectangle({
+                    x: padding,
+                    y: padding,
+                    width: width - 2 * padding,
+                    height: height - 2 * padding,
+                    borderColor: rgb(0, 0, 0),
+                    borderWidth: 1
+                });
+            };
+        
+            words.forEach(word => {
+                const textWidth = font.widthOfTextAtSize(`${currentLine} ${word}`, 12);
+                if (textWidth < maxWidth) {
+                    currentLine += ` ${word}`;
+                } else {
+                    if (y < minY) {
+                        createNewPage();
+                    }
+                    page.drawText(currentLine, {
+                        x: 40,
+                        y: y,
+                        size: 12,
+                        font,
+                        color: rgb(0, 0, 0)
+                    });
+                    y -= yOffset;
+                    currentLine = word;
+                }
+            });
+        
+            if (currentLine) {
+                if (y < minY) {
+                    createNewPage();
+                }
+                const text1EndX = 40 + font.widthOfTextAtSize(currentLine, 12);
+                page.drawText(currentLine, {
+                    x: 40,
+                    y: y,
+                    size: 12,
+                    font,
+                    color: rgb(0, 0, 0)
+                });
+        
+                const text2TextWidth = font.widthOfTextAtSize(text2, 12);
+                const text2X = width - padding - text2TextWidth;
+        
+                if (y < minY) {
+                    createNewPage();
+                }
+                page.drawText(text2, {
+                    x: text2X - 10,
+                    y: y,
+                    size: 12,
+                    font,
+                    color: rgb(0, 0, 0)
+                });
+        
+                // Draw dashed line from the end of text1 to the start of text2
+                if (y >= minY) {
+                    page.drawLine({
+                        start: { x: text1EndX + 5, y: y + 6 },
+                        end: { x: text2X - 15, y: y + 6 },
+                        thickness: 1,
+                        color: rgb(0, 0, 0),
+                        dashArray: [3, 3]
+                    });
+                }
+        
+                y -= yOffset; // Decrement y after drawing both texts
+            }
+        };
 
         // for (let itemKey in props.items) {
         //     if (props.items.hasOwnProperty(itemKey)) {
@@ -134,33 +220,126 @@ const PdfAnchor = (props) => {
         //       }
         //     }
         //   }
-        var y = vesselY - 80;
-        const addText = (text, text2, yOffset = 20) => {
-            page.drawText(text, {
-                x: 40,
-                y: y -= yOffset,
-                size: 12,
-                font,
-                color: rgb(0, 0, 0)
-            });
-            const text2TextWidth = font.widthOfTextAtSize(text2, infoFontSize);
-            const text2X = width - padding - text2TextWidth;
-            page.drawText(text2, {
-                x: text2X - 10,
-                y: y -= yOffset,
-                size: 12,
-                font,
-                color: rgb(0, 0, 0)
-            });
-        };
+
 
         darray.forEach((item, index) => {
-                addText(`${index + 1}. ${item}`, props.items[0]["ToolboxRAAttendanceRecord"]);
+                addText(`${index + 1}. ${item}`, entries[index][1]);
+          });
+
+          const conductedByText = "Conducted by:";
+          const conductedByFontSize = 12; // Adjust the font size as needed
+      
+          // Calculate the Y position for "Conducted by:", positioned below the line
+          const conductedByTextY = 100; // Adjust the vertical position as needed
+      
+          // Draw the "Conducted by:" text left aligned
+          page.drawText(conductedByText, {
+              x: padding +10,
+              y: conductedByTextY,
+              size: conductedByFontSize,
+              font: font,
+              color: rgb(0, 0, 0)
+          });
+      
+          const addSignature2 = async (base64String, x, y, maxWidth = 50) => {
+              // Convert Base64 signature to Uint8Array
+              const signatureBytes = Uint8Array.from(atob(base64String.split(',')[1]), c => c.charCodeAt(0));
+          
+              // Embed the signature image in the document
+              const signatureImage = await pdfDoc.embedPng(signatureBytes);
+          
+              // Calculate the size and position of the signature
+              const signatureAspectRatio = signatureImage.width / signatureImage.height;
+              const signatureWidth = Math.min(maxWidth, signatureImage.width);
+              const signatureHeight = signatureWidth / signatureAspectRatio;
+          
+              // Draw the signature image
+              page.drawImage(signatureImage, {
+                  x: x,
+                  y: y - signatureHeight, // Adjust Y position to align top of the image
+                  width: signatureWidth,
+                  height: signatureHeight
+              });
+          };
+      
+          // Define the text for "Name:" and "Signature:"
+          const nameText = "Name: " + props.author;
+          const nameText2 = "Name: " + props.nameSupervisor;
+          const signatureText = "Signature:";
+      
+          // Calculate the Y position for "Name:" and "Signature:", positioned below "Conducted by:"
+          const nameSignatureTextY = conductedByTextY - 20; // Adjust the vertical position as needed
+      
+          // Draw the left aligned "Name:"
+          page.drawText(nameText, {
+              x: padding + 10,
+              y: nameSignatureTextY,
+              size: infoFontSize,
+              font: font,
+              color: rgb(0, 0, 0)
+          });
+      
+          // Draw the right aligned "Name:"
+          const nameTextWidth = font.widthOfTextAtSize(nameText, infoFontSize);
+          page.drawText(nameText2, {
+              x: width - padding - nameTextWidth - 65,
+              y: nameSignatureTextY,
+              size: infoFontSize,
+              font: font,
+              color: rgb(0, 0, 0)
+          });
+      
+          // Position "Signature:" below "Name:"
+          const signatureTextY = nameSignatureTextY - 20; // Adjust as needed
+      
+          // Draw the left aligned "Signature:"
+          page.drawText(signatureText, {
+              x: padding + 10,
+              y: signatureTextY,
+              size: infoFontSize,
+              font: font,
+              color: rgb(0, 0, 0)
+          });
+      
+          // Draw the right aligned "Signature:"
+          const signatureTextWidth = font.widthOfTextAtSize(signatureText, infoFontSize);
+          page.drawText(signatureText, {
+              x: width - padding - signatureTextWidth - 70,
+              y: signatureTextY,
+              size: infoFontSize,
+              font: font,
+              color: rgb(0, 0, 0)
+          });
+      
+          const authorSignatureX = padding + 10 + font.widthOfTextAtSize(nameText, infoFontSize) + 10; // Adjust as needed
+          await addSignature2(props.authorSignature, authorSignatureX, nameSignatureTextY - 10);
+      
+          // Place supervisor signature after "Name: Supervisor"
+          const supervisorSignatureX = width - padding - nameTextWidth - 10 - font.widthOfTextAtSize(nameText2, infoFontSize) - 50; // Adjust as needed
+          await addSignature2(props.supervisorSignature, supervisorSignatureX + 140, nameSignatureTextY - 10);
+      
+      
+          // Define the centered message
+          const centerMessage = "Safety Starts With Me - Together We Care";
+          const centerMessageFontSize = 10; // Adjust the font size as needed
+      
+          // Calculate the width of the centered message to position it correctly
+          const centerMessageWidth = font.widthOfTextAtSize(centerMessage, centerMessageFontSize);
+      
+          // Calculate the Y position for the centered message
+          const centerMessageY = (padding + signatureTextY) / 2; // Adjust as needed to center between bottom and last text
+      
+          // Draw the centered message
+          page.drawText(centerMessage, {
+              x: (width - centerMessageWidth) / 2,
+              y: centerMessageY,
+              size: centerMessageFontSize,
+              font: font,
+              color: rgb(0, 0, 0)
           });
         
-          let entries = Object.entries(props.items[0]);
-            console.log(entries);
-            
+
+
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);

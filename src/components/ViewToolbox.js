@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import PdfGenerator from './Pdfgenarator'
+import '../css/Viewer.css'
 
 
 const RecordsViewer = () => {
@@ -43,35 +44,53 @@ const RecordsViewer = () => {
     if (error) return <p>Error loading data: {error}</p>;
     console.log(records);
     return (
-<Container>
-    <h2 className="text-center">All Records</h2>
-    <Row>
-        {records.map(record => (
-            <Col sm={12} md={6} lg={4} className="mb-4" key={record._id}>
-                <div className="card">
-                    <div className="card-body">
-                        <h4 className="card-title text-center">
-                            {record.type === 'dailymeeting' && 'DAILY TOOLBOX MEETING AND PPE RECORD'}
-                            {record.type === 'contractorsmeeting' && 'CONTRACTORS TOOLBOX MEETING AND PPE RECORD'}
-                            {record.type === 'transportmeeting' && 'TRANSPORT MEETING RECORD'}
-                        </h4>
-                        {/* <Row className="card-text"><Col xs={6} className="text-left">Document ID:</Col> <Col xs={6} className="text-left">{record._id}</Col></Row> */}
-                        <Row className="card-text"><Col xs={6} className="text-left">Department:</Col> <Col xs={6} className="text-left">{record.department}</Col></Row>
-                        <Row className="card-text"><Col xs={6} className="text-left">Date & Time:</Col> <Col xs={6} className="text-left">{new Date(record.dateTime).toLocaleString()}</Col></Row>
-                        <Row className="card-text"><Col xs={6} className="text-left">Author:</Col> <Col xs={6} className="text-left">{record.author}</Col></Row>
-                        <Row className="card-text"><Col xs={6} className="text-left">RA Number:</Col> <Col xs={6} className="text-left">{record.raNumber}</Col></Row>
-                        <Row className="card-text"><Col xs={6} className="text-left">Vessel:</Col> <Col xs={6} className="text-left">{record.vessel}</Col></Row>
-                        <Row className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
+        <Container>
+        <h2 className="text-center">All Records</h2>
+        <Row>
+            {records.map(record => {
+                // Determine the gradient class based on the record status
+                let gradientClass = '';
+                switch (record.status) {
+                    case 'pending':
+                        gradientClass = 'gradient-pending';
+                        break;
+                    case 'rejected':
+                        gradientClass = 'gradient-rejected';
+                        break;
+                    case 'approved':
+                        gradientClass = 'gradient-approved';
+                        break;
+                    default:
+                        // Default class if needed
+                        break;
+                }
 
-                        <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }} >
-                            <PdfGenerator {...record} />
-                        </Col>
-                    </div>
-                </div>
-            </Col> 
-        ))}
-    </Row>
-</Container>
+                return (
+                    <Col sm={12} md={6} lg={4} className="mb-4" key={record._id}>
+                        <div className={`card ${gradientClass}`}>
+                            <div className="card-body">
+                                <h4 className="card-title text-center">
+                                    {record.type === 'dailymeeting' && 'DAILY TOOLBOX MEETING AND PPE RECORD'}
+                                    {record.type === 'contractorsmeeting' && 'CONTRACTORS TOOLBOX MEETING AND PPE RECORD'}
+                                    {record.type === 'transportmeeting' && 'TRANSPORT MEETING RECORD'}
+                                </h4>
+                                <Row className="card-text"><Col xs={6} className="text-left">Department:</Col> <Col xs={6} className="text-left">{record.department}</Col></Row>
+                                <Row className="card-text"><Col xs={6} className="text-left">Date & Time:</Col> <Col xs={6} className="text-left">{new Date(record.dateTime).toLocaleString()}</Col></Row>
+                                <Row className="card-text"><Col xs={6} className="text-left">Author:</Col> <Col xs={6} className="text-left">{record.author}</Col></Row>
+                                <Row className="card-text"><Col xs={6} className="text-left">RA Number:</Col> <Col xs={6} className="text-left">{record.raNumber}</Col></Row>
+                                <Row className="card-text"><Col xs={6} className="text-left">Vessel:</Col> <Col xs={6} className="text-left">{record.vessel}</Col></Row>
+                                <Row className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
+
+                                <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }} >
+                                <PdfGenerator {...record} />
+                                </Col>
+                            </div>
+                        </div>
+                    </Col>
+                );
+            })}
+        </Row>
+    </Container>
 
 
     );
