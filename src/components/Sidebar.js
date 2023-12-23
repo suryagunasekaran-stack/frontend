@@ -47,7 +47,10 @@ const Sidebarr = () => {
                     <MenuItem component={<Link to="/AnchoragePreForm" />}>Enter New Record</MenuItem>
                     <MenuItem component={<Link to="/AnchorView" />}>View Past Record</MenuItem>
                 </SubMenu>
-                <MenuItem icon={<FaHelmetSafety />}>Mass Safety Briefing Record</MenuItem>
+                <SubMenu icon={<FaHelmetSafety />} label="Mass Safety Briefing Record">
+                    <MenuItem component={<Link to="/MassSafetyForm" />}>Enter New Record</MenuItem>
+                    <MenuItem component={<Link to="/MassSafetyView" />}>View Past Record</MenuItem>
+                </SubMenu>
                 <MenuItem icon={<RiPassExpiredFill />}>Toolbox Expiry</MenuItem>
                 <MenuItem icon={<IoLogOut />} onClick={handleLogout}> Logout </MenuItem>
 
