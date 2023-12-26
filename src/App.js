@@ -12,6 +12,7 @@ import NotificationBell from './components/Notifcations';
 import { jwtDecode } from "jwt-decode"
 import AnchorageViewer from './components/ViewAnchorform';
 import MassSafetyForm from './components/Masssafetyform';
+import MassViewer from './components/ViewMasssafety';
 
 
 
@@ -54,6 +55,7 @@ const Layout = () => {
                   <Route path="/AnchorView" element={<ProtectedRoute><AnchorageViewer /></ProtectedRoute>} />
                   <Route path="/AnchoragePreForm" element={<ProtectedRoute><TaskArrangementForm /></ProtectedRoute>} />
                   <Route path="/MassSafetyForm" element={<ProtectedRoute><MassSafetyForm /></ProtectedRoute>} />
+                  <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
                   {/* ... other routes ... */}
               </Routes>
           </div>
