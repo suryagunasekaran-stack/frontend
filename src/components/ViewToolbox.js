@@ -131,7 +131,7 @@ const RecordsViewer = () => {
                                 <Row className="mt-3">
                                     {record.status === 'approved' || record.status === 'rejected' ? (
                                         <Col xs={4} className="d-flex align-items-center justify-content-start">
-                                            <Badge pill bg={record.status === 'approved' ? 'success' : 'danger'} text="dark">
+                                            <Badge pill bg={record.status === 'approved' ? 'success' : 'danger'} text="light">
                                                 {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
                                             </Badge>
                                         </Col>
