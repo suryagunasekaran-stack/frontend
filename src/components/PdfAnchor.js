@@ -1,5 +1,6 @@
 import React from 'react';
 import { PDFDocument, rgb, PageSizes, StandardFonts } from 'pdf-lib';
+import { Button } from 'react-bootstrap';
 
 const PdfAnchor = (props) => {
   const createPdf = async () => {
@@ -348,7 +349,7 @@ const PdfAnchor = (props) => {
     window.open(url, '_blank');
   };
 
-  return <button onClick={createPdf}>Create PDF</button>;
+  return <Button onClick={createPdf}>Create PDF</Button>;
 };
 
 export default PdfAnchor;

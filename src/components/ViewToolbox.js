@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Badge } from 'react-bootstrap';
 import PdfGenerator from './Pdfgenarator'
 import '../css/Viewer.css'
 
@@ -81,9 +81,15 @@ const RecordsViewer = () => {
                                 <Row className="card-text"><Col xs={6} className="text-left">Vessel:</Col> <Col xs={6} className="text-left">{record.vessel}</Col></Row>
                                 <Row className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
 
-                                <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }} >
-                                <PdfGenerator {...record} />
+                                <Row className="mt-3">
+                                <Col xs={6} className="d-flex align-items-center justify-content-start">
+                                    <Badge pill bg="warning" text="dark">Pending</Badge>
                                 </Col>
+
+                                    <Col xs={6} className="d-flex justify-content-end">
+                                        <PdfGenerator {...record} />
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
                     </Col>

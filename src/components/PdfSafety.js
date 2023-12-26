@@ -59,6 +59,140 @@ const PdfSafety = (props) => {
             color: rgb(0, 0, 0)
         });
 
+        const topic = "Mass Safety Briefing Attendance Record";
+        const topicFontSize = 12; // Adjust the subtitle font size as needed
+
+        // Calculate text width for the subtitle and center it
+        const topicTextWidth = font.widthOfTextAtSize(topic, topicFontSize);
+        const topicX = (width - topicTextWidth) / 2;
+        const topicY = subtitleY - 30; // Position the subtitle below the title
+
+        // Draw the subtitle text on the page
+        page.drawText(topic, {
+            x: topicX,
+            y: topicY,
+            size: topicFontSize,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
+
+    
+        const location = `Location Name: ${props.location}`; // Replace with your location
+        const trade = `Trade Name: ${props.trade} `; // Replace with your trade
+
+  
+        const date1 = new Date(props.date);
+
+        // Format the date and time in a readable format
+        const readableDate = date1.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        const date = `Date: ${readableDate}`; // Replace with your date
+        
+        const pageWidth = width; // Replace with the actual page width
+        const margin = 50; // Margin from the page edges
+        
+        // Calculate the X position for the left-aligned text (Location)
+        const locationX = margin;
+        
+        // Calculate the X position for the center-aligned text (Trade)
+        const tradeTextWidth = font.widthOfTextAtSize(trade, 9);
+        const tradeX = (pageWidth - tradeTextWidth) / 2;
+        
+        // Calculate the X position for the right-aligned text (Date)
+        const dateTextWidth = font.widthOfTextAtSize(date, 9);
+        const dateX = pageWidth - dateTextWidth - margin ;
+        
+        const textY2 = topicY -30; // Replace with the desired Y position for the line
+        
+        // Draw the Location text on the page (Left align)
+        page.drawText(location, {
+            x: locationX,
+            y: textY2,
+            size: 9,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
+        
+        // Draw the Trade text on the page (Center align)
+        page.drawText(trade, {
+            x: tradeX,
+            y: textY2,
+            size: 9,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
+        
+        // Draw the Date text on the page (Right align)
+        page.drawText(date, {
+            x: dateX,
+            y: textY2,
+            size: 9,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
+
+        const topic3 = `Topic: ${props.topic}`; // Replace with your topic
+        const topic3X = margin;
+        const topic3Y = textY2 - 30;
+        page.drawText(topic3, {
+            x: topic3X,
+            y: topic3Y,
+            size: 11,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
+
+        var y = topic3Y - 10;
+        const addText = (text, yOffset = 20) => {
+          page.drawText(text, {
+              x: 50,
+              y: y -= yOffset,
+              size: 12,
+              font,
+              color: rgb(0, 0, 0)
+          });
+      };
+      
+      const addSignature = async (base64String, xOffset = 50) => {
+          // Convert Base64 signature to Uint8Array
+          const signatureBytes = Uint8Array.from(atob(base64String.split(',')[1]), c => c.charCodeAt(0));
+      
+          // Embed the signature image in the document
+          const signatureImage = await pdfDoc.embedPng(signatureBytes);
+      
+          // Calculate the size and position of the signature
+          const signatureMaxWidth = 50; // Smaller width
+          const signatureAspectRatio = signatureImage.width / signatureImage.height;
+          const signatureWidth = Math.min(signatureMaxWidth, signatureImage.width);
+          const signatureHeight = signatureWidth / signatureAspectRatio;
+          const signatureX = page.getWidth() - signatureWidth - xOffset; // Right aligned
+          const signatureY = y - (signatureHeight / 2); // Centered vertically on the current line
+      
+          // Draw the signature image
+          page.drawImage(signatureImage, {
+              x: signatureX,
+              y: signatureY,
+              width: signatureWidth,
+              height: signatureHeight
+          });
+      };
+
+      
+      props.employees.forEach(async (employee, index) => {
+        // Access properties of each employee object
+        addText(`${index + 1}: ${employee.name}`, 30);
+    
+        // Add signature if exists
+        if (employee.signature) {
+            await addSignature(employee.signature);
+        }
+    });
+    
+        
+
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);

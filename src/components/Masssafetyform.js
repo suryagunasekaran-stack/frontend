@@ -204,12 +204,13 @@ function MassSafetyForm() {
             Add Employee
             </Button>
         </Col>
-        
-        <Col className="d-flex justify-content-start" style={{ paddingTop: '10px' }}>
-            <Button variant="primary" type="submit">
-            Submit
-            </Button>
+
+
+    <Row>
+        <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }}>
+            <Button type="submit"> Submit For Approval </Button>
         </Col>
+    </Row>
       </Form>
     </Container>
   );
