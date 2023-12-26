@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import PdfGenerator from './Pdfgenarator'
 import '../css/Viewer.css'
 
@@ -8,25 +8,51 @@ const RecordsViewer = () => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const token = localStorage.getItem('token'); // Retrieve the stored token from localStorage
+    // eslint-disable-next-line
+    const [role, setRole] = useState(null); // Add this line
 
-    const fetchData = async () => {
+    const fetchDataBasedOnRole = async () => {
         try {
-            const authorUsername = localStorage.getItem('username'); // Get the author's username from localStorage
-            const response = await fetch('http://localhost:3000/gettoolboxrecordsbyauthor', { // Update with your server URL
+            const username = localStorage.getItem('username'); // Get the username from localStorage
+            const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+    
+            // Fetch user role
+            const roleResponse = await fetch('http://localhost:3000/getuserrole', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ author: authorUsername }) // Send the author's username in the request body
+                body: JSON.stringify({ username })
             });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+    
+            if (!roleResponse.ok) {
+                throw new Error(`HTTP error when fetching role! Status: ${roleResponse.status}`);
             }
-
-            const data = await response.json();
+    
+            const roleData = await roleResponse.json();
+            setRole(roleData.role); // Assuming the response has a 'role' field
+    
+            // Decide which endpoint to call based on the role
+            const endpoint = roleData.role === 'supervisor'
+                ? 'http://localhost:3000/gettoolboxrecords'
+                : 'http://localhost:3000/gettoolboxrecordsbyauthor';
+    
+            // Fetch data from the chosen endpoint
+            const dataResponse = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ author: username }) // This can be adjusted based on what each endpoint expects
+            });
+    
+            if (!dataResponse.ok) {
+                throw new Error(`HTTP error when fetching data! Status: ${dataResponse.status}`);
+            }
+    
+            const data = await dataResponse.json();
             setRecords(data);
         } catch (error) {
             setError(error.message);
@@ -34,15 +60,36 @@ const RecordsViewer = () => {
             setIsLoading(false);
         }
     };
-
+    
     useEffect(() => {
-        fetchData();
+        fetchDataBasedOnRole();
         // eslint-disable-next-line
     }, []);
 
+    const handleApprove = async (recordId, updatedStatus) => {
+        const token = localStorage.getItem('token'); // Get the username from localStorage
+        // Call to backend to update status
+        const response = await fetch('http://localhost:3000/updateRecordStatus', {
+            method: 'PUT', // or 'PATCH'
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`, // Include your auth token if needed
+            },
+            body: JSON.stringify({ id: recordId, status: updatedStatus })
+        });
+    
+        if (response.ok) {
+            // Update local state to reflect the change
+            setRecords(records.map(rec => rec._id === recordId ? { ...rec, status: updatedStatus } : rec));
+        } else {
+            // Handle error
+            console.error('Failed to update record status');
+        }
+    }; 
+    
+
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error loading data: {error}</p>;
-    console.log(records);
     return (
         <Container>
         <h2 className="text-center">All Records</h2>
@@ -82,14 +129,30 @@ const RecordsViewer = () => {
                                 <Row className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
 
                                 <Row className="mt-3">
-                                <Col xs={6} className="d-flex align-items-center justify-content-start">
-                                    <Badge pill bg="warning" text="dark">Pending</Badge>
-                                </Col>
+                                    {record.status === 'approved' || record.status === 'rejected' ? (
+                                        <Col xs={4} className="d-flex align-items-center justify-content-start">
+                                            <Badge pill bg={record.status === 'approved' ? 'success' : 'danger'} text="dark">
+                                                {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                                            </Badge>
+                                        </Col>
+                                    ) : null}
+                                    
+                                    {role === 'supervisor' && record.status === 'pending' && (
+                                        <>
+                                            <Col xs={4} className="d-flex align-items-center justify-content-center">
+                                                <Button variant="success" onClick={() => handleApprove(record._id, "approved")}>Approve</Button>
+                                            </Col>
+                                            <Col xs={4} className="d-flex align-items-center justify-content-center">
+                                                <Button variant="danger" onClick={() => handleApprove(record._id, "rejected")}>Reject</Button>
+                                            </Col>
+                                        </>
+                                    )}
 
-                                    <Col xs={6} className="d-flex justify-content-end">
-                                        <PdfGenerator {...record} />
+                                    <Col>
+                                        <PdfGenerator className="w-100" {...record} />
                                     </Col>
                                 </Row>
+
                             </div>
                         </div>
                     </Col>

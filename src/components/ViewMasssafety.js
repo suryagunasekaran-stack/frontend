@@ -41,7 +41,6 @@ const MassViewer = () => {
 
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error loading data: {error}</p>;
-    console.log(records);
     return (
 <Container>
     <h2 className="text-center">All Records</h2>
