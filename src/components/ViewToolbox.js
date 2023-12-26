@@ -8,55 +8,33 @@ const RecordsViewer = () => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    // eslint-disable-next-line
-    const [role, setRole] = useState(null); // Add this line
 
     const fetchDataBasedOnRole = async () => {
         try {
-            const username = localStorage.getItem('username'); // Get the username from localStorage
-            const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
-    
-            // Fetch user role
-            const roleResponse = await fetch('http://localhost:3000/getuserrole', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ username })
-            });
-    
-            if (!roleResponse.ok) {
-                throw new Error(`HTTP error when fetching role! Status: ${roleResponse.status}`);
+            const token = localStorage.getItem('token'); // Retrieve the stored token from localStorage
+            const role = localStorage.getItem('role'); // Retrieve the stored role from localStorage
+            if (role !== 'supervisor') {
+                // For non-supervisor roles, add the author's username to the request body
+                var authorUsername = localStorage.getItem('username'); // Get the author's username from localStorage
             }
-    
-            const roleData = await roleResponse.json();
-            setRole(roleData.role); // Assuming the response has a 'role' field
-    
-            // Decide which endpoint to call based on the role
-            const endpoint = roleData.role === 'supervisor'
-                ? 'http://localhost:3000/gettoolboxrecords'
-                : 'http://localhost:3000/gettoolboxrecordsbyauthor';
-    
+
             // Fetch data from the chosen endpoint
-            const dataResponse = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ author: username }) // This can be adjusted based on what each endpoint expects
-            });
-    
-            if (!dataResponse.ok) {
-                throw new Error(`HTTP error when fetching data! Status: ${dataResponse.status}`);
+            const response = await fetch('http://localhost:3000/gettoolboxrecords', { // Update with your server URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ author: authorUsername }) // Send the author's username in the request body
+        });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-    
-            const data = await dataResponse.json();
+            const data = await response.json();
             setRecords(data);
-        } catch (error) {
+        }catch (error) {
             setError(error.message);
-        } finally {
+        }finally {
             setIsLoading(false);
         }
     };
@@ -75,7 +53,7 @@ const RecordsViewer = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`, // Include your auth token if needed
             },
-            body: JSON.stringify({ id: recordId, status: updatedStatus })
+            body: JSON.stringify({ id: recordId, status: updatedStatus, modelName: "MainData" })
         });
     
         if (response.ok) {
@@ -131,13 +109,17 @@ const RecordsViewer = () => {
                                 <Row className="mt-3">
                                     {record.status === 'approved' || record.status === 'rejected' ? (
                                         <Col xs={4} className="d-flex align-items-center justify-content-start">
-                                            <Badge pill bg={record.status === 'approved' ? 'success' : 'danger'} text="dark">
+                                            <Badge pill bg={record.status === 'approved' ? 'success' : 'danger'} text="light">
                                                 {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
                                             </Badge>
                                         </Col>
-                                    ) : null}
+                                    ) : <Col xs={4} className="d-flex align-items-center justify-content-start">
+                                            <Badge pill bg='warning' text="light">
+                                                Pending
+                                            </Badge>
+                                        </Col>}
                                     
-                                    {role === 'supervisor' && record.status === 'pending' && (
+                                    {localStorage.getItem('role') === 'supervisor' && record.status === 'pending' && (
                                         <>
                                             <Col xs={4} className="d-flex align-items-center justify-content-center">
                                                 <Button variant="success" onClick={() => handleApprove(record._id, "approved")}>Approve</Button>

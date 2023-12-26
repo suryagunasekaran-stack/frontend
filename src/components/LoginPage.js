@@ -35,6 +35,7 @@ const handleSubmit = async (e) => {
         if (data.message === "Login successful") {
             localStorage.setItem('token', data.token);
             localStorage.setItem('username', data.username)
+            localStorage.setItem('role', data.role)
           navigate('/HomePage');
         }
 
