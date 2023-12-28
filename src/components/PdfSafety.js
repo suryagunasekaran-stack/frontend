@@ -1,5 +1,6 @@
 import React from 'react';
 import { PDFDocument, rgb, PageSizes, StandardFonts } from 'pdf-lib';
+import { Button } from 'react-bootstrap';
 
 const PdfSafety = (props) => {
   const createPdf = async () => {
@@ -201,7 +202,7 @@ const PdfSafety = (props) => {
     window.open(url, '_blank');
   };
 
-  return <button onClick={createPdf}>Create PDF</button>;
+  return <Button onClick={createPdf}>Create PDF</Button>;
 };
 
 export default PdfSafety;

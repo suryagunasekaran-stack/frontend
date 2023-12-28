@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Badge, Button, Dropdown } from 'react-bootstrap';
 import { FaBell } from "react-icons/fa";
-import '../css/Notification.css'
 
 const NotificationBell = () => {
     const [notifications, setNotifications] = useState([]);

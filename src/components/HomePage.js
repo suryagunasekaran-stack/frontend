@@ -2,6 +2,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import '../css/HomePage.css';
+import FeedDisplay from './viewFeed';
 
 const HomePage = () => {
 const username = localStorage.getItem('username');
@@ -22,6 +23,11 @@ return (
           <Col className='d-flex justify-content-left align-items-left p-3' >
               <Dashboard />
           </Col>
+      </Row>
+      <Row>
+        <Col>
+            <FeedDisplay />
+        </Col>
       </Row>
   </Container>
 );

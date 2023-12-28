@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,19 +9,27 @@ import Sidebarr from './components/Sidebar';
 import ToolboxForm from './components/ToolboxForm';
 import TaskArrangementForm from './components/AnchoragePreForm';
 import RecordsViewer from './components/ViewToolbox';
-import NotificationBell from './components/Notifcations';
 import { jwtDecode } from "jwt-decode"
 import AnchorageViewer from './components/ViewAnchorform';
 import MassSafetyForm from './components/Masssafetyform';
 import MassViewer from './components/ViewMasssafety';
-
-
+import FeedItemForm from './components/CreateFeed';
+import './css/App.css'
 
 const Layout = () => {
   const location = useLocation();
 
   const ProtectedRoute = ({ children }) => {
     return isAuthenticated() ? children : <Navigate to="/" />;
+  };
+
+  const SupervisorProtectedRoute = ({ children }) => {
+    return isAuthenticated() && isSupervisor() ? children : <Navigate to="/" />;
+  };
+  
+  const isSupervisor = () => {
+    const role = localStorage.getItem('role');
+    return role === 'supervisor';
   };
 
   const isAuthenticated = () => {
@@ -44,23 +53,31 @@ const Layout = () => {
 };
 
   return (
-      <div style={{ display: 'flex' }}>
-          {location.pathname !== '/' && <Sidebarr />}
-          <div style={{ flex: 1 }}>
-              <Routes>
-                  <Route path="/" element={<LoginPage />} />
-                  <Route path="/HomePage" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-                  <Route path="/ToolboxCreate" element={<ProtectedRoute><ToolboxForm /></ProtectedRoute>} />
-                  <Route path="/ToolboxView" element={<ProtectedRoute><RecordsViewer /></ProtectedRoute>} />
-                  <Route path="/AnchorView" element={<ProtectedRoute><AnchorageViewer /></ProtectedRoute>} />
-                  <Route path="/AnchoragePreForm" element={<ProtectedRoute><TaskArrangementForm /></ProtectedRoute>} />
-                  <Route path="/MassSafetyForm" element={<ProtectedRoute><MassSafetyForm /></ProtectedRoute>} />
-                  <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
-                  {/* ... other routes ... */}
-              </Routes>
+      <Container fluid className="layout-container">
+      <Row className="flex-grow-1"> {/* Ensures the row fills the height */}
+        {location.pathname !== '/' && 
+          <Col xs={12} md={3}> {/* Adjust size as needed */}
+            <Sidebarr />
+          </Col>
+        }
+
+        <Col xs={12} md={location.pathname !== '/' ? 9 : 12}>
+          <div className="content-container">
+            <Routes>
+            <Route path="/" element={<LoginPage />} />
+              <Route path="/HomePage" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+              <Route path="/ToolboxCreate" element={<ProtectedRoute><ToolboxForm /></ProtectedRoute>} />
+              <Route path="/ToolboxView" element={<ProtectedRoute><RecordsViewer /></ProtectedRoute>} />
+              <Route path="/AnchorView" element={<ProtectedRoute><AnchorageViewer /></ProtectedRoute>} />
+              <Route path="/AnchoragePreForm" element={<ProtectedRoute><TaskArrangementForm /></ProtectedRoute>} />
+              <Route path="/MassSafetyForm" element={<ProtectedRoute><MassSafetyForm /></ProtectedRoute>} />
+              <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
+              <Route path="/CreateFeeditem" element={<SupervisorProtectedRoute><FeedItemForm/></SupervisorProtectedRoute>} />
+            </Routes>
           </div>
-          {location.pathname !== '/' && <NotificationBell />}
-      </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
