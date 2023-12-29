@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 
 const FeedDisplay = () => {
     const [feedItems, setFeedItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:3000/getFeedItems')
-            .then(response => response.json())
-            .then(data => {
-                setFeedItems(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching feed items:', error);
-                setIsLoading(false);
-            });
+        const token = localStorage.getItem('token'); // Replace 'token' with the actual key you're using
+    
+        fetch('http://localhost:3000/getFeedItems', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            setFeedItems(data);
+            setIsLoading(false);
+        })
+        .catch(error => {
+            console.error('Error fetching feed items:', error);
+            setIsLoading(false);
+        });
     }, []);
+    
 
     const convertToImageUrl = (binaryData) => {
         if (!binaryData) {
@@ -38,6 +45,31 @@ const FeedDisplay = () => {
         }
     };
     
+    const handleDelete = (id) => {
+        const token = localStorage.getItem('token');
+        if (window.confirm("Are you sure you want to delete this feed item?")) {
+            fetch('http://localhost:3000/deleteFeedItem', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ id }), // Send the ID in the body
+                // Include authentication token if your API requires
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Update the feedItems state to remove the deleted item
+                setFeedItems(feedItems.filter(item => item._id !== id));
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    };
+    
+    
 
     if (isLoading) {
         return (
@@ -55,6 +87,15 @@ const FeedDisplay = () => {
                 {feedItems.map((item) => (
                     <Col key={item._id}>
                         <Card>
+                        {localStorage.getItem("role") === "supervisor" && (
+                                <Button 
+                                    variant="danger" 
+                                    style={{ position: 'absolute', top: '10px', right: '10px' }}
+                                    onClick={() => handleDelete(item._id)}
+                                >
+                                    X
+                                </Button>
+                            )}
                             <Card.Body>
                                 <Card.Title>{item.title}</Card.Title>
                                 <Card.Text>{item.message}</Card.Text>

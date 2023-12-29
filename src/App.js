@@ -14,7 +14,9 @@ import AnchorageViewer from './components/ViewAnchorform';
 import MassSafetyForm from './components/Masssafetyform';
 import MassViewer from './components/ViewMasssafety';
 import FeedItemForm from './components/CreateFeed';
-import './css/App.css'
+import './css/App.css';
+import { ToastProvider } from 'react-toast-notifications';
+
 
 const Layout = () => {
   const location = useLocation();
@@ -24,7 +26,7 @@ const Layout = () => {
   };
 
   const SupervisorProtectedRoute = ({ children }) => {
-    return isAuthenticated() && isSupervisor() ? children : <Navigate to="/" />;
+    return isAuthenticated() && isSupervisor() ? children : <Navigate to="/HomePage" />;
   };
   
   const isSupervisor = () => {
@@ -84,9 +86,11 @@ const Layout = () => {
 function App() {
 
 return (
+  <ToastProvider>
   <Router>
       <Layout />
   </Router>
+  </ToastProvider>
 );
 }
 

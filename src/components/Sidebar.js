@@ -38,7 +38,12 @@ const Sidebarr = () => {
         <Sidebar collapsed={collapsed}>
             <button onClick={handleToggleSidebar} style={{width:"100%"}}>{collapsed ? "Expand" : "Collapse"}</button>
             <Menu>
-                <MenuItem icon={<FaHome />} component={<Link to="/HomePage" />}>Home Page</MenuItem>
+                <SubMenu icon={<FaHome />} label="Homepage">
+                    {localStorage.getItem("role") === "supervisor" && (
+                        <MenuItem component={<Link to="/CreateFeeditem" />}>Create New Feed</MenuItem>
+                    )}
+                    <MenuItem component={<Link to="/HomePage" />}>View Feed</MenuItem>
+                </SubMenu>
                 <SubMenu icon={<FaTools />} label="Daily Toolbox Record">
                     <MenuItem component={<Link to="/ToolboxCreate" />}>Enter New Record</MenuItem>
                     <MenuItem component={<Link to="/ToolboxView" />}>View Past Record</MenuItem>

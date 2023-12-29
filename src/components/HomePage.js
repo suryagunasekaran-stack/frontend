@@ -3,6 +3,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import '../css/HomePage.css';
 import FeedDisplay from './viewFeed';
+import NotificationComponent from './NotificationComponent';
 
 const HomePage = () => {
 const username = localStorage.getItem('username');
@@ -27,6 +28,11 @@ return (
       <Row>
         <Col>
             <FeedDisplay />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+            <NotificationComponent />
         </Col>
       </Row>
   </Container>
