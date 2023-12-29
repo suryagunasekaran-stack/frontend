@@ -1,45 +1,116 @@
-/* LoginPage.css */
+.loginPageContainer {
+  background-color: #e2d8c7;
+}
 
-.login-container {
-    height: 100vh;
-    background-color: lightblue;
+.loginBackgroundImage {
+  position: absolute;
+  bottom: 10px; /* Adjust padding at the bottom */
+  left: 50%; /* Centering horizontally */
+  transform: translateX(-50%); /* Align center correctly */
+  z-index: -1; /* Behind other elements */
+  border-radius: 70px; /* Border radius */
+}
+
+#loginForm {
+  z-index: 3;
+}
+
+.loginCard {
+ color: #383631;
+ border: 0cm;
+}
+
+/* Mobile Devices */
+@media only screen and (max-width: 767px) {
+  .loginBackgroundImage {
+      width: 80%; /* Adjust width for mobile screens */
+      bottom: 5px; /* Less padding at the bottom */
+      /* Add other mobile-specific styles here */
+  }
+}
+
+/* Tablet Devices */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  .loginBackgroundImage {
+      width: 50%; /* Adjust width for tablet screens */
+      bottom: 8px; /* Adjust padding for tablets */
+      /* Add other tablet-specific styles here */
+  }
+}
+
+/* Desktop Devices */
+@media only screen and (min-width: 1024px) {
+  #loginForm {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px; /* Added padding for smaller screens */
+    justify-content: flex-end; /* Align to the right */
+    align-items: center; /* Center align vertically */
+    height: 100vh; /* Full viewport height */
+}
+
+.loginCard {
+    height: 100%; /* Increase the height of the card */
+    width: 130%; /* Adjust the width as needed */
+    position: relative;
+    left: 200px;
+    font-size: x-large;
+    /* Add additional styling if needed */
+}
+  .loginBackgroundImage {
+    bottom:0px; /* Adjust padding at the bottom */
+    left: 20%; /* Centering horizontally */
+    transform: translateX(-50%); /* Align center correctly */
+    width: 80%; /* Adjust width for desktop screens */
+    /* Add other desktop-specific styles here */
   }
-  
-  .login-form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 100%; /* Full width on smaller screens */
-    max-width: 500px; /* Maximum width to avoid too wide on larger screens */
+}
+
+/* Desktop Devices */
+@media only screen and (min-width: 1440px) {
+  #loginForm {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center; /* Center align vertically */
+    height: 100vh; /* Full viewport height */
+}
+
+.loginCard {
+    height: 100%; /* Increase the height of the card */
+    width: 130%; /* Adjust the width as needed */
+    position: relative;
+    left: 330px;
+    font-size: x-large;
+    /* Add additional styling if needed */
+}
+  .loginBackgroundImage {
+    bottom:0px; /* Adjust padding at the bottom */
+    left: 20%; /* Centering horizontally */
+    transform: translateX(-50%); /* Align center correctly */
+    width: 70%; /* Adjust width for desktop screens */
+    /* Add other desktop-specific styles here */
   }
-  
-  .form-control, .btn {
-    border-radius: 4px;
+}
+
+@media only screen and (min-width: 2560px) {
+  #loginForm {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center; /* Center align vertically */
+    height: 100vh; /* Full viewport height */
+}
+
+.loginCard {
+    height: 150%; /* Increase the height of the card */
+    width: 190%; /* Adjust the width as needed */
+    position: relative;
+    left: 630px;
+    font-size: x-large;
+    /* Add additional styling if needed */
+}
+  .loginBackgroundImage {
+    bottom:0px; /* Adjust padding at the bottom */
+    left: 20%; /* Centering horizontally */
+    transform: translateX(-50%); /* Align center correctly */
+    width: 40%; /* Adjust width for desktop screens */
+    /* Add other desktop-specific styles here */
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .login-form {
-      padding: 15px;
-    }
-  
-    .form-control, .btn {
-      font-size: 14px; /* Adjust font size for smaller screens */
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .login-form {
-      padding: 10px;
-    }
-  
-    .form-control, .btn {
-      font-size: 12px; /* Further adjust for very small screens */
-    }
-  }
-  
-  
+}

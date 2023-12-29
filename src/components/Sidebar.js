@@ -35,7 +35,7 @@ const Sidebarr = () => {
     const navigate = useNavigate();
 
     return (
-        <Sidebar collapsed={collapsed}>
+        <Sidebar collapsed={collapsed} backgroundColor='rgb(237, 106, 90,1)' >
             <button onClick={handleToggleSidebar} style={{width:"100%"}}>{collapsed ? "Expand" : "Collapse"}</button>
             <Menu>
                 <SubMenu icon={<FaHome />} label="Homepage">

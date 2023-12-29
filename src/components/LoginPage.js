@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
+import '../css/Login.css'
+import background from '../media/loginBackground.svg';
 
 const LoginPage = () => {
 
@@ -46,11 +48,14 @@ const handleSubmit = async (e) => {
 
     
       return (
-        <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+        <div className='loginPageContainer'>
+        <Container fluid className="d-flex justify-content-center align-items-center" id='loginForm' style={{ minHeight: "100vh", position: "relative" }}>
+            <img src={background} alt="Background" className='loginBackgroundImage' />            
           <Row >
               <Col xs={12} md={12} lg={12} xl={12} className="mx-auto" >
-                <Card>
+                <Card className='loginCard'>
                     <Card.Body>
+                    <Card.Title style={{paddingBottom:"30px", fontSize:"1.5em"}}>Brightsun Engineering Safety</Card.Title>
                     <Form onSubmit={handleSubmit}>
                       <Form.Group className="mb-3" controlId="formBasicEmail">
                           <Form.Label>Username</Form.Label>
@@ -62,7 +67,7 @@ const handleSubmit = async (e) => {
                           <Form.Control type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
                       </Form.Group>
 
-                      <Button variant="primary" type="submit">
+                      <Button style={{ backgroundColor: '#383631', borderColor: '#383631', display: "flex", position: "left:0" }} type="submit">
                           Login
                       </Button>
                   </Form>
@@ -71,6 +76,7 @@ const handleSubmit = async (e) => {
               </Col>
           </Row>
         </Container>
+        </div>
       );
   };
 

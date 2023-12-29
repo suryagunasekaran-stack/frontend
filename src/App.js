@@ -55,15 +55,15 @@ const Layout = () => {
 };
 
   return (
-      <Container fluid className="layout-container">
-      <Row className="flex-grow-1"> {/* Ensures the row fills the height */}
+      <Container fluid className="layout-container no-padding-container">
+      <Row className="flex-grow-1 g-0"> {/* Ensures the row fills the height */}
         {location.pathname !== '/' && 
-          <Col xs={12} md={3}> {/* Adjust size as needed */}
+          <Col > {/* Adjust size as needed */}
             <Sidebarr />
           </Col>
         }
 
-        <Col xs={12} md={location.pathname !== '/' ? 9 : 12}>
+        <Col md={location.pathname !== '/' ? 9 : 12} className="px-0" style={{backgroundColor:"rgb(244, 241, 187,0.5)"}}>
           <div className="content-container">
             <Routes>
             <Route path="/" element={<LoginPage />} />
