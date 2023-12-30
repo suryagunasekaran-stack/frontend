@@ -5,6 +5,7 @@ import { FaTools } from "react-icons/fa";
 import { FaAnchor } from "react-icons/fa";
 import { FaHelmetSafety } from "react-icons/fa6";
 import { IoLogOut } from "react-icons/io5";
+import { FaHome } from "react-icons/fa";
 
 const sidebarVariants = {
     open: {
@@ -15,7 +16,8 @@ const sidebarVariants = {
       width: '0px',
       transition: { duration: 0.5 }
     }
-  };  
+  }; 
+    
 
 const Sidebaru = ({ isOpen}) => {
     const navigate = useNavigate();
@@ -44,7 +46,7 @@ const Sidebaru = ({ isOpen}) => {
       } else {
         controls.start("hidden").then(() => {
           // Delay the hiding of sidebar to allow content fade-out
-          setTimeout(() => setIsContentVisible(false), 500); // Adjust delay to match fade-out animation
+          setTimeout(() => setIsContentVisible(false), 0); // Adjust delay to match fade-out animation
         });
       }
     }, [isOpen, controls]);
@@ -61,9 +63,18 @@ const Sidebaru = ({ isOpen}) => {
         bottom: 0,
         backgroundColor: '#b8b8d1',
         overflow: 'hidden',
+        zIndex:"100",
       }}
     >
+
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '80px', backgroundColor: '#616194', color: 'white', opacity:'0.5', borderRadius:'10px'}}>
+        <Link to="/HomePage" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <FaHome />
+        HomePage
+        </Link>
+    </motion.div>
+
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#616194', color: 'white', opacity:'0.5', borderRadius:'10px'}}>
         <Link to="/ToolboxView" style={{ textDecoration: 'none', color: 'inherit' }}>
         <FaTools />
         Toolbox Risk Assessment

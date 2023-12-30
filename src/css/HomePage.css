@@ -1,5 +1,43 @@
-
-.sidebar-footer {
-    position: absolute;
-    bottom: 0;
+.HomeContainer {
+    background-color: #e8d2ae;
+    height: 100vh;
+    max-height: 100vh;
 }
+
+.header {
+margin-left: 100px; /* Adjust left margin */
+padding-top: 25px; /* Adjust top padding */
+}
+
+.first-row {
+margin-top: 20px; /* Adjust space below the header */
+}
+
+.second-row {
+margin-top: 10px; /* Adjust space between rows */
+}
+
+.feed-display-container {
+max-width: 1000px; /* Adjust as needed */
+margin: left; /* This centers it in the column */
+/* Add height or other styling as needed */
+}
+
+.full-width-image {
+    width: 100%; /* Ensure the image takes full width */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.small-footer {
+    padding: 0.5rem; /* Reduce the size of the footer */
+}
+
+.date-posted {
+    font-size: 0.8rem; /* Adjust the font size as needed */
+}
+
+.calendar-container {
+    max-width: 300px; /* Adjust as needed */
+    margin: auto;
+}
+  
