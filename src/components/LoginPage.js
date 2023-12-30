@@ -1,13 +1,16 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import '../css/Login.css'
 import background from '../media/loginBackground.svg';
+import { AuthContext } from './AuthContext';
 
 const LoginPage = () => {
 
+// eslint-disable-next-line
+const { theAuth, setTheAuth } = useContext(AuthContext);
 const [username, setUsername] = useState('');
 const [password, setPassword] = useState('');
 const navigate = useNavigate();
@@ -38,6 +41,7 @@ const handleSubmit = async (e) => {
             localStorage.setItem('token', data.token);
             localStorage.setItem('username', data.username)
             localStorage.setItem('role', data.role)
+            setTheAuth(true);
           navigate('/HomePage');
         }
 

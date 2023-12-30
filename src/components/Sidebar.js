@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaTools } from "react-icons/fa";
 import { FaHelmetSafety } from "react-icons/fa6";
@@ -8,10 +8,13 @@ import { RiPassExpiredFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaHome } from "react-icons/fa";
+import { AuthContext } from '../App';
 
 
 const Sidebarr = () => {
     const [collapsed, setCollapsed] = useState(false);
+    // eslint-disable-next-line
+    const { theAuth, setTheAuth } = useContext(AuthContext);
 
     const handleToggleSidebar = () => {
         setCollapsed(!collapsed);
@@ -27,7 +30,8 @@ const Sidebarr = () => {
             // Include credentials if your backend requires them
             credentials: 'include',
         });
-    
+        
+        setTheAuth(false)
         // Navigate to '/'
         navigate('/');
     };
