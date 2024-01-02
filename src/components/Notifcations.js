@@ -24,7 +24,6 @@ const NotificationBell = () => {
             }
 
             const data = await response.json();
-            console.log(data);
             setNotifications(data);
         } catch (error) {
             console.error('Error fetching notifications:', error);

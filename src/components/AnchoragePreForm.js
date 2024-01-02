@@ -44,11 +44,10 @@ const TaskArrangementForm = () => {
             });
     
             if (response.ok) {
+                 // eslint-disable-next-line
                 const responseData = await response.json();
-                console.log('Server response:', responseData);
                 alert('Success: Operation completed successfully.');
             } else {
-                console.log(response)
                 console.error('Server error:', response.status);
                 alert('Error: Operation failed. Status code: ' + response.status);
             }

@@ -55,8 +55,8 @@ const ToolboxForm = () => {
             });
     
             if (response.ok) {
+                 // eslint-disable-next-line
                 const responseData = await response.json();
-                console.log('Server response:', responseData);
                 alert('Success: Operation completed successfully.');
             } else {
                 console.error('Server error:', response.status);

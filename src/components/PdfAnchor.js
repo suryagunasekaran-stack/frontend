@@ -126,7 +126,6 @@ const PdfAnchor = (props) => {
         const darray =  ["Toolbox / RA briefing attendance record", "Life vest for Embarkation/Disembarkation/Work", "Tools bag (Loose items are packed in bags)", "PPE's - Helmet with chin strap, Life vest, Gloves, Coverall, Slip-resistant shoes", "All electrical tools, equipment’s and cables in good working Condition and tested", "Hot work Permit with MPA Gas free certificate arranged", "Gas hoses, pressure regulator fitted with flash back arrestor & non-return valve, welding cables in good condition and tested", "Gas cylinders secured in upright position, use lashing straps and placed together in a pallet with valid tag", "Fire-cloth, spark igniter gun, and soap solution to do leak test", "Reflective vest (Fire watch, CSA, Lifting crew)", "Entry into confined space permit arranged", "Appropriate Portable Gas Detector in good condition and calibrated", "Confined Space Attendant with walkie talkie and attendance record","Ventilation equipment arranged","Lighting equipment arranged","Fire proof lighting for explosive atmosphere","All Lifting Appliances and Gears have test certificate and valid tag","Material Handling (Lifting aids, Team/buddy lifting)","Use tag ropes to control the load swing","All lifting devices and equipment shall be visually examined before use.", "All people shall be kept clear of overhead (suspended) loads and areas of potential impact.", "Full body harness (double lanyard with shock absorber attached to a suitable anchor point.)", "Self-Retractable Life Line shall lock and limit the arrest force to a maximum of 6kN", "Hazardous / Volatile / Corrosive material and solvent safety data sheet available if chemicals involved", "Chemical resistant suit / Apron / Gloves / Respirator"];
 
         let entries = Object.entries(props.items[0]);
-        console.log(entries);
 
         var y = vesselY - 80;
         const addText = (text, text2, yOffset = 20) => {
@@ -210,19 +209,6 @@ const PdfAnchor = (props) => {
                 y -= yOffset; // Decrement y after drawing both texts
             }
         };
-
-        // for (let itemKey in props.items) {
-        //     if (props.items.hasOwnProperty(itemKey)) {
-        //       console.log('Item ' + itemKey + ':');
-        //       for (let propertyKey in props.items[itemKey]) {
-        //         if (props.items[itemKey].hasOwnProperty(propertyKey)) {
-        //           console.log('  ' + propertyKey + ': ' + props.items[itemKey][propertyKey]);
-        //         }
-        //       }
-        //     }
-        //   }
-
-
         darray.forEach((item, index) => {
                 addText(`${index + 1}. ${item}`, entries[index][1]);
           });

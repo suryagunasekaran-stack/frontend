@@ -59,7 +59,6 @@ const FeedDisplay = () => {
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
                 // Update the feedItems state to remove the deleted item
                 setFeedItems(feedItems.filter(item => item._id !== id));
             })

@@ -10,7 +10,6 @@ import './css/App.css';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  console.log(isSidebarOpen)
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

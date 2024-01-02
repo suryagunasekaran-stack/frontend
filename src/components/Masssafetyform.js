@@ -83,7 +83,6 @@ function MassSafetyForm() {
     
             if (response.ok) {
                 const responseData = await response.json();
-                console.log('Server response:', responseData);
                 alert('Success: Operation completed successfully.');
             } else {
                 console.error('Server error:', response.status);
