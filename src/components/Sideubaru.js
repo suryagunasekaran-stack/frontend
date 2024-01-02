@@ -67,33 +67,33 @@ const Sidebaru = ({ isOpen}) => {
       }}
     >
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '80px', backgroundColor: '#616194', color: 'white', opacity:'0.5', borderRadius:'10px'}}>
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '80px', color:'black', opacity:'0.5', borderRadius:'10px'}}>
         <Link to="/HomePage" style={{ textDecoration: 'none', color: 'inherit' }}>
         <FaHome />
         HomePage
         </Link>
     </motion.div>
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#616194', color: 'white', opacity:'0.5', borderRadius:'10px'}}>
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px'}}>
         <Link to="/ToolboxView" style={{ textDecoration: 'none', color: 'inherit' }}>
         <FaTools />
         Toolbox Risk Assessment
         </Link>
     </motion.div>
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#616194', color: 'white', opacity:'0.5', borderRadius:'10px' }} >
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
     <Link to="/AnchorView" style={{ textDecoration: 'none', color: 'inherit' }}>
         <FaAnchor/> Anchorage Forms
     </Link>
     </motion.div>
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#616194', color: 'white', opacity:'0.5', borderRadius:'10px' }} >
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
     <Link to="/MassSafetyView" style={{ textDecoration: 'none', color: 'inherit' }}>
         <FaHelmetSafety/> Mass Safety Briefing
     </Link>
     </motion.div>
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', backgroundColor: '#616194', color: 'white', opacity:'0.5', borderRadius:'10px' }} >
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
     <Link to="/" onClick={handleLogout}  style={{ textDecoration: 'none', color: 'inherit' }}>
         <IoLogOut/> Logout
     </Link>
