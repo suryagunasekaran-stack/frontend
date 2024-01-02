@@ -23,13 +23,7 @@ const HomePage = () => {
       </Col>
     </Row>
 
-      <Row className="first-row text-center justify-content-start">
-        <Col>
-            <div className="feed-display-container justify-content-start">
-              <FeedDisplay/>
-            </div>
-        </Col>
-      </Row>
+    <FeedDisplay/>
     </Container>
   );
 };

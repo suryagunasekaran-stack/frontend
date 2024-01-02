@@ -43,6 +43,7 @@ function MassSafetyForm() {
 
   useEffect(() => {
     fetchEmployeeData();
+    // eslint-disable-next-line
   }, []);
 
   const lookupEmployeeName = (index) => {
@@ -83,6 +84,7 @@ function MassSafetyForm() {
             });
     
             if (response.ok) {
+              // eslint-disable-next-line
                 const responseData = await response.json();
                 alert('Success: Operation completed successfully.');
             } else {

@@ -28,19 +28,13 @@ const FeedDisplay = () => {
     
 
     const convertToImageUrl = (binaryData) => {
-        if (!binaryData) {
-            return ''; // Return a default image or an empty string if binaryData is undefined or null
+        if (!binaryData || !binaryData.data || !binaryData.contentType) {
+            console.error('Invalid binary data:', binaryData);
+            return ''; // Return a default image or an empty string if binaryData is invalid
         }
     
         try {
-            // Convert binary data (array of byte values) to a binary string
-            const binaryString = binaryData.data.reduce((str, byte) => str + String.fromCharCode(byte), '');
-    
-            // Convert binary string to base64
-            const base64String = btoa(binaryString);
-    
-            // Construct the data URL
-            return `data:${binaryData.contentType};base64,${base64String}`;
+            return `data:${binaryData.contentType};base64,${binaryData.data}`;
         } catch (error) {
             console.error('Error converting image:', error);
             return ''; // Return a default image or an empty string in case of an error
@@ -85,38 +79,47 @@ const FeedDisplay = () => {
 
     return (
         <Container>
-            <Row xs={1} md={2} lg={3} className="g-4">
-                {feedItems.map((item) => (
-                    <Col key={item._id} >
-                        <Card className="h-100">
-                            <Row noGutters>
-                                <Col md={6} className="p-0">
-                                    {item.pictures && item.pictures.map((pic, picIndex) => (
-                                        pic.data ? <Card.Img key={picIndex} className="full-width-image" src={convertToImageUrl(pic.data)} alt={`Feed item ${item._id}`} /> : null
-                                    ))}
-                                </Col>
-                                <Col md={6}>
-                                    <Card.Body>
-                                        <Card.Title>{item.title}</Card.Title>
-                                        <Card.Text>{item.message}</Card.Text>
-                                    </Card.Body>
-                                    <Card.Footer className="small-footer">
-                                        <small className="text-muted">Posted on {new Date(item.createdAt).toLocaleDateString()}</small>
-                                    </Card.Footer>
-                                </Col>
-                            </Row>
-                            {localStorage.getItem("role") === "supervisor" && (
-                                <Button 
-                                    variant="danger" 
-                                    style={{ position: 'absolute', top: '10px', right: '10px' }}
-                                    onClick={() => handleDelete(item._id)}
-                                >
-                                    X
-                                </Button>
-                            )}
-                        </Card>
+            <Row className="g-4">
+            {feedItems.map((item) => (
+    <Row key={item._id} className="g-4">
+        <Col>
+            <Card className="h-100">
+                <Row>
+                    <Col md={6} className="p-0">
+                        {item.pictures && item.pictures.map((pic, picIndex) => (
+                            pic.data ? 
+                            <Card.Img 
+                                key={picIndex} 
+                                className="full-width-image" 
+                                src={convertToImageUrl(pic)}
+                                alt={`Feed item ${item._id}`} 
+                            /> 
+                            : null
+                        ))}
                     </Col>
-                ))}
+                    <Col md={6}>
+                        <Card.Body>
+                            <Card.Title>{item.title}</Card.Title>
+                            <Card.Text>{item.message}</Card.Text>
+                        </Card.Body>
+                        <Card.Footer className="small-footer">
+                            <small className="text-muted">Posted on {new Date(item.createdAt).toLocaleDateString()}</small>
+                        </Card.Footer>
+                    </Col>
+                </Row>
+                {localStorage.getItem("role") === "supervisor" && (
+                    <Button 
+                        variant="danger" 
+                        style={{ position: 'absolute', top: '10px', right: '10px' }}
+                        onClick={() => handleDelete(item._id)}
+                    >
+                        X
+                    </Button>
+                )}
+            </Card>
+        </Col>
+    </Row>
+))}
             </Row>
         </Container>
     );

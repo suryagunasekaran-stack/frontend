@@ -18,7 +18,6 @@ margin-top: 10px; /* Adjust space between rows */
 }
 
 .feed-display-container {
-max-width: 1000px; /* Adjust as needed */
 margin: left; /* This centers it in the column */
 /* Add height or other styling as needed */
 }
@@ -40,4 +39,14 @@ margin: left; /* This centers it in the column */
     max-width: 300px; /* Adjust as needed */
     margin: auto;
 }
-  
+
+.FeedDisplay {
+    /* Remove or adjust if these styles exist */
+    height: fixed_value; 
+    overflow-y: scroll;
+}
+
+.HomeContainer {
+    overflow-y: auto; /* Allows scrolling for the whole container */
+    max-height: 100vh; /* Adjust as needed */
+}
