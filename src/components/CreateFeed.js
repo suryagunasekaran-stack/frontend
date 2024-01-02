@@ -9,7 +9,7 @@ import '../css/FeedItemForm.css';
 const FeedItemForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [files, setFiles] = useState([]);
-
+    const apiUrl = process.env.REACT_APP_API_URL;
     const onDrop = useCallback(acceptedFiles => {
         setFiles(acceptedFiles);
         // Now you can do something with the files
@@ -26,7 +26,7 @@ const FeedItemForm = () => {
             Object.keys(data).forEach(key => formData.append(key, data[key]));
             formData.append('author', localStorage.getItem("username")); // Add the author to the FormData
             files.forEach(file => formData.append('pictures', file, file.name));
-            const response = await fetch('http://localhost:3000/newFeeditem', {
+            const response = await fetch(`${apiUrl}/newFeeditem`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,

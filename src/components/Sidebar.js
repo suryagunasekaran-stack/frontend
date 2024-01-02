@@ -21,11 +21,12 @@ const Sidebarr = () => {
     };
 
     const handleLogout = async () => {
+        
         // Clear local sessions
         localStorage.clear();
-    
+        const apiUrl = process.env.REACT_APP_API_URL;
         // Make POST request to server for logout
-        await fetch('http://localhost:3000/logout', {
+        await fetch(`${apiUrl}/logout`, {
             method: 'POST',
             // Include credentials if your backend requires them
             credentials: 'include',

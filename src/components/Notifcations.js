@@ -7,10 +7,11 @@ const NotificationBell = () => {
     const [showDropdown, setShowDropdown] = useState(false);
 
     const fetchNotifications = async () => {
+        const apiUrl = process.env.REACT_APP_API_URL;
         try {
             const username = localStorage.getItem('username');
             const token = localStorage.getItem('token'); // Retrieve the stored token from localStorage
-            const response = await fetch('http://localhost:3000/notifications', {
+            const response = await fetch(`${apiUrl}/notifications`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,8 +37,9 @@ const NotificationBell = () => {
     }, []);
 
     const markAsRead = async (notificationId) => {
+        const apiUrl = process.env.REACT_APP_API_URL;
         try {
-            const response = await fetch('http://localhost:3000/notifications/mark-read', {
+            const response = await fetch(`${apiUrl}/notifications/mark-read`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

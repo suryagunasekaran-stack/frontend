@@ -9,6 +9,7 @@ function MassSafetyForm() {
     control,
     name: "employees"
   });
+  const apiUrl = process.env.REACT_APP_API_URL;
   const sigCanvasRef = useRef({});
   const [employeeData, setEmployeeData] = useState({});
 
@@ -17,7 +18,7 @@ function MassSafetyForm() {
     try {
       const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
-      const response = await fetch('http://localhost:3000/getallname', {
+      const response = await fetch(`${apiUrl}/getallname`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +49,6 @@ function MassSafetyForm() {
     const employeeNumberField = `employees[${index}].employeeNumber`;
     const number = getValues(employeeNumberField); // Get the current value of the employee number field
     const name = employeeData[number];
-    
     if (name) {
       setValue(`employees[${index}].name`, name);
     } else {
@@ -59,6 +59,7 @@ function MassSafetyForm() {
 
   const onSubmit =  async (data) => {
 
+    const apiUrl = process.env.REACT_APP_API_URL;
     try {
         const token = localStorage.getItem('token');
     const itemsWithSignatures = data.employees.map((item, index) => {
@@ -72,7 +73,7 @@ function MassSafetyForm() {
         ...data,
         employees: itemsWithSignatures,
     };
-    const response = await fetch('http://localhost:3000/savemassform', { // Replace with your server URL
+    const response = await fetch(`${apiUrl}/savemassform`, { // Replace with your server URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

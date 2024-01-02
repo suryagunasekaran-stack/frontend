@@ -10,7 +10,7 @@ const TaskArrangementForm = () => {
     const clearSignature = () => {
         authorSigRef.current.clear();
     };
-
+    const apiUrl = process.env.REACT_APP_API_URL;
     const { control, register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
           items: [{}]
@@ -34,7 +34,7 @@ const TaskArrangementForm = () => {
                 supervisorSignature
             };
 
-            const response = await fetch('http://localhost:3000/anchorpreformsubmit', { // Replace with your server URL
+            const response = await fetch(`${apiUrl}/anchorpreformsubmit`, { // Replace with your server URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

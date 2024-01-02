@@ -4,11 +4,12 @@ import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 const FeedDisplay = () => {
     const [feedItems, setFeedItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const apiUrl = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         const token = localStorage.getItem('token'); // Replace 'token' with the actual key you're using
     
-        fetch('http://localhost:3000/getFeedItems', {
+        fetch(`${apiUrl}/getFeedItems`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
@@ -22,6 +23,7 @@ const FeedDisplay = () => {
             console.error('Error fetching feed items:', error);
             setIsLoading(false);
         });
+        // eslint-disable-next-line
     }, []);
     
 
@@ -47,8 +49,9 @@ const FeedDisplay = () => {
     
     const handleDelete = (id) => {
         const token = localStorage.getItem('token');
+        const apiUrl = process.env.REACT_APP_API_URL;
         if (window.confirm("Are you sure you want to delete this feed item?")) {
-            fetch('http://localhost:3000/deleteFeedItem', {
+            fetch(`${apiUrl}/deleteFeedItem`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

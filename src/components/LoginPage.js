@@ -12,6 +12,8 @@ const LoginPage = () => {
 const [username, setUsername] = useState('');
 const [password, setPassword] = useState('');
 const navigate = useNavigate();
+const apiUrl = process.env.REACT_APP_API_URL;
+
 
 const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -21,17 +23,11 @@ const handlePasswordChange = (e) => {
     setPassword(e.target.value);
 };
 
-// useEffect(() => {
-//     if (localStorage.getItem('username')) {
-//       navigate('/HomePage');
-//     }
-//   }, [navigate]);
-
 const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch(`${apiUrl}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

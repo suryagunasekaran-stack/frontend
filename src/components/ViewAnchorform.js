@@ -19,7 +19,8 @@ const AnchorageViewer = () => {
             }
 
             // Fetch data from the chosen endpoint
-            const response = await fetch('http://localhost:3000/getanchorrecords', { // Update with your server URL
+            const apiUrl = process.env.REACT_APP_API_URL;
+            const response = await fetch(`${apiUrl}/getanchorrecords`, { // Update with your server URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +47,8 @@ const AnchorageViewer = () => {
     const handleApprove = async (recordId, updatedStatus) => {
         const token = localStorage.getItem('token'); // Get the username from localStorage
         // Call to backend to update status
-        const response = await fetch('http://localhost:3000/updateRecordStatus', {
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const response = await fetch(`${apiUrl}/updateRecordStatus`, {
             method: 'PUT', // or 'PATCH'
             headers: {
                 'Content-Type': 'application/json',

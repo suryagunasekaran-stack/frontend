@@ -12,7 +12,8 @@ const MassViewer = () => {
     const fetchData = async () => {
         try {
             const authorUsername = localStorage.getItem('username'); // Get the author's username from localStorage
-            const response = await fetch('http://localhost:3000/getmasssafetyrecords', { // Update with your server URL
+            const apiUrl = process.env.REACT_APP_API_URL;
+            const response = await fetch(`${apiUrl}/getmasssafetyrecords`, { // Update with your server URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,7 +43,8 @@ const MassViewer = () => {
     const handleApprove = async (recordId, updatedStatus) => {
         const token = localStorage.getItem('token'); // Get the username from localStorage
         // Call to backend to update status
-        const response = await fetch('http://localhost:3000/updateRecordStatus', {
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const response = await fetch(`${apiUrl}/updateRecordStatus`, {
             method: 'PUT', // or 'PATCH'
             headers: {
                 'Content-Type': 'application/json',
