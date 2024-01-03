@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
+import { Container, Row, Col, Badge, Button, DropdownButton } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PdfGenerator from './Pdfgenarator'
 import '../css/Viewer.css'
@@ -84,8 +84,38 @@ const RecordsViewer = () => {
             Create Record
             </Button>
         </div>
+
+        <div className='pb-3'>
+    <Row className="justify-content-end">
+        <Col xs={12} md="auto">
+            <DropdownButton id="dropdown-department" title="Department">
+                {/* Map through departments to create Dropdown.Item */}
+            </DropdownButton>
+        </Col>
+        <Col xs={12} md="auto">
+            <DropdownButton id="dropdown-author" title="Author">
+                {/* Map through authors to create Dropdown.Item */}
+            </DropdownButton>
+        </Col>
+        <Col xs={12} md="auto">
+            <DropdownButton id="dropdown-vessel" title="Vessel">
+                {/* Map through vessels to create Dropdown.Item */}
+            </DropdownButton>
+        </Col>
+        <Col xs={12} md="auto">
+            <DropdownButton id="dropdown-ra-number" title="RA Number">
+                {/* Map through RA numbers to create Dropdown.Item */}
+            </DropdownButton>
+        </Col>
+    </Row>
+    {/* <DatePicker ... /> */}
+</div>
+
+
+        <div style={{ overflowY: 'scroll', maxHeight: '100vh', border: '1px solid #ddd', padding: '15px', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'}}>
         <Row>
-            {records.map(record => {
+                {records.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime))
+            .map(record => {
                 // Determine the gradient class based on the record status
                 let gradientClass = '';
                 switch (record.status) {
@@ -112,12 +142,12 @@ const RecordsViewer = () => {
                                     {record.type === 'contractorsmeeting' && 'CONTRACTORS TOOLBOX MEETING AND PPE RECORD'}
                                     {record.type === 'transportmeeting' && 'TRANSPORT MEETING RECORD'}
                                 </h4>
-                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Department:</Col> <Col xs={6} className="text-left">{record.department}</Col></Row>
-                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Date & Time:</Col> <Col xs={6} className="text-left">{new Date(record.dateTime).toLocaleString()}</Col></Row>
-                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Author:</Col> <Col xs={6} className="text-left">{record.author}</Col></Row>
-                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">RA Number:</Col> <Col xs={6} className="text-left">{record.raNumber}</Col></Row>
-                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Vessel:</Col> <Col xs={6} className="text-left">{record.vessel}</Col></Row>
-                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"20px"}} className="card-text"><Col xs={6} className="text-left">Department:</Col> <Col xs={6} className="text-left">{record.department}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"20px"}} className="card-text"><Col xs={6} className="text-left">Date & Time:</Col> <Col xs={6} className="text-left">{new Date(record.dateTime).toLocaleString()}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"20px"}} className="card-text"><Col xs={6} className="text-left">Author:</Col> <Col xs={6} className="text-left">{record.author}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"20px"}} className="card-text"><Col xs={6} className="text-left">RA Number:</Col> <Col xs={6} className="text-left">{record.raNumber}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"20px"}} className="card-text"><Col xs={6} className="text-left">Vessel:</Col> <Col xs={6} className="text-left">{record.vessel}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"20px"}} className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
 
                                 <Row className="mt-3">
                                     {record.status === 'approved' || record.status === 'rejected' ? (
@@ -153,6 +183,7 @@ const RecordsViewer = () => {
                 );
             })}
         </Row>
+        </div>
     </Container>
 
 

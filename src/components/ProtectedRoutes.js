@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Navigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
+import { AuthContext } from './AuthContext';
 
-const isAuthenticated = () => {
+const isAuthenticated = (setTheAuth) => {
   const token = localStorage.getItem('token');
   if (!token) return false;
 
@@ -10,11 +11,13 @@ const isAuthenticated = () => {
     const { exp } = jwtDecode(token);
     if (exp < Date.now() / 1000) {
       localStorage.removeItem('token');
+      setTheAuth(false);
       return false;
     }
 
     return true;
   } catch (error) {
+    setTheAuth(false);
     return false;
   }
 };
@@ -25,7 +28,8 @@ const isSupervisor = () => {
 };
 
 export const ProtectedRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/" />;
+  const { setTheAuth } = useContext(AuthContext); // Use setTheAuth from AuthContext
+  return isAuthenticated(setTheAuth) ? children : <Navigate to="/" />;
 };
 
 export const SupervisorProtectedRoute = ({ children }) => {

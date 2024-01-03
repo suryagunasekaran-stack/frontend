@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaTools } from "react-icons/fa";
@@ -6,6 +6,7 @@ import { FaAnchor } from "react-icons/fa";
 import { FaHelmetSafety } from "react-icons/fa6";
 import { IoLogOut } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
+import { AuthContext } from './AuthContext';
 
 const sidebarVariants = {
     open: {
@@ -19,11 +20,11 @@ const sidebarVariants = {
   }; 
     
 
-const Sidebaru = ({ isOpen}) => {
+const Sidebaru = ({ isOpen, onClose}) => {
     const navigate = useNavigate();
     const [isContentVisible, setIsContentVisible] = useState(isOpen);
     const controls = useAnimation();
-
+    const { setTheAuth } = useContext(AuthContext);
     const handleLogout = async () => {
         // Clear local sessions
         localStorage.clear();
@@ -34,10 +35,18 @@ const Sidebaru = ({ isOpen}) => {
             // Include credentials if your backend requires them
             credentials: 'include',
         });
-    
+
+        setTheAuth(false);
+        handleLinkClick('/');
         // Navigate to '/'
-        navigate('/');
     };
+
+    const handleLinkClick = (path) => {
+      navigate(path);
+      onClose(); // This will close the sidebar
+  };
+
+  
   
     useEffect(() => {
       if (isOpen) {
@@ -68,29 +77,30 @@ const Sidebaru = ({ isOpen}) => {
     >
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '80px', color:'black', opacity:'0.5', borderRadius:'10px'}}>
-        <Link to="/HomePage" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <FaHome />
-        HomePage
-        </Link>
+        <div onClick={() => handleLinkClick('/HomePage')} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <FaHome />
+                    HomePage
+        </div>
     </motion.div>
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px'}}>
-        <Link to="/ToolboxView" style={{ textDecoration: 'none', color: 'inherit' }}>
+    <div onClick={() => handleLinkClick('/ToolboxView')} style={{ textDecoration: 'none', color: 'inherit' }}>
+        
         <FaTools />
         Toolbox Risk Assessment
-        </Link>
+        </div>
     </motion.div>
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
-    <Link to="/AnchorView" style={{ textDecoration: 'none', color: 'inherit' }}>
+    <div onClick={() => handleLinkClick('/AnchorView')} style={{ textDecoration: 'none', color: 'inherit' }}>
         <FaAnchor/> Anchorage Forms
-    </Link>
+    </div>
     </motion.div>
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
-    <Link to="/MassSafetyView" style={{ textDecoration: 'none', color: 'inherit' }}>
+    <div onClick={() => handleLinkClick('/MassSafetyView')} style={{ textDecoration: 'none', color: 'inherit' }}>
         <FaHelmetSafety/> Mass Safety Briefing
-    </Link>
+    </div>
     </motion.div>
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >

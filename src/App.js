@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './components/AuthContext';
 import AppRoutes from './components/AppRoutes';
 import { ToastProvider } from 'react-toast-notifications';
 import Sidebaru from './components/Sideubaru';
 import CircleButton from './components/MenuCustom';
+import { AuthContext } from './components/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/App.css';
 
 function App() {
+  const { theAuth } = useContext(AuthContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -34,10 +34,9 @@ function App() {
   };
 
   return (
-    <AuthProvider>
       <ToastProvider>
         <Router>
-          {localStorage.getItem('token') && <CircleButton onClick={toggleSidebar} isOpen={isSidebarOpen} />}
+          {theAuth && <CircleButton onClick={toggleSidebar} isOpen={isSidebarOpen} />}
           
           {isSidebarOpen && <Overlay onClick={() => setIsSidebarOpen(false)} />}
           
@@ -45,7 +44,6 @@ function App() {
           <AppRoutes toggleSidebar={toggleSidebar} />
         </Router>
       </ToastProvider>
-    </AuthProvider>
 
   );
 }
