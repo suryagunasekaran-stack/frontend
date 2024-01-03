@@ -59,8 +59,8 @@ const PdfSafety = (props) => {
     
         // Calculate text width and position it in the center
         const textWidth = font.widthOfTextAtSize(title, fontSize);
-        const textX = (width - textWidth) / 2;
-        const textY = height - 70; // Adjust the Y-coordinate as needed
+        const textX = ((width - textWidth) / 2) + 30;
+        const textY = height - 95; // Adjust the Y-coordinate as needed
     
         // Draw the text on the page
         page.drawText(title, {
@@ -76,7 +76,7 @@ const PdfSafety = (props) => {
 
         // Calculate text width for the subtitle and center it
         const subtitleTextWidth = font.widthOfTextAtSize(subtitle, subtitleFontSize);
-        const subtitleX = (width - subtitleTextWidth) / 2;
+        const subtitleX = ((width - subtitleTextWidth) / 2) + 30;
         const subtitleY = textY - 30; // Position the subtitle below the title
 
         // Draw the subtitle text on the page
@@ -230,7 +230,7 @@ const PdfSafety = (props) => {
     window.open(url, '_blank');
   };
 
-  return <Button onClick={createPdf}>Create PDF</Button>;
+  return <Button style={{ backgroundColor: '#383631', borderColor: '#383631'}} onClick={createPdf}>Create PDF</Button>;
 };
 
 export default PdfSafety;

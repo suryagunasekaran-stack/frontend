@@ -363,7 +363,7 @@ const PdfAnchor = (props) => {
     window.open(url, '_blank');
   };
 
-  return <Button onClick={createPdf}>Create PDF</Button>;
+  return <Button style={{ backgroundColor: '#383631', borderColor: '#383631'}} onClick={createPdf}>Create PDF</Button>;
 };
 
 export default PdfAnchor;

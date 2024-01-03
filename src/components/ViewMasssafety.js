@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
 import PdfSafety from './PdfSafety';
+import { useNavigate } from 'react-router-dom';
 
 
 const MassViewer = () => {
@@ -8,6 +9,12 @@ const MassViewer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token'); // Retrieve the stored token from localStorage
+
+    const navigate = useNavigate();
+
+    const navigateToToolboxCreate = () => {
+      navigate('/MassSafetyForm');
+    };
 
     const fetchData = async () => {
         try {
@@ -65,8 +72,13 @@ const MassViewer = () => {
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error loading data: {error}</p>;
     return (
-        <Container>
-        <h2 className="text-center">All Records</h2>
+        <Container style={{ minHeight: '100vw', minWidth: '100vw', backgroundColor: '#E5ECF4' }}>
+        <div className="d-flex justify-content-between align-items-center p-3" style={{ paddingTop: "25px", paddingBottom: "25px" }}>
+            <h2 className="text-left" style={{ marginLeft: "100px" }}>MassSafety Meeting Records</h2>
+            <Button style={{ backgroundColor: '#383631', borderColor: '#383631' }} onClick={navigateToToolboxCreate}>
+            Create Record
+            </Button>
+        </div>
         <Row>
             {records.map(record => {
                 // Determine the gradient class based on the record status
@@ -95,10 +107,10 @@ const MassViewer = () => {
                                     {record.type === 'contractorsmeeting' && 'CONTRACTORS TOOLBOX MEETING AND PPE RECORD'}
                                     {record.type === 'transportmeeting' && 'TRANSPORT MEETING RECORD'}
                                 </h4>
-                                <Row className="card-text"><Col xs={6} className="text-left">Department:</Col> <Col xs={6} className="text-left">{record.trade}</Col></Row>
-                                <Row className="card-text"><Col xs={6} className="text-left">Date & Time:</Col> <Col xs={6} className="text-left">{new Date(record.date).toLocaleString()}</Col></Row>
-                                <Row className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
-                                <Row className="card-text"><Col xs={6} className="text-left">Location:</Col> <Col xs={6} className="text-left">{record.location}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Department:</Col> <Col xs={6} className="text-left">{record.trade}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Date & Time:</Col> <Col xs={6} className="text-left">{new Date(record.date).toLocaleString()}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Topic:</Col> <Col xs={6} className="text-left">{record.topic}</Col></Row>
+                                <Row style={{fontFamily: "'Teko', sans-serif", fontSize:"30px"}} className="card-text"><Col xs={6} className="text-left">Location:</Col> <Col xs={6} className="text-left">{record.location}</Col></Row>
 
                                 <Row className="mt-3">
                                     {record.status === 'approved' || record.status === 'rejected' ? (
