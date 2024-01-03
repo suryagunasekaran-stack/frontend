@@ -1,12 +1,14 @@
 .gradient-pending {
-    background: linear-gradient(to bottom, #ffffe0, #ffffff); /* Light yellow to white */
+    background: linear-gradient(to bottom, #F8E077, #E5ECF4); /* Light yellow to white */
+    border: white;
 }
 
 .gradient-rejected {
-    background: linear-gradient(to bottom, #ffcccc, #ffffff); /* Light red to white */
+    background: linear-gradient(to bottom, #FF784F, #E5ECF4); /* Light red to white */
+    border: white;
 }
 
 .gradient-approved {
-    background: linear-gradient(to bottom, #ccffcc, #ffffff); /* Light green to white */
+    background: linear-gradient(to bottom, #73956F, #E5ECF4); /* Light green to white */
+    border: white;
 }
-

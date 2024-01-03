@@ -15,18 +15,21 @@ function App() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const Overlay = () => {
+  const Overlay = ({ onClick }) => {
     return (
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backdropFilter: 'blur(4px)',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black background
-        zIndex: 99
-      }}></div>
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backdropFilter: 'blur(4px)',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent black background
+          zIndex: 99
+        }}
+        onClick={onClick}
+      ></div>
     );
   };
 
@@ -34,13 +37,16 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <Router>
-          {localStorage.getItem('username') && <CircleButton onClick={toggleSidebar} isOpen={isSidebarOpen} />}
-          {isSidebarOpen && <Overlay />}
+          {localStorage.getItem('token') && <CircleButton onClick={toggleSidebar} isOpen={isSidebarOpen} />}
+          
+          {isSidebarOpen && <Overlay onClick={() => setIsSidebarOpen(false)} />}
+          
           <Sidebaru isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
           <AppRoutes toggleSidebar={toggleSidebar} />
         </Router>
       </ToastProvider>
     </AuthProvider>
+
   );
 }
 

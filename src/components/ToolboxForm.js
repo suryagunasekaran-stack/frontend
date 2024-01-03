@@ -1,15 +1,97 @@
-import React, {useRef} from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import React, {useRef, useState, useEffect} from 'react';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import SignatureCanvas from 'react-signature-canvas';
+import { FaArrowLeft } from 'react-icons/fa';
+import Select from 'react-select';
+import { FaTimes } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 
 const ToolboxForm = () => {
-    const { register, control, handleSubmit, formState: { errors } } = useForm();
+    const { register, control, handleSubmit, formState: { errors },setValue, watch, getValues } = useForm();
     const token = localStorage.getItem('token');
     const sigCanvasRef = useRef({});
     const authorSigRef = useRef(null);
     const supervisorSigRef = useRef(null);
+    const navigate = useNavigate();
+    const [raData, setRaData] = useState([]); // State to store RA.No data
+    const [employeeData, setEmployeeData] = useState([]);
+  
 
+  // Function to fetch RA.No data from backend
+  const fetchRaData = async () => {
+    try {
+      // Replace '/api/ra-data' with your actual API endpoint
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+        const response = await fetch(`${apiUrl}/getRaNumbers`, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+                // Add other headers as needed
+            }
+        });
+      const data = await response.json();
+      setRaData(data);
+    } catch (error) {
+      console.error('Error fetching RA data:', error);
+    }
+  };
+
+  const fetchEmployeeData = async () => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+  
+      const response = await fetch(`${apiUrl}/getallname`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+          // Add other headers as needed
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log(data)
+      setEmployeeData(data);
+    } catch (error) {
+      console.error('Error fetching employee data:', error);
+    }
+  };
+
+    useEffect(() => {
+        fetchRaData();
+        fetchEmployeeData();
+    }, []);
+
+    
+
+    // Format RA.No data for use with react-select
+    const raOptions = raData.map(item => ({
+        value: item['RA Ref. No.'],
+        label: item['RA Ref. No.'],
+        topic: item['INVENTORY OF WORK ACTIVITIES - CRITCAL']
+    }));
+
+    // Watch the RA number value
+    const selectedRa = watch('raNumber');
+
+    // Effect to update the topic when RA number changes
+    useEffect(() => {
+        const ra = raData.find(ra => ra['RA Ref. No.'] === selectedRa);
+        if (ra) {
+        setValue('topic', ra['INVENTORY OF WORK ACTIVITIES - CRITCAL']);
+        }
+    }, [selectedRa, raData, setValue]);
+
+    const goBack = () => {
+        navigate(-1); // Navigates to the previous page
+    };
     // Function to clear a specific signature
     // eslint-disable-next-line
     const clearSignature = (index) => {
@@ -17,6 +99,16 @@ const ToolboxForm = () => {
             sigCanvasRef.current[index].clear();
         }
     };
+
+    const handleSearch = async (index) => {
+        const empNumber = getValues(`items[${index}].permitNumber`);
+        const employee = employeeData.find(emp => emp['EMP NO.'] === empNumber);
+        if (employee) {
+          setValue(`items[${index}].name`, employee.NAME);
+        }
+      };
+
+
     
     const onSubmit = async (data) => {
         try {
@@ -73,9 +165,13 @@ const ToolboxForm = () => {
     });
 
 
-
     return (
-        <Container>
+    <Container  style={{ minHeight: '100vw', minWidth: '100vw', backgroundColor: '#E5ECF4', color:"#331832" }}>
+    <div style={{ padding: '20px' }}>
+      <div style={{ paddingLeft: "60px", paddingTop: "20px", display: 'flex', alignItems: 'center' }}>
+        <FaArrowLeft onClick={goBack} style={{ cursor: 'pointer', marginRight: '10px' }} />
+        {/* Rest of your content */}
+      </div>
             <Form className='pt-4' onSubmit={handleSubmit(onSubmit)}>
                 <Row>
                     <Col>
@@ -144,19 +240,29 @@ const ToolboxForm = () => {
 
                 <Row>
                     <Col>
-                        <Form.Group>
-                            <Form.Label>Topic:</Form.Label>
-                            <Form.Control as="textarea" {...register('topic')} />
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>RA.No:</Form.Label>
+                        <Controller
+                        name="raNumber"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                            {...field}
+                            options={raOptions}
+                            onChange={(selected) => field.onChange(selected.value)}
+                            />
+                        )}
+                        />
+                    </Form.Group>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <Form.Group>
-                            <Form.Label>Ra.No:</Form.Label>
-                            <Form.Control type="number" {...register('raNumber')} />
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Topic:</Form.Label>
+                        <Form.Control as="textarea" {...register('topic')} disabled />
+                    </Form.Group>
                     </Col>
                 </Row>
 
@@ -164,16 +270,22 @@ const ToolboxForm = () => {
                 <Row className='pt-5' key={item.id}>
                     <Col className='d-flex justify-content-center align-items-center' xs={1} md={1} lg={1} xl={1}>{index + 1}</Col>
                     <Col className='d-flex justify-content-center align-items-center'>
-                        <Form.Group controlId={`PermitNumber-${index}`}>
-                            <Form.Label>Permit Number</Form.Label>
-                            <Form.Control type="text" {...register(`items[${index}].permitNumber`)} />
-                        </Form.Group>
+                    <Form.Group controlId={`PermitNumber-${index}`}>
+                    <Form.Label>Employee / Permit Number</Form.Label>
+                    <Form.Control type="text" {...register(`items[${index}].permitNumber`)} />
+                    <div
+                    onClick={() => handleSearch(index)}
+                    style={{ cursor: 'pointer' }}
+                    >
+                    <FaSearch /> {/* Search icon from react-icons */}
+                    </div>
+                    </Form.Group>
                     </Col>
                     <Col className='d-flex justify-content-center align-items-center'>
-                        <Form.Group controlId={`Name-${index}`}>
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type="text" {...register(`items[${index}].name`)} />
-                        </Form.Group>
+                            <Form.Group controlId={`Name-${index}`}>
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control type="text" {...register(`items[${index}].name`)} disabled />
+                    </Form.Group>
                     </Col>
                     <Col xs={2} md={2} lg={2} xl={2}>
                         <Form.Group >
@@ -196,20 +308,27 @@ const ToolboxForm = () => {
                                     penColor='black'
                                     canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                                 />
-                                <Button style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={() => sigCanvasRef.current[index].clear()}>Clear Signature</Button>
+                            <div style={{cursor: 'pointer',}} onClick={() => sigCanvasRef.current[index].clear()}>
+                            <FaTimes /> 
+                            </div>
                             </Form.Group>
                     </Col>
                     <Col className='d-flex justify-content-center align-items-center'>
-                        <Button style={{ backgroundColor: 'red', borderColor: 'red' }} type="button" onClick={() => remove(index)}>Remove</Button>
+                             <div style={{cursor: 'pointer',}} onClick={() => remove(index)}>
+                                <FaTimes /> 
+                            </div>
                     </Col>
                 </Row>
             
 ))}
-<Col className="d-flex justify-content-end"  style={{ paddingTop: '20px' }}>
-<Button type="button" style={{ backgroundColor: 'light-green', borderColor: 'light-green' }} onClick={() => append({ permitNumber: '', name: '', ppe: {}, signature: '' })} className="me-2" >
-    Add More
-</Button>
-</Col>
+                <Col className="d-flex justify-content-end"  style={{ paddingTop: '20px' }}>
+                <div
+                    onClick={() => append({ permitNumber: '', name: '', ppe: {}, signature: '' })}
+                    style={{ cursor: 'pointer' }}
+                    >
+                    <FaPlus /> {/* Plus icon from react-icons */}
+                    </div>
+                </Col>
 
 
 <Row>
@@ -243,7 +362,9 @@ const ToolboxForm = () => {
                                 penColor='black'
                                 canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                             />
-                            <Button onClick={() => authorSigRef.current.clear()} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
+                            <div style={{cursor: 'pointer',}} onClick={() => authorSigRef.current.clear()}>
+                            <FaTimes /> 
+                            </div>
                         </Form.Group>
                 </Col>
                 <Col>
@@ -256,17 +377,20 @@ const ToolboxForm = () => {
                                 penColor='black'
                                 canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
                             />
-                            <Button onClick={() => supervisorSigRef.current.clear()} style={{ backgroundColor: 'red', borderColor: 'red' }} >Clear Signature</Button>
+                            <div style={{cursor: 'pointer',}} onClick={() => supervisorSigRef.current.clear()}>
+                            <FaTimes /> 
+                            </div>
                         </Form.Group>
                 </Col>
             </Row>
     <Row>
         <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }}>
-            <Button type="submit">Submit For Approval</Button>
+            <Button style={{ backgroundColor: '#383631', borderColor: '#383631' }} type="submit">Submit For Approval</Button>
         </Col>
     </Row>
 
             </Form>
+            </div>
         </Container>
     );
 };

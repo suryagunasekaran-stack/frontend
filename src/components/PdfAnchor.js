@@ -1,6 +1,14 @@
 import React from 'react';
 import { PDFDocument, rgb, PageSizes, StandardFonts } from 'pdf-lib';
 import { Button } from 'react-bootstrap';
+import imageUrl from '../media/logo192.png';
+
+async function fetchImageAsUint8Array(imageUrl) {
+    const response = await fetch(imageUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    return new Uint8Array(arrayBuffer);
+  }
+
 
 const PdfAnchor = (props) => {
   const createPdf = async () => {
@@ -22,6 +30,26 @@ const PdfAnchor = (props) => {
         borderWidth: 1
     });
 
+    const pngImageBytes = await fetchImageAsUint8Array(imageUrl);
+
+    // Embed the PNG image in the document
+    const pngImage = await pdfDoc.embedPng(pngImageBytes);
+    
+    // Scale the image to a smaller size to avoid overlap
+    const scale = 0.3; // Adjust the scale factor as needed
+    const pngDims = pngImage.scale(scale);
+    
+    // Draw the image on the page (adjust the x and y coordinates as needed)
+    const imageX = 50; // X-coordinate for the image
+    const imageY = height - pngDims.height - 30; // Y-coordinate for the image, with some space from the top
+    
+    page.drawImage(pngImage, {
+        x: imageX,
+        y: imageY - 20,
+        width: pngDims.width,
+        height: pngDims.height,
+    });
+
         // Load a standard font
         const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
@@ -31,8 +59,8 @@ const PdfAnchor = (props) => {
     
         // Calculate text width and position it in the center
         const textWidth = font.widthOfTextAtSize(title, fontSize);
-        const textX = (width - textWidth) / 2;
-        const textY = height - 70; // Adjust the Y-coordinate as needed
+        const textX = ((width - textWidth) / 2) + 30;
+        const textY = height - 75; // Adjust the Y-coordinate as needed
     
         // Draw the text on the page
         page.drawText(title, {
@@ -48,8 +76,8 @@ const PdfAnchor = (props) => {
 
         // Calculate text width for the subtitle and center it
         const subtitleTextWidth = font.widthOfTextAtSize(subtitle, subtitleFontSize);
-        const subtitleX = (width - subtitleTextWidth) / 2;
-        const subtitleY = textY - 30; // Position the subtitle below the title
+        const subtitleX = ((width - subtitleTextWidth) / 2) + 20;
+        const subtitleY = textY - 20; // Position the subtitle below the title
 
         // Draw the subtitle text on the page
         page.drawText(subtitle, {

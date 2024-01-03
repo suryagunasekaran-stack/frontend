@@ -1,6 +1,14 @@
 import React from 'react';
 import { PDFDocument, rgb, PageSizes, StandardFonts } from 'pdf-lib';
 import { Button } from 'react-bootstrap';
+import imageUrl from '../media/logo192.png';
+
+// Function to fetch and convert an image to Uint8Array
+async function fetchImageAsUint8Array(imageUrl) {
+    const response = await fetch(imageUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    return new Uint8Array(arrayBuffer);
+  }
 
 const PdfSafety = (props) => {
   const createPdf = async () => {
@@ -20,6 +28,26 @@ const PdfSafety = (props) => {
         height: height - 2 * padding,
         borderColor: rgb(0, 0, 0),
         borderWidth: 1
+    });
+
+    const pngImageBytes = await fetchImageAsUint8Array(imageUrl);
+
+    // Embed the PNG image in the document
+    const pngImage = await pdfDoc.embedPng(pngImageBytes);
+    
+    // Scale the image to a smaller size to avoid overlap
+    const scale = 0.3; // Adjust the scale factor as needed
+    const pngDims = pngImage.scale(scale);
+    
+    // Draw the image on the page (adjust the x and y coordinates as needed)
+    const imageX = 50; // X-coordinate for the image
+    const imageY = height - pngDims.height - 30; // Y-coordinate for the image, with some space from the top
+    
+    page.drawImage(pngImage, {
+        x: imageX,
+        y: imageY - padding,
+        width: pngDims.width,
+        height: pngDims.height,
     });
 
         // Load a standard font

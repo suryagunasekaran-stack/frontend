@@ -1,17 +1,22 @@
-import React,  {useRef} from 'react';
-import { useForm,  useFieldArray } from 'react-hook-form';
+import React,  {useRef, useState, useEffect} from 'react';
+import { useForm,  useFieldArray, Controller } from 'react-hook-form';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import SignatureCanvas from 'react-signature-canvas';
+import Select from 'react-select';
+import { FaArrowLeft } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const TaskArrangementForm = () => {
     // eslint-disable-next-line
+    const [raData, setRaData] = useState([]); // State to store RA.No data
     const authorSigRef = useRef(null);
     const supervisorSigRef = useRef(null);
+    const navigate = useNavigate();
     const clearSignature = () => {
         authorSigRef.current.clear();
     };
     const apiUrl = process.env.REACT_APP_API_URL;
-    const { control, register, handleSubmit, formState: { errors } } = useForm({
+    const { control, register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
         defaultValues: {
           items: [{}]
         }
@@ -21,6 +26,29 @@ const TaskArrangementForm = () => {
         control,
         name: "items",
       });
+
+      const goBack = () => {
+        navigate(-1); // Navigates to the previous page
+    };
+
+      const fetchRaData = async () => {
+        try {
+          // Replace '/api/ra-data' with your actual API endpoint
+          const apiUrl = process.env.REACT_APP_API_URL;
+          const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    
+            const response = await fetch(`${apiUrl}/getRaNumbers`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+                    // Add other headers as needed
+                }
+            });
+          const data = await response.json();
+          setRaData(data);
+        } catch (error) {
+          console.error('Error fetching RA data:', error);
+        }
+      };
 
     const onSubmit = async (data) => {
         try {
@@ -56,8 +84,34 @@ const TaskArrangementForm = () => {
         }
     };
 
+    useEffect(() => {
+        fetchRaData();
+    }, []);
+
+    const raOptions = raData.map(item => ({
+        value: item['RA Ref. No.'],
+        label: item['RA Ref. No.'],
+        topic: item['INVENTORY OF WORK ACTIVITIES - CRITCAL']
+    }));
+
+    // Watch the RA number value
+    const selectedRa = watch('raNumber');
+
+    // Effect to update the topic when RA number changes
+    useEffect(() => {
+        const ra = raData.find(ra => ra['RA Ref. No.'] === selectedRa);
+        if (ra) {
+        setValue('topic', ra['INVENTORY OF WORK ACTIVITIES - CRITCAL']);
+        }
+    }, [selectedRa, raData, setValue]);
+
     return (
-        <Container>
+        <Container  style={{ minHeight: '100vw', minWidth: '100vw', backgroundColor: '#E5ECF4', color:"#331832" }}>
+                <div style={{ padding: '20px' }}>
+                  <div style={{ paddingLeft: "60px", paddingTop: "20px", display: 'flex', alignItems: 'center' }}>
+        <FaArrowLeft onClick={goBack} style={{ cursor: 'pointer', marginRight: '10px' }} />
+        {/* Rest of your content */}
+      </div>
             <Form className='pt-4' onSubmit={handleSubmit(onSubmit)}>
                 <Row>
                     <Col>
@@ -105,10 +159,29 @@ const TaskArrangementForm = () => {
 
                 <Row>
                     <Col>
-                        <Form.Group>
-                            <Form.Label>Risk assesment Number:</Form.Label>
-                            <Form.Control type="number" {...register('raNumber')} />
-                        </Form.Group>
+                    <Form.Group>
+                        <Form.Label>RA.No:</Form.Label>
+                        <Controller
+                        name="raNumber"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                            {...field}
+                            options={raOptions}
+                            onChange={(selected) => field.onChange(selected.value)}
+                            />
+                        )}
+                        />
+                    </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                    <Form.Group>
+                        <Form.Label>Topic:</Form.Label>
+                        <Form.Control as="textarea" {...register('topic')} disabled />
+                    </Form.Group>
                     </Col>
                 </Row>
 
@@ -1059,6 +1132,7 @@ sheet available if chemicals involved</Col>
             <Button className='d-flex justify-content-center align-items-center' type="submit">Submit</Button>
             </Row>
             </Form>
+            </div>
         </Container>
     );
 };

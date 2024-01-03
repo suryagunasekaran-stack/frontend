@@ -1,7 +1,14 @@
 import React from 'react';
 import { PDFDocument, rgb, PageSizes, StandardFonts } from 'pdf-lib';
 import { Button } from 'react-bootstrap';
+import imageUrl from '../media/logo192.png';
 
+// Function to fetch and convert an image to Uint8Array
+async function fetchImageAsUint8Array(imageUrl) {
+    const response = await fetch(imageUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    return new Uint8Array(arrayBuffer);
+  }
 
 const PdfGenerator = ({
   department,
@@ -35,34 +42,53 @@ const PdfGenerator = ({
         borderColor: rgb(0, 0, 0),
         borderWidth: 1
     });
+    const pngImageBytes = await fetchImageAsUint8Array(imageUrl);
 
-        // Load a standard font
-        const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-        // Define the header title and its size
-        const title = "BRIGHTSUN GROUP OF COMPANIES";
-        const fontSize = 24; // Adjust the font size as needed
+    // Embed the PNG image in the document
+    const pngImage = await pdfDoc.embedPng(pngImageBytes);
     
-        // Calculate text width and position it in the center
-        const textWidth = font.widthOfTextAtSize(title, fontSize);
-        const textX = (width - textWidth) / 2;
-        const textY = height - 70; // Adjust the Y-coordinate as needed
+    // Scale the image to a smaller size to avoid overlap
+    const scale = 0.3; // Adjust the scale factor as needed
+    const pngDims = pngImage.scale(scale);
     
-        // Draw the text on the page
-        page.drawText(title, {
-            x: textX,
-            y: textY,
-            size: fontSize,
-            font: font,
-            color: rgb(0, 0, 0) // You can change the color if needed
-        });
+    // Draw the image on the page (adjust the x and y coordinates as needed)
+    const imageX = 50; // X-coordinate for the image
+    const imageY = height - pngDims.height - 30; // Y-coordinate for the image, with some space from the top
+    
+    page.drawImage(pngImage, {
+        x: imageX,
+        y: imageY - padding,
+        width: pngDims.width,
+        height: pngDims.height,
+    });
+    
+    // Load a standard font
+    const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    
+    // Define the header title and its size
+    const title = "BRIGHTSUN GROUP OF COMPANIES";
+    const fontSize = 24; // Adjust the font size as needed
+    
+    // Calculate text width and position it in the center
+    const textWidth = font.widthOfTextAtSize(title, fontSize);
+    const textX = ((width - textWidth) / 2) + 30;
+    const textY = imageY - 10; // Position the text below the image with some space
+    
+    // Draw the text on the page
+    page.drawText(title, {
+        x: textX,
+        y: textY,
+        size: fontSize,
+        font: font,
+        color: rgb(0, 0, 0) // You can change the color if needed
+    });
 
         const subtitle = "No. 9, Tuas Avenue 8, Singapore 639224. Tel: 68634001 Fax: 68633521";
         const subtitleFontSize = 12; // Adjust the subtitle font size as needed
 
         // Calculate text width for the subtitle and center it
         const subtitleTextWidth = font.widthOfTextAtSize(subtitle, subtitleFontSize);
-        const subtitleX = (width - subtitleTextWidth) / 2;
+        const subtitleX = ((width - subtitleTextWidth) / 2) + 30;
         const subtitleY = textY - 30; // Position the subtitle below the title
 
         // Draw the subtitle text on the page
@@ -425,7 +451,7 @@ const PdfGenerator = ({
     window.open(url, '_blank');
   };
 
-  return <Button onClick={createPdf}>View PDF</Button>;
+  return <Button style={{ backgroundColor: '#383631', borderColor: '#383631'}} onClick={createPdf}>View PDF</Button>;
 };
 
 export default PdfGenerator;
