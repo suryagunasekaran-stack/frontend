@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Badge, Button, DropdownButton } from 'react-bootstrap';
+import { Container, Row, Col, Badge, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PdfGenerator from './Pdfgenarator'
 import '../css/Viewer.css'
@@ -10,6 +10,12 @@ const RecordsViewer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [departmentFilter, setDepartmentFilter] = useState('');
+
+    // States for other filters if needed
+    const [authorFilter, setAuthorFilter] = useState('');
+    const [vesselFilter, setVesselFilter] = useState('');
+    const [raNumberFilter, setRANumberFilter] = useState('');
 
   const navigateToToolboxCreate = () => {
     navigate('/ToolboxCreate');
@@ -71,7 +77,28 @@ const RecordsViewer = () => {
             // Handle error
             console.error('Failed to update record status');
         }
-    }; 
+    };
+    
+    const uniqueDepartments = [...new Set(records.map(record => record.department))];
+    const uniqueAuthors = [...new Set(records.map(record => record.author))];
+    const uniqueVessels = [...new Set(records.map(record => record.vessel))];
+    const uniqueRANumbers = [...new Set(records.map(record => record.raNumber))];
+    const clearFilters = () => {
+        setDepartmentFilter('');
+        setAuthorFilter('');
+        setVesselFilter('');
+        setRANumberFilter('');
+        // ... reset other filters as needed
+    };
+
+    const filteredRecords = records
+    .filter(record => 
+        (departmentFilter === '' || record.department === departmentFilter) &&
+        (authorFilter === '' || record.author === authorFilter) &&
+        (vesselFilter === '' || record.vessel === vesselFilter) &&
+        (raNumberFilter === '' || record.raNumber === raNumberFilter)
+    )
+    .sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
     
 
     if (isLoading) return <p>Loading...</p>;
@@ -88,24 +115,43 @@ const RecordsViewer = () => {
         <div className='pb-3'>
     <Row className="justify-content-end">
         <Col xs={12} md="auto">
-            <DropdownButton id="dropdown-department" title="Department">
-                {/* Map through departments to create Dropdown.Item */}
+            <DropdownButton variant='secondary' id="dropdown-department" title="Department">
+            {uniqueDepartments.map(department => (
+                    <Dropdown.Item key={department} onClick={() => setDepartmentFilter(department)}>
+                        {department}
+                    </Dropdown.Item>
+                ))}
             </DropdownButton>
         </Col>
         <Col xs={12} md="auto">
-            <DropdownButton id="dropdown-author" title="Author">
-                {/* Map through authors to create Dropdown.Item */}
+            <DropdownButton variant='secondary' id="dropdown-author" title="Author">
+            {uniqueAuthors.map(author => (
+                    <Dropdown.Item key={author} onClick={() => setAuthorFilter(author)}>
+                        {author}
+                    </Dropdown.Item>
+                ))}
             </DropdownButton>
         </Col>
         <Col xs={12} md="auto">
-            <DropdownButton id="dropdown-vessel" title="Vessel">
-                {/* Map through vessels to create Dropdown.Item */}
+            <DropdownButton variant='secondary' id="dropdown-vessel" title="Vessel">
+            {uniqueVessels.map(vessel => (
+                    <Dropdown.Item key={vessel} onClick={() => setVesselFilter(vessel)}>
+                        {vessel}
+                    </Dropdown.Item>
+                ))}
             </DropdownButton>
         </Col>
         <Col xs={12} md="auto">
-            <DropdownButton id="dropdown-ra-number" title="RA Number">
-                {/* Map through RA numbers to create Dropdown.Item */}
+            <DropdownButton variant='secondary' id="dropdown-ra-number" title="RA Number">
+            {uniqueRANumbers.map(raNumber => (
+                    <Dropdown.Item key={raNumber} onClick={() => setRANumberFilter(raNumber)}>
+                        {raNumber}
+                    </Dropdown.Item>
+            ))}
             </DropdownButton>
+        </Col>
+        <Col xs={12} md="auto">
+        <Button onClick={clearFilters}>Clear Filters</Button>
         </Col>
     </Row>
     {/* <DatePicker ... /> */}
@@ -114,8 +160,7 @@ const RecordsViewer = () => {
 
         <div style={{ overflowY: 'scroll', maxHeight: '100vh', border: '1px solid #ddd', padding: '15px', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'}}>
         <Row>
-                {records.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime))
-            .map(record => {
+        {filteredRecords.map(record => {
                 // Determine the gradient class based on the record status
                 let gradientClass = '';
                 switch (record.status) {

@@ -12,3 +12,8 @@
     background: linear-gradient(to bottom, #73956F, #E5ECF4); /* Light green to white */
     border: white;
 }
+
+.custom-dropdown .btn {
+    background-color: #383631;
+    border-color: #383631;
+}
