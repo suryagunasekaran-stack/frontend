@@ -74,7 +74,7 @@ const MassViewer = () => {
     return (
         <Container style={{ minHeight: '100vw', minWidth: '100vw', backgroundColor: '#E5ECF4' }}>
         <div className="d-flex justify-content-between align-items-center p-3" style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-            <h2 className="text-left" style={{ marginLeft: "100px" }}>MassSafety Meeting Records</h2>
+            <h2 className="text-left" style={{ marginLeft: "100px" }}>Mass Safety Meeting Records</h2>
             <Button style={{ backgroundColor: '#383631', borderColor: '#383631' }} onClick={navigateToToolboxCreate}>
             Create Record
             </Button>

@@ -333,7 +333,7 @@ const ToolboxForm = () => {
 
 <Row>
                 <Col>
-                    I herby Acknowledge that the above statements are true and correct to the best of my knowledge.
+                    I hereby Acknowledge that the above statements are true and correct to the best of my knowledge.
                 </Col>
                 <Col>
                         <Form.Group>
@@ -370,7 +370,7 @@ const ToolboxForm = () => {
                 <Col>
                         <Form.Group>
                             <Form.Label>Trade Supervisor</Form.Label>
-                            <Form.Label>Name </Form.Label>
+                            <Form.Label> Name </Form.Label>
                             <Form.Control type="text" {...register(`.nameSupervisor`)} />
                             <br></br>
                             <SignatureCanvas ref={supervisorSigRef}
