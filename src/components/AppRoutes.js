@@ -9,7 +9,7 @@ import MassViewer from './ViewMasssafety';
 import FeedItemForm from './CreateFeed';
 import ToolboxForm from './ToolboxForm';
 import TaskArrangementForm from './AnchoragePreForm';
-import RecordsViewer from './ViewToolbox';
+import ViewToolbox from './ViewToolbox';
 // ... other component imports
 
 const AppRoutes = () => {
@@ -18,7 +18,7 @@ const AppRoutes = () => {
       <Route path="/" element={<LoginPage />} />
               <Route path="/HomePage" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
               <Route path="/ToolboxCreate" element={<ProtectedRoute><ToolboxForm /></ProtectedRoute>} />
-              <Route path="/ToolboxView" element={<ProtectedRoute><RecordsViewer /></ProtectedRoute>} />
+              <Route path="/ToolboxView" element={<ProtectedRoute><ViewToolbox /></ProtectedRoute>} />
               <Route path="/AnchorView" element={<ProtectedRoute><AnchorageViewer /></ProtectedRoute>} />
               <Route path="/AnchoragePreForm" element={<ProtectedRoute><TaskArrangementForm /></ProtectedRoute>} />
               <Route path="/MassSafetyForm" element={<ProtectedRoute><MassSafetyForm /></ProtectedRoute>} />
