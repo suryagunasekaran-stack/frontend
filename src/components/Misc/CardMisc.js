@@ -30,6 +30,12 @@ export const cardConfigurations = {
   masssafety: ['department', 'author', 'topic'],
 };
 
+export const cardRoutes = {
+  toolbox: "/ToolboxCreate",
+  anchor: "/AnchoragePreForm",
+  masssafety: "/MassSafetyForm",
+};
+
 export const pdfComponents = {
   toolbox: PdfGenerator,
   masssafety: PdfSafety,

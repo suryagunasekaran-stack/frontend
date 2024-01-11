@@ -2,10 +2,9 @@ import React, { useCallback } from 'react';
 import { Container, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { BasicCard } from '../Misc/BasicCard';
-import { useApproveRecord } from '../Misc/CardMisc';
-import { FilterRow } from './ViewMisc';
+import { useApproveRecord, cardRoutes } from '../Misc/CardMisc';
+import { FilterRow, cardTitle } from './ViewMisc';
 import useRecordFilter from '../CustomHooks/useRecordFilter';
-import { cardTitle } from './ViewMisc';
 import '../../css/Viewer.css';
 
 const RecordsViewer = ({ records, setRecords, cardType, ...otherProps }) => {
@@ -18,8 +17,9 @@ const RecordsViewer = ({ records, setRecords, cardType, ...otherProps }) => {
     }, [records, setRecords]);
 
     const navigateToToolboxCreate = useCallback(() => {
-        navigate('/ToolboxCreate');
-    }, [navigate]);
+        const naviroute = cardRoutes[cardType]
+        navigate(naviroute);
+    }, [navigate, cardType]);
 
     if (!records) return <p>Loading...</p>;
     if (otherProps.error) return <p>Error loading data: {otherProps.error}</p>;
