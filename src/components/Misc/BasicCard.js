@@ -1,7 +1,7 @@
 import React from "react";
 import { Col } from 'react-bootstrap';
 import { InfoRow, recordTitles, gradientClasses, cardConfigurations, pdfComponents, renderApprovalButtons } from "./CardMisc";
-import '../css/Viewer.css'
+import '../../css/Viewer.css'
 
 export const BasicCard = ({record, cardType, onApprove, onReject}) => {
     const gradientClass = gradientClasses[record.status] || ''; // Default to empty string if status is not found

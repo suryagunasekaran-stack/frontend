@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { IoCloudUploadOutline } from 'react-icons/io5';
-import '../css/FeedItemForm.css';
+import '../../css/FeedItemForm.css';
 
 
 const FeedItemForm = () => {

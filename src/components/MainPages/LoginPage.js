@@ -3,9 +3,9 @@ import { useState, useContext } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import '../css/Login.css'
-import background from '../media/loginBackground.svg';
-import { AuthContext } from './AuthContext';
+import '../../css/Login.css'
+import background from '../../media/loginBackground.svg';
+import { AuthContext } from '../Routing/AuthContext';
 
 const LoginPage = () => {
 

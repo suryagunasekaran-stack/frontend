@@ -1,7 +1,7 @@
 import React from 'react';
 import { PDFDocument, rgb, PageSizes, StandardFonts } from 'pdf-lib';
 import { Button } from 'react-bootstrap';
-import imageUrl from '../media/logo192.png';
+import imageUrl from '../../media/logo192.png';
 
 // Function to fetch and convert an image to Uint8Array
 async function fetchImageAsUint8Array(imageUrl) {

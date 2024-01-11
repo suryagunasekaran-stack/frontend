@@ -1,10 +1,10 @@
 import React, {useState, useContext} from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import AppRoutes from './components/AppRoutes';
+import AppRoutes from './components/Routing/AppRoutes';
 import { ToastProvider } from 'react-toast-notifications';
-import Sidebaru from './components/Sideubaru';
-import CircleButton from './components/MenuCustom';
-import { AuthContext } from './components/AuthContext';
+import Sidebaru from './components/SidebarMenu/Sideubaru';
+import CircleButton from './components/SidebarMenu/MenuCustom';
+import { AuthContext } from './components/Routing/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/App.css';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import '../css/HomePage.css'; 
+import '../../css/HomePage.css'; 
 import 'react-calendar/dist/Calendar.css';
-import FeedDisplay from './Views/viewFeed';
+import FeedDisplay from '../Views/viewFeed';
 
 const HomePage = () => {
   return (

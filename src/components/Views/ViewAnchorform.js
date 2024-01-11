@@ -1,5 +1,5 @@
 import React from "react";
-import withRecordsViewer from '../withRecordsViewer';
+import withRecordsViewer from '../Views/withRecordsViewer';
 
 const AnchorView = withRecordsViewer('/getanchorrecords', 'anchor');
 const AnchorageViewer = () => {

@@ -1,7 +1,7 @@
 // withRecordsViewer.js
 import React from 'react';
 import RecordsViewer from './RecordsViewer';
-import useFetchRecords from './useFetchRecords';
+import useFetchRecords from '../CustomHooks/useFetchRecords';
 
 const withRecordsViewer = (apiEndpoint, cardType) => {
     return (props) => {

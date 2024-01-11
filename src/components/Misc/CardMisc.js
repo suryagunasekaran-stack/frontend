@@ -1,9 +1,9 @@
 import React from "react";
 import { Row, Col, Button } from "react-bootstrap";
-import PdfAnchor from "./PdfAnchor";
-import PdfGenerator from "./Pdfgenarator";
-import PdfSafety from "./PdfSafety";
-import '../css/Viewer.css'
+import PdfAnchor from "../PdfGenerator/PdfAnchor";
+import PdfGenerator from "../PdfGenerator/Pdfgenarator";
+import PdfSafety from "../PdfGenerator/PdfSafety";
+import '../../css/Viewer.css'
 
 export const InfoRow = ({ label, value }) => (
     <Row style={{ fontFamily: "'Teko', sans-serif", fontSize: "20px" }} className="card-text">
@@ -37,6 +37,12 @@ export const pdfComponents = {
   // Add other mappings as needed
 };
 
+ const cardData = {
+  toolbox: 'MainData',
+  anchor: 'FormModel',
+  masssafety: 'MassSafety',
+};
+
 
 export const renderApprovalButtons = ({isSupervisorAndPending, onApprove, onReject}) => {
     if (isSupervisorAndPending) {
@@ -53,18 +59,17 @@ export const renderApprovalButtons = ({isSupervisorAndPending, onApprove, onReje
 };
 
 export const useApproveRecord = () => {
-  const handleApprove = async (recordId, updatedStatus, updateRecordsCallback) => {
-      // ... your API call logic
-      const token = localStorage.getItem('token'); // Get the username from localStorage
-        // Call to backend to update status
+  const handleApprove = async (recordId, updatedStatus, updateRecordsCallback, cardType) => {
+      const token = localStorage.getItem('token');
         const apiUrl = process.env.REACT_APP_API_URL;
+        const modelName = cardData[cardType]
         const response = await fetch(`${apiUrl}/updateRecordStatus`, {
-            method: 'PUT', // or 'PATCH'
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`, // Include your auth token if needed
             },
-            body: JSON.stringify({ id: recordId, status: updatedStatus, modelName: "MainData" })
+            body: JSON.stringify({ id: recordId, status: updatedStatus, modelName})
         });
 
       if (response.ok) {

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { ProtectedRoute, SupervisorProtectedRoute } from './ProtectedRoutes';
-import LoginPage from './LoginPage';
-import HomePage from './HomePage';
-import AnchorageViewer from './Views/ViewAnchorform';
-import MassSafetyForm from './Forms/Masssafetyform';
-import MassViewer from './Views/ViewMasssafety';
-import FeedItemForm from './CreateFeed';
-import ToolboxForm from './Forms/ToolboxForm';
-import TaskArrangementForm from './Forms/AnchoragePreForm';
-import ViewToolbox from './Views/ViewToolbox';
+import { ProtectedRoute, SupervisorProtectedRoute } from '../Routing/ProtectedRoutes';
+import LoginPage from '../MainPages/LoginPage';
+import HomePage from '../MainPages/HomePage';
+import AnchorageViewer from '../Views/ViewAnchorform';
+import MassSafetyForm from '../Forms/Masssafetyform';
+import MassViewer from '../Views/ViewMasssafety';
+import FeedItemForm from '../Forms/CreateFeed';
+import ToolboxForm from '../Forms/ToolboxForm';
+import TaskArrangementForm from '../Forms/AnchoragePreForm';
+import ViewToolbox from '../Views/ViewToolbox';
 // ... other component imports
 
 const AppRoutes = () => {

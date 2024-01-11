@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './css/index.css';
 import App from './App';
 import reportWebVitals from './others/reportWebVitals';
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider } from './components/Routing/AuthContext';
 import { MantineProvider } from '@mantine/core';
 
 

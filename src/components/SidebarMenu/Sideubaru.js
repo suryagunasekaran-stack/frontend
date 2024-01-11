@@ -6,7 +6,7 @@ import { FaAnchor } from "react-icons/fa";
 import { FaHelmetSafety } from "react-icons/fa6";
 import { IoLogOut } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../Routing/AuthContext';
 
 const sidebarVariants = {
     open: {

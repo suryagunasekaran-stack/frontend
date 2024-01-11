@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { Container, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { BasicCard } from './BasicCard';
-import { useApproveRecord } from './CardMisc';
+import { BasicCard } from '../Misc/BasicCard';
+import { useApproveRecord } from '../Misc/CardMisc';
 import { FilterRow } from './ViewMisc';
-import useRecordFilter from './useRecordFilter';
+import useRecordFilter from '../CustomHooks/useRecordFilter';
 import { cardTitle } from './ViewMisc';
-import '../css/Viewer.css';
+import '../../css/Viewer.css';
 
 const RecordsViewer = ({ records, setRecords, cardType, ...otherProps }) => {
     const navigate = useNavigate();
@@ -48,8 +48,8 @@ const RecordsViewer = ({ records, setRecords, cardType, ...otherProps }) => {
                             key={record._id}
                             record={record} 
                             cardType={cardType}
-                            onApprove={() => handleApprove(record._id, "approved", updateRecords)}
-                            onReject={() => handleApprove(record._id, "rejected", updateRecords)}
+                            onApprove={() => handleApprove(record._id, "approved", updateRecords, cardType)}
+                            onReject={() => handleApprove(record._id, "rejected", updateRecords, cardType)}
                             {...otherProps}
                         />
                     ))}
