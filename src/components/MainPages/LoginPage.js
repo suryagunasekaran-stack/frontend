@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
 import { useState, useContext } from 'react';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import '../../css/Login.css'
 import background from '../../media/loginBackground.svg';
 import { AuthContext } from '../Routing/AuthContext';
+
 
 const LoginPage = () => {
 
@@ -15,6 +16,10 @@ const [password, setPassword] = useState('');
 const navigate = useNavigate();
 const apiUrl = process.env.REACT_APP_API_URL;
 const {theAuth, setTheAuth } = useContext(AuthContext);
+const [showModal, setShowModal] = useState(false);
+const [errorMessage, setErrorMessage] = useState('');
+
+
 
 useEffect(() => {
     if (theAuth) {
@@ -43,6 +48,14 @@ const handleSubmit = async (e) => {
             credentials: 'include', // Include credentials to handle cookies
         });
 
+        if (!response.ok) {
+            // Handle HTTP errors
+            const errorData = await response.json();
+            setErrorMessage(errorData.message || 'Login failed');
+            setShowModal(true);
+            return;
+        }
+
         const data = await response.json();
         if (data.message === "Login successful") {
             localStorage.setItem('token', data.token);
@@ -52,8 +65,12 @@ const handleSubmit = async (e) => {
           navigate('/HomePage');
         }
 
-    } catch (error) {
-        console.error('Error:', error); // Handle errors here
+    } catch (error) {// Handle errors here
+        // Inside your catch block
+        console.error('Network error:', error);
+        setErrorMessage('Network error, please try again later.');
+        setShowModal(true);
+
     }
 };
 
@@ -86,7 +103,19 @@ const handleSubmit = async (e) => {
                 </Card>
               </Col>
           </Row>
+          <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Login Error</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>{errorMessage}</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Close
+                        </Button>
+                    </Modal.Footer>
+            </Modal>
         </Container>
+
         </div>
       );
   };

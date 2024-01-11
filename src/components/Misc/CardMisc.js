@@ -27,7 +27,7 @@ export const gradientClasses = {
 export const cardConfigurations = {
   toolbox: ['department', 'dateTime', 'author', 'raNumber', 'vessel', 'topic'],
   anchor: ['department', 'dateTime', 'author', 'raNumber', 'vessel', 'topic'],
-  masssafety: ['department', 'author', 'topic'],
+  masssafety: ['trade', 'date', 'topic'],
 };
 
 export const cardRoutes = {

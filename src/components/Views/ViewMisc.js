@@ -18,12 +18,12 @@ export const FilterRow = ({ filters, onClearFilters }) => {
         <div className='pb-3'>
             <Row className="justify-content-end">
                 {filters.map(({ title, uniqueItems, setFilter }) => (
-                    <Col key={title} xs={12} md="auto">
+                    <Col key={title} xs={6} sm={4} md="auto" className="mb-2 mb-md-0 text-center">
                         <FilterDropdown title={title} uniqueItems={uniqueItems} setFilter={setFilter} />
                     </Col>
                 ))}
-                <Col xs={12} md="auto">
-                    <Button onClick={onClearFilters}>Clear Filters</Button>
+                <Col xs={6} sm={4} md="auto" className="mb-2 mb-md-0 text-center">
+                    <Button variant="warning" onClick={onClearFilters}>Clear Filters</Button>
                 </Col>
             </Row>
         </div>

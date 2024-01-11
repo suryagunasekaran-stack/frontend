@@ -14,11 +14,17 @@ const FeedItemForm = () => {
         setFiles(acceptedFiles);
         // Now you can do something with the files
     }, []);
+    const [isLoading, setIsLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     // This is a template for the onSubmit function, you need to implement the actual logic
     const onSubmitForm = async (data, e) => {
+        setIsLoading(true); // Start loading
+        setSuccessMessage('');
+        setErrorMessage('');
         try {
             const token = localStorage.getItem('token');
             const formData = new FormData();
@@ -35,15 +41,20 @@ const FeedItemForm = () => {
             });
     
             if (response.ok) {
-                 // eslint-disable-next-line
+                // eslint-disable-next-line
                 const responseData = await response.json();
-                alert('Success: Operation completed successfully.');
+                setSuccessMessage('Success: Operation completed successfully.');
+                // Navigate back or to a success page
+                // e.g., history.goBack() or history.push('/successPage')
             } else {
                 console.error('Server error:', response.status);
-                alert('Error: Operation failed. Status code: ' + response.status);
+                setErrorMessage('Error: Operation failed. Status code: ' + response.status);
             }
         } catch (error) {
             console.error('Network error:', error);
+            setErrorMessage('Network error. Please try again later.');
+        } finally {
+            setIsLoading(false); // End loading
         }
     };
 
@@ -84,7 +95,9 @@ const FeedItemForm = () => {
                     </Col>
                 </Form.Group>
 
-                <Button type="submit">Post</Button>
+                <Button type="submit" disabled={isLoading}> {isLoading ? 'Loading...' : 'Submit'} </Button>
+                {successMessage && <div>{successMessage}</div>}
+                {errorMessage && <div>{errorMessage}</div>}
             </Form>
         </Container>
     );
