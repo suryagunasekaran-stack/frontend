@@ -1,5 +1,5 @@
 import React from "react";
-import withRecordsViewer from './withRecordsViewer';
+import withRecordsViewer from '../withRecordsViewer';
 
 const ToolboxRecordsViewer = withRecordsViewer('/gettoolboxrecords', 'toolbox');
 const ViewToolbox = () => {

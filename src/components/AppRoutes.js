@@ -3,13 +3,13 @@ import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute, SupervisorProtectedRoute } from './ProtectedRoutes';
 import LoginPage from './LoginPage';
 import HomePage from './HomePage';
-import AnchorageViewer from './ViewAnchorform';
-import MassSafetyForm from './Masssafetyform';
-import MassViewer from './ViewMasssafety';
+import AnchorageViewer from './Views/ViewAnchorform';
+import MassSafetyForm from './Forms/Masssafetyform';
+import MassViewer from './Views/ViewMasssafety';
 import FeedItemForm from './CreateFeed';
-import ToolboxForm from './ToolboxForm';
-import TaskArrangementForm from './AnchoragePreForm';
-import ViewToolbox from './ViewToolbox';
+import ToolboxForm from './Forms/ToolboxForm';
+import TaskArrangementForm from './Forms/AnchoragePreForm';
+import ViewToolbox from './Views/ViewToolbox';
 // ... other component imports
 
 const AppRoutes = () => {
