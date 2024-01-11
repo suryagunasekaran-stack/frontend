@@ -369,7 +369,7 @@ const ToolboxForm = () => {
                 </Col>
                 <Col>
                         <Form.Group>
-                            <Form.Label>Trade Supervisor</Form.Label>
+                            <Form.Label>Trade  Supervisor</Form.Label>
                             <Form.Label> Name </Form.Label>
                             <Form.Control type="text" {...register(`.nameSupervisor`)} />
                             <br></br>
