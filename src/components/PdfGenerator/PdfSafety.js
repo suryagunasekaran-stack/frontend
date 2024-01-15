@@ -226,8 +226,34 @@ const PdfSafety = (props) => {
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
     
-    // Open in a new window or tab
-    window.open(url, '_blank');
+    // Function to check if the device is mobile
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Conditional logic based on device type
+    if (isMobileDevice()) {
+        // For mobile devices, trigger a direct download
+        const a = document.createElement("a");
+        const formattedDateTime = new Date(props.dateTime).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true // Set to false for 24-hour format
+        });
+        a.href = url;
+        a.download = `AnchorageReport-${formattedDateTime}`; // You can specify the default file name for the PDF here
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } else {
+        // For non-mobile devices, open PDF in a new tab
+        window.open(url, '_blank');
+    }
   };
 
   return <Button style={{ backgroundColor: '#383631', borderColor: '#383631'}} onClick={createPdf}>Create PDF</Button>;

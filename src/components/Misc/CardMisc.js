@@ -5,12 +5,26 @@ import PdfGenerator from "../PdfGenerator/Pdfgenarator";
 import PdfSafety from "../PdfGenerator/PdfSafety";
 import '../../css/Viewer.css'
 
-export const InfoRow = ({ label, value }) => (
+export const InfoRow = ({ label, value }) => {
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const capitalizedLabel = capitalizeFirstLetter(label);
+  let capitalizedValue = value;
+
+  if (typeof value === 'string') {
+    capitalizedValue = capitalizeFirstLetter(value);
+  }
+
+  return (
     <Row style={{ fontFamily: "'Teko', sans-serif", fontSize: "20px" }} className="card-text">
-      <Col xs={6} className="text-left">{label}:</Col>
-      <Col xs={6} className="text-left">{value}</Col>
+      <Col xs={6} className="text-left">{capitalizedLabel}:</Col>
+      <Col xs={6} className="text-left">{capitalizedValue}</Col>
     </Row>
   );
+};
+
 
 export const recordTitles = {
     dailymeeting: 'DAILY TOOLBOX MEETING AND PPE RECORD',
