@@ -80,7 +80,7 @@ export const renderApprovalButtons = ({isSupervisorAndPending, onApprove, onReje
 
 export const useApproveRecord = () => {
   const handleApprove = async (recordId, updatedStatus, updateRecordsCallback, cardType) => {
-      const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');
         const apiUrl = process.env.REACT_APP_API_URL;
         const modelName = cardData[cardType]
         const response = await fetch(`${apiUrl}/updateRecordStatus`, {
