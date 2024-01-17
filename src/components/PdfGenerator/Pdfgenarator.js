@@ -28,7 +28,7 @@ const PdfGenerator = ({
 
 
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage(PageSizes.A4);
+    var page = pdfDoc.addPage(PageSizes.A4);
     const width = page.getWidth();
     const height = page.getHeight();
     const padding = 30;
@@ -263,12 +263,13 @@ const PdfGenerator = ({
             });
         };
         
-        const addSignature = async (base64String, xOffset = 50) => {
+        const addSignature = async (base64String, xOffset = 50, yPos) => {
             // Convert Base64 signature to Uint8Array
             const signatureBytes = Uint8Array.from(atob(base64String.split(',')[1]), c => c.charCodeAt(0));
         
             // Embed the signature image in the document
             const signatureImage = await pdfDoc.embedPng(signatureBytes);
+            
         
             // Calculate the size and position of the signature
             const signatureMaxWidth = 50; // Smaller width
@@ -276,9 +277,8 @@ const PdfGenerator = ({
             const signatureWidth = Math.min(signatureMaxWidth, signatureImage.width);
             const signatureHeight = signatureWidth / signatureAspectRatio;
             const signatureX = page.getWidth() - signatureWidth - xOffset; // Right aligned
-            const signatureY = y - (signatureHeight / 2); // Centered vertically on the current line
-        
-            // Draw the signature image
+            const signatureY = yPos - (signatureHeight / 2);
+
             page.drawImage(signatureImage, {
                 x: signatureX,
                 y: signatureY,
@@ -286,17 +286,58 @@ const PdfGenerator = ({
                 height: signatureHeight
             });
         };
-        
-        items.forEach(async (item, index) => {
+
+        let currentYPos = lineYBelowRaNo - 10; // Starting position for the first text line
+
+        const yPosIncrement = 60; // Adjust as needed for spacing between items
+
+        const bottomMargin = 50; // Adjust this value based on your requirements
+
+        // Function to add a new page and reset the y position
+        const addNewPage = () => {
+            // Add a new page
+            page = pdfDoc.addPage();
+            // Reset y to the top of the new page (minus initial offset)    
+            y = page.getHeight() - 30; // Adjust as necessary
+            page.drawRectangle({
+                x: padding,
+                y: padding,
+                width: width - 2 * padding,
+                height: height - 2 * padding,
+                borderColor: rgb(0, 0, 0),
+                borderWidth: 1
+            });
+        };
+
+        for (const [index, item] of items.entries()) {
+            // Add the item text
+            if (y - 30 < bottomMargin) { // Check for new page before adding text
+                addNewPage();
+            }
             addText(`${index + 1}: ${item.permitNumber} - ${item.name}`, 30);
             addText(`PPE: ${item.ppe.join(', ')}`, 15);
-            
-            // Add signature if exists
+        
             if (item.signature) {
-                await addSignature(item.signature);
+                // Update currentYPos to the last y position used in addText
+                currentYPos = y - 15; // Adjust this based on the height of the signature
+        
+                // Check if we need a new page before adding signature
+                if (currentYPos < bottomMargin) {
+                    addNewPage();
+                    currentYPos = y - 15; // Reset currentYPos on the new page
+                }
+        
+                await addSignature(item.signature, 50, currentYPos);
+                y = currentYPos - (yPosIncrement - 15); // Adjust y for the next item
             }
-        });
+        }
 
+        const spaceNeededForFooter = 100; // Adjust this based on the space needed for your footer content
+        if (y - spaceNeededForFooter < bottomMargin) {
+            addNewPage(); // This function adds a new page and resets 'y' to the top
+        }
+
+        // Now add the footer on the current page (which might be a new page if one was just added)
         const footerText1 = "The above employees have attended the toolbox meeting and provided with the PPE as mentioned. (mandatory PPE such as Safety Helmet, Safety Shoes, Safety Belt, Safety Spectacles & Ear Plug were Permanently provided)";
         const footerFontSize = 4.5; // Adjust the font size for the footer text as needed
 
