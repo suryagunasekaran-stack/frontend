@@ -180,10 +180,13 @@ const ToolboxForm = () => {
                             <Form.Control as="select" {...register('department', { required: true })}>
                                 <option value="Electrical">Electrical</option>
                                 <option value="Mechanical">Mechanical</option>
-                                <option value="Piping">Piping</option>
-                                <option value="Engine">Engine</option>
-                                <option value="Mechanical">Mechanical</option>
+                                <option value="Engine Recon">Engine Recon</option>
                                 <option value="Machine Shop">Machine Shop</option>
+                                <option value="Office">Office</option>
+                                <option value="Afloat Repair">Afloat Repair</option>
+                                <option value="Engine Overhauling">Engine Overhauling</option>
+                                <option value="Transport">Transport</option>
+                                <option value="EDLC">EDLC</option>
                             </Form.Control>
                             {errors.department && <p>This field is required</p>}
                         </Form.Group>

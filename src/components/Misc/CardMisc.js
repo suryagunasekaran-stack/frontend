@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, Badge } from "react-bootstrap";
 import PdfAnchor from "../PdfGenerator/PdfAnchor";
 import PdfGenerator from "../PdfGenerator/Pdfgenarator";
 import PdfSafety from "../PdfGenerator/PdfSafety";
@@ -64,8 +64,8 @@ export const pdfComponents = {
 };
 
 
-export const renderApprovalButtons = ({isSupervisorAndPending, onApprove, onReject}) => {
-    if (isSupervisorAndPending) {
+export const renderApprovalButtons = ({condition, onApprove, onReject, record}) => {
+    if (condition === 'supervisorAndPending') {
         return (
             <>
                 <Col xs={4} className="d-flex align-items-center justify-content-end">
@@ -74,13 +74,32 @@ export const renderApprovalButtons = ({isSupervisorAndPending, onApprove, onReje
                 </Col>
             </>
         );
-    }
+    } else if (condition === 'supervisorAndApproved') {
+      const approverName = record.finalApprover ? record.finalApprover.toUpperCase() : localStorage.getItem('username').toUpperCase();
+      return (
+          <>
+              <Col xs={4} className="d-flex align-items-center justify-content-end">
+                  <Badge bg="success">Approved By: {approverName}</Badge>
+              </Col>
+          </>
+      );
+  } else if (condition === 'supervisorAndRejected') {
+    const approverName = record.finalApprover ? record.finalApprover.toUpperCase() : localStorage.getItem('username').toUpperCase();
+    return (
+        <>
+            <Col xs={4} className="d-flex align-items-center justify-content-end">
+                <Badge bg="danger">Rejected By: {approverName}</Badge>
+            </Col>
+        </>
+    );
+}
     return null;
 };
 
 export const useApproveRecord = () => {
   const handleApprove = async (recordId, updatedStatus, updateRecordsCallback, cardType) => {
         const token = localStorage.getItem('token');
+        const approver = localStorage.getItem('username');
         const apiUrl = process.env.REACT_APP_API_URL;
         const modelName = cardData[cardType]
         const response = await fetch(`${apiUrl}/updateRecordStatus`, {
@@ -89,7 +108,7 @@ export const useApproveRecord = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`, // Include your auth token if needed
             },
-            body: JSON.stringify({ id: recordId, status: updatedStatus, modelName})
+            body: JSON.stringify({ id: recordId, status: updatedStatus, modelName, approver})
         });
 
       if (response.ok) {
@@ -102,4 +121,21 @@ export const useApproveRecord = () => {
   };
 
   return handleApprove;
+};
+
+export const determineCondition = (record) => {
+  const status = record.status;
+  const role = localStorage.getItem('role')
+
+  const conditionMap = {
+      'supervisor_pending': 'supervisorAndPending',
+      'supervisor_approved': 'supervisorAndApproved',
+      'supervisor_rejected': 'supervisorAndRejected',
+      'other_pending': 'notSupervisorAndPending',
+      'other_approved': 'notSupervisorAndApproved',
+      'other_rejected': 'notSupervisorAndRejected'
+  };
+
+  const conditionKey = `${role === 'supervisor' ? 'supervisor' : 'other'}_${status}`;
+  return conditionMap[conditionKey] || 'other';
 };
