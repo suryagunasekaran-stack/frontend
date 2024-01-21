@@ -26,6 +26,8 @@ const ToolboxForm = () => {
     const selectedRa = watch('raNumber');
     const [showModal, setShowModal] = useState(false);
     const [employees, setEmployees] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
 
     const addEmployee = (newEmployeeData) => {
         setEmployees(currentEmployees => [...currentEmployees, newEmployeeData]);
@@ -51,13 +53,23 @@ const ToolboxForm = () => {
 
     
     const onSubmit = async (data) => {
+        setIsSubmitting(true);
         const combinedData = {
             ...data,
             items: employees
         };
-        console.log(combinedData)
-        await submitFormData(combinedData, authorSigRef, supervisorSigRef);
+    
+        try {
+            await submitFormData(combinedData, authorSigRef, supervisorSigRef);
+            window.alert('Success: Operation completed successfully.');
+            navigate(-1); // Navigate back on success
+        } catch (error) {
+            window.alert(`Error: ${error.message}`);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+    
 
     return (
     <Container  style={{ minHeight: '100vw', minWidth: '100vw', backgroundColor: '#E5ECF4', color:"#331832" }}>
@@ -246,7 +258,7 @@ const ToolboxForm = () => {
                 </Row>
                 <Row>
                     <Col className="d-flex justify-content-end" style={{ paddingTop: '10px' }}>
-                        <Button style={{ backgroundColor: '#383631', borderColor: '#383631' }} type="submit">Submit For Approval</Button>
+                        <Button style={{ backgroundColor: '#383631', borderColor: '#383631' }} disabled={isSubmitting} type="submit">Submit For Approval</Button>
                     </Col>
                 </Row>
             </Form>

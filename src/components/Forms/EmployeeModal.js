@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import SignatureCanvas from 'react-signature-canvas';
+import '../../css/EmployeeModa.css'
 
 const EmployeeModal = ({ show, handleClose, onEmployeeSubmit, employeeMap  }) => {
     const [employeeData, setEmployeeData] = useState({
@@ -25,13 +26,13 @@ const EmployeeModal = ({ show, handleClose, onEmployeeSubmit, employeeMap  }) =>
     const handlePermitNumberChange = (e) => {
         const permitNumber = e.target.value;
         const employee = employeeMap.get(permitNumber);
-        setEmployeeData({
-            ...employeeData,
+        setEmployeeData(prevData => ({
+            ...prevData,
             permitNumber: permitNumber,
-            name: employee ? employee.NAME : ''
-        });
+            name: employee ? employee.NAME : prevData.name
+        }));
     };
-
+    
     const submitEmployee = () => {
         const signatureData = sigCanvasRef.current
             ? sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png')
@@ -55,11 +56,11 @@ const EmployeeModal = ({ show, handleClose, onEmployeeSubmit, employeeMap  }) =>
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Add Employee</Modal.Title>
+                <Modal.Title>Add Employee:</Modal.Title>
             </Modal.Header>
             <Modal.Body>
             <Form.Group controlId="PermitNumber">
-                    <Form.Label>Employee / Permit Number</Form.Label>
+                    <Form.Label>Employee / Permit Number:</Form.Label>
                     <Form.Control
                         type="text"
                         value={employeeData.permitNumber}
@@ -67,37 +68,52 @@ const EmployeeModal = ({ show, handleClose, onEmployeeSubmit, employeeMap  }) =>
                     />
                 </Form.Group>
                 <Form.Group controlId="Name">
-                    <Form.Label>Name</Form.Label>
+                    <Form.Label>Name:</Form.Label>
                     <Form.Control
                         type="text"
                         value={employeeData.name}
-                        readOnly
+                        onChange={(e) => setEmployeeData({...employeeData, name: e.target.value})}
                     />
                 </Form.Group>
+
                 <Form.Group>
-                    <Form.Label>PPE</Form.Label>
-                    {['Life Jacket', 'Body Harness', 'Safety Gear', 'Face Shield', 'Hand Gear', 'Others'].map(ppe => (
-                        <Form.Check 
-                            key={ppe}
-                            type="checkbox"
-                            label={ppe}
-                            onChange={() => handlePPEChange(ppe)}
-                            checked={!!employeeData.ppe[ppe]}
-                        />
-                    ))}
+                <Form.Label>PPE:</Form.Label>
+                    <div className="d-flex flex-wrap">
+                        {['Life Jacket', 'Body Harness', 'Safety Gear', 'Face Shield', 'Hand Gear', 'Others'].map(ppe => (
+                            <div
+                                key={ppe}
+                                className={`ppe-box ${employeeData.ppe[ppe] ? 'checked' : ''}`}
+                                onClick={() => handlePPEChange(ppe)}
+                            >
+                                {ppe}
+                            </div>
+                        ))}
+                    </div>
                 </Form.Group>
+
                 <Form.Group controlId="Signature">
-                    <Form.Label>Signature</Form.Label>
+                <Form.Label>Signature:</Form.Label>
+                <div className="signature-canvas-container">
                     <SignatureCanvas
                         ref={sigCanvasRef}
                         penColor='black'
-                        canvasProps={{ width: 300, height: 100, className: 'sigCanvas', style: { border: "2px solid black" } }}
+                        canvasProps={{ 
+                            width: 500, 
+                            height: 200, 
+                            className: 'sigCanvas', 
+                            style: { border: "none", width: "100%", height: "100%" } 
+                        }}
                     />
-                </Form.Group>
+                    <div className="clear-signature-button" onClick={() => sigCanvasRef.current.clear()}>
+                        Clear
+                    </div>
+                </div>
+            </Form.Group>
+
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>Close</Button>
-                <Button variant="primary" onClick={submitEmployee}>Submit</Button>
+                <Button variant="primary" onClick={submitEmployee}>Add</Button>
             </Modal.Footer>
         </Modal>
     );

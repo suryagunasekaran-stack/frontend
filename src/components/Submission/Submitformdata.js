@@ -32,8 +32,8 @@ const submitFormData = async (data, authorSigRef, supervisorSigRef) => {
 
         // Handle the response
         if (response.ok) {
+            // eslint-disable-next-line
             const responseData = await response.json();
-            alert('Success: Operation completed successfully.', responseData);
         } else {
             console.error('Server error:', response.status);
             alert('Error: Operation failed. Status code: ' + response.status);

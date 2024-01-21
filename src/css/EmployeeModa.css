@@ -1,0 +1,33 @@
+.ppe-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ppe-box.checked {
+    background-color: #28a745;
+    color: white;
+}
+
+.signature-canvas-container {
+    border: 2px solid #888;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #ccc;
+    margin-top: 10px;
+    padding: 10px;
+    position: relative;
+}
+
+.signature-canvas-container:focus-within {
+    border-color: #0056b3; /* Change color on focus */
+}
+
+.clear-signature-button {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+}
