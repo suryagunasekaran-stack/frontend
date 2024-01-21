@@ -387,7 +387,7 @@ const PdfGenerator = ({
         color: rgb(0, 0, 0)
     });
 
-    const addSignature2 = async (base64String, x, y, maxWidth = 50) => {
+    const addSignature2 = async (base64String, x, y, maxWidth = 70) => {
         // Convert Base64 signature to Uint8Array
         const signatureBytes = Uint8Array.from(atob(base64String.split(',')[1]), c => c.charCodeAt(0));
     
@@ -457,12 +457,12 @@ const PdfGenerator = ({
         color: rgb(0, 0, 0)
     });
 
-    const authorSignatureX = padding + 10 + font.widthOfTextAtSize(nameText, infoFontSize) + 10; // Adjust as needed
-    await addSignature2(authorSignature, authorSignatureX, nameSignatureTextY - 10);
+    const authorSignatureX = padding + 80
+    await addSignature2(authorSignature, authorSignatureX , nameSignatureTextY - 7);
 
     // Place supervisor signature after "Name: Supervisor"
-    const supervisorSignatureX = width - padding - nameTextWidth - 10 - font.widthOfTextAtSize(nameText2, infoFontSize) - 50; // Adjust as needed
-    await addSignature2(supervisorSignature, supervisorSignatureX + 140, nameSignatureTextY - 10);
+    const supervisorSignatureX = width - padding - nameTextWidth + 40 // Adjust as needed
+    await addSignature2(supervisorSignature, supervisorSignatureX, nameSignatureTextY - 10);
 
 
     // Define the centered message
