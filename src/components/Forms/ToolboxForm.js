@@ -53,6 +53,12 @@ const ToolboxForm = () => {
 
     
     const onSubmit = async (data) => {
+        // Confirmation step
+        const isConfirmed = window.confirm("Are you sure you want to submit this form?");
+        if (!isConfirmed) {
+            return; // Exit the function if the user does not confirm
+        }
+    
         setIsSubmitting(true);
         const combinedData = {
             ...data,
@@ -69,6 +75,7 @@ const ToolboxForm = () => {
             setIsSubmitting(false);
         }
     };
+    
     
 
     return (
