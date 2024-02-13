@@ -56,19 +56,32 @@ const TaskArrangementForm = () => {
             const supervisorSignature = supervisorSigRef.current?.getTrimmedCanvas().toDataURL('image/png');
             const token = localStorage.getItem('token');
 
-            const formData = {
-                ...data,
-                authorSignature,
-                supervisorSignature
-            };
+            const formData = new FormData();
 
-            const response = await fetch(`${apiUrl}/anchorpreformsubmit`, { // Replace with your server URL
+            // Append text fields
+            Object.keys(data).forEach(key => {
+                if (key !== 'images') {
+                    formData.append(key, data[key]);
+                }
+            });
+    
+            // Append signatures
+            formData.append('authorSignature', authorSignature);
+            formData.append('supervisorSignature', supervisorSignature);
+    
+            // Append images
+            if (data.images && data.images.length) {
+                for (const file of data.images) {
+                    formData.append('images', file);
+                }
+            }
+    
+            const response = await fetch(`${apiUrl}/anchorpreformsubmit`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(formData)
+                body: formData
             });
     
             if (response.ok) {
@@ -1083,7 +1096,16 @@ sheet available if chemicals involved</Col>
 
                 </Row>
             ))}
-
+            
+            <Row>
+                <Col>
+                    <Form.Group>
+                        <Form.Label>Upload Images:</Form.Label>
+                        <Form.Control type="file" accept="image/*" multiple {...register('images', { required: false })} />
+                        {errors.images && <p>At least one image is required</p>}
+                    </Form.Group>
+                </Col>
+            </Row>
 
                 
             <Row>

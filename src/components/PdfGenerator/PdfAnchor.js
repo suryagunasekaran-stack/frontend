@@ -237,9 +237,15 @@ const PdfAnchor = (props) => {
                 y -= yOffset; // Decrement y after drawing both texts
             }
         };
+        console.log(props)
         darray.forEach((item, index) => {
+            if (entries[index]) {
                 addText(`${index + 1}. ${item}`, entries[index][1]);
-          });
+            } else {
+                // Handle the case where there's no corresponding entry, e.g., add default text or log a message
+                addText(`${index + 1}. ${item}`, 'Default text or some other handling');
+            }
+        });
 
           const conductedByText = "Conducted by:";
           const conductedByFontSize = 12; // Adjust the font size as needed
