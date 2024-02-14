@@ -151,10 +151,35 @@ const PdfAnchor = (props) => {
             color: rgb(0, 0, 0)
         });
 
-        const darray =  ["Toolbox / RA briefing attendance record", "Life vest for Embarkation/Disembarkation/Work", "Tools bag (Loose items are packed in bags)", "PPE's - Helmet with chin strap, Life vest, Gloves, Coverall, Slip-resistant shoes", "All electrical tools, equipment’s and cables in good working Condition and tested", "Hot work Permit with MPA Gas free certificate arranged", "Gas hoses, pressure regulator fitted with flash back arrestor & non-return valve, welding cables in good condition and tested", "Gas cylinders secured in upright position, use lashing straps and placed together in a pallet with valid tag", "Fire-cloth, spark igniter gun, and soap solution to do leak test", "Reflective vest (Fire watch, CSA, Lifting crew)", "Entry into confined space permit arranged", "Appropriate Portable Gas Detector in good condition and calibrated", "Confined Space Attendant with walkie talkie and attendance record","Ventilation equipment arranged","Lighting equipment arranged","Fire proof lighting for explosive atmosphere","All Lifting Appliances and Gears have test certificate and valid tag","Material Handling (Lifting aids, Team/buddy lifting)","Use tag ropes to control the load swing","All lifting devices and equipment shall be visually examined before use.", "All people shall be kept clear of overhead (suspended) loads and areas of potential impact.", "Full body harness (double lanyard with shock absorber attached to a suitable anchor point.)", "Self-Retractable Life Line shall lock and limit the arrest force to a maximum of 6kN", "Hazardous / Volatile / Corrosive material and solvent safety data sheet available if chemicals involved", "Chemical resistant suit / Apron / Gloves / Respirator"];
-
-        let entries = Object.entries(props.items[0]);
-
+        
+        const mapping = {
+            "Toolbox / RA briefing attendance record": "ToolboxRAAttendanceRecord",
+            "Life vest for Embarkation/Disembarkation/Work": "LifevestforEmbarkation",
+            "Tools bag (Loose items are packed in bags)": "Toolsbag",
+            "PPE's - Helmet with chin strap, Life vest, Gloves, Coverall, Slip-resistant shoes": "Helmetwithchin",  // Note: This might need adjustment if you have a more specific key
+            "All electrical tools, equipment’s and cables in good working Condition and tested": "Allelectricaltools",
+            "Hot work Permit with MPA Gas free certificate arranged": "HotworkPermit",
+            "Gas hoses, pressure regulator fitted with flash back arrestor & non-return valve, welding cables in good condition and tested": "Gashoses",
+            "Gas cylinders secured in upright position, use lashing straps and placed together in a pallet with valid tag": "Gascylinders",
+            "Fire-cloth, spark igniter gun, and soap solution to do leak test": "Sparkigniter",
+            "Reflective vest (Fire watch, CSA, Lifting crew)": "Reflectivevest",
+            "Entry into confined space permit arranged": "Entryintoconfined",
+            "Appropriate Portable Gas Detector in good condition and calibrated": "AppropriatePortable",
+            "Confined Space Attendant with walkie talkie and attendance record": "ConfinedSpace",
+            "Ventilation equipment arranged": "Ventilationequipment",
+            "Lighting equipment arranged": "Lightingequipment",
+            "Fire proof lighting for explosive atmosphere": "Fireproof",
+            "All Lifting Appliances and Gears have test certificate and valid tag": "AllLifting",
+            "Material Handling (Lifting aids, Team/buddy lifting)": "MaterialHandling",
+            "Use tag ropes to control the load swing": "Usetag",
+            "All lifting devices and equipment shall be visually examined before use.": "Alllifting",
+            "All people shall be kept clear of overhead (suspended) loads and areas of potential impact.": "Allpeople",
+            "Full body harness (double lanyard with shock absorber attached to a suitable anchor point.)": "Fullbodyharness",
+            "Self-Retractable Life Line shall lock and limit the arrest force to a maximum of 6kN": "RetractableLife",
+            "Hazardous / Volatile / Corrosive material and solvent safety data sheet available if chemicals involved": "Corrosivematerial",
+            "Chemical resistant suit / Apron / Gloves / Respirator": "Chemicalresistant"  // Assuming this is the correct key
+        };
+        
         var y = vesselY - 80;
         const addText = (text, text2, yOffset = 20) => {
             const maxWidth = 400; // Adjust this value as needed
@@ -237,15 +262,70 @@ const PdfAnchor = (props) => {
                 y -= yOffset; // Decrement y after drawing both texts
             }
         };
-        console.log(props)
-        darray.forEach((item, index) => {
-            if (entries[index]) {
-                addText(`${index + 1}. ${item}`, entries[index][1]);
+      
+        const itemsArray = JSON.parse(props.items);
+        const itemsObject = itemsArray[0]; // Assuming there's only one object in the array
+        let zm = 1
+        Object.keys(mapping).forEach(description => {
+            const key = mapping[description];
+            const value = itemsObject[key];
+
+            if (value !== null) {
+                // Assuming addText is a function that displays the text as required
+                // eslint-disable-next-line 
+               addText( zm + ". " + description, value);
+               zm += 1
             } else {
-                // Handle the case where there's no corresponding entry, e.g., add default text or log a message
-                addText(`${index + 1}. ${item}`, 'Default text or some other handling');
+                console.log(`No value found for: ${description}`);
             }
         });
+
+        page.drawText("Pre Anchorage Images:", {
+            x: 40, 
+            y: y - 20, 
+            size: infoFontSize,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
+
+        for (const imageUrl of props.images) {
+            try {
+                const imageBytes = await fetchImageAsUint8Array(imageUrl);
+        
+                // Determine the file type (PNG or JPEG)
+                const imageExtension = imageUrl.split('.').pop().toLowerCase();
+                let image;
+                if (imageExtension === 'png') {
+                    image = await pdfDoc.embedPng(imageBytes);
+                } else if (imageExtension === 'jpg' || imageExtension === 'jpeg') {
+                    image = await pdfDoc.embedJpg(imageBytes);
+                } else {
+                    throw new Error('Unsupported image type');
+                }
+        
+                // Determine image size and position
+                const scale = 0.7; // Adjust scale to your needs
+                const imageDims = image.scale(scale);
+                const imageX = 50; // Adjust X position as needed
+                let imageY = y - imageDims.height - 30; // Adjust Y position as needed
+        
+                // Draw the image on the page
+                page.drawImage(image, {
+                    x: imageX,
+                    y: imageY,
+                    width: imageDims.width,
+                    height: imageDims.height,
+                });
+        
+                // Update the Y position for the next image
+                y = imageY - 20; // Adjust the gap between images as needed
+            } catch (error) {
+                console.error(`Error embedding image: ${imageUrl}`, error);
+            }
+        }
+        
+        
+ 
 
           const conductedByText = "Conducted by:";
           const conductedByFontSize = 12; // Adjust the font size as needed

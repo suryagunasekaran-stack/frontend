@@ -1,17 +1,19 @@
-import React,  {useRef, useState, useEffect} from 'react';
+import React,  {useRef, useEffect, useMemo} from 'react';
 import { useForm,  useFieldArray, Controller } from 'react-hook-form';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import SignatureCanvas from 'react-signature-canvas';
 import Select from 'react-select';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import useFetchData from '../CustomHooks/useFetchData';
 
 const TaskArrangementForm = () => {
     // eslint-disable-next-line
-    const [raData, setRaData] = useState([]); // State to store RA.No data
+
     const authorSigRef = useRef(null);
     const supervisorSigRef = useRef(null);
     const navigate = useNavigate();
+    const { data: raData } = useFetchData('getRaNumbers');
     const clearSignature = () => {
         authorSigRef.current.clear();
     };
@@ -30,27 +32,23 @@ const TaskArrangementForm = () => {
       const goBack = () => {
         navigate(-1); // Navigates to the previous page
     };
-
-      const fetchRaData = async () => {
-        try {
-          // Replace '/api/ra-data' with your actual API endpoint
-          const apiUrl = process.env.REACT_APP_API_URL;
-          const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-    
-            const response = await fetch(`${apiUrl}/getRaNumbers`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
-                    // Add other headers as needed
-                }
-            });
-          const data = await response.json();
-          setRaData(data);
-        } catch (error) {
-          console.error('Error fetching RA data:', error);
+    const raOptions = useMemo(() => raData.map(item => ({
+        value: item['RA Ref. No.'],
+        label: `${item['RA Ref. No.']} - ${item['INVENTORY OF WORK ACTIVITIES - CRITCAL']}`,
+        topic: item['INVENTORY OF WORK ACTIVITIES - CRITCAL']
+    })), [raData]);
+    const selectedRa = watch('raNumber');
+    useEffect(() => {
+        const ra = raData.find(ra => ra['RA Ref. No.'] === selectedRa);
+        if (ra) {
+        setValue('topic', ra['INVENTORY OF WORK ACTIVITIES - CRITCAL']);
         }
-      };
+    }, [selectedRa, raData, setValue]);
 
     const onSubmit = async (data) => {
+        if (!window.confirm("Are you sure you want to submit?")) {
+            return; // Stop execution if the user cancels
+        }
         try {
             const authorSignature = authorSigRef.current?.getTrimmedCanvas().toDataURL('image/png');
             const supervisorSignature = supervisorSigRef.current?.getTrimmedCanvas().toDataURL('image/png');
@@ -61,9 +59,16 @@ const TaskArrangementForm = () => {
             // Append text fields
             Object.keys(data).forEach(key => {
                 if (key !== 'images') {
-                    formData.append(key, data[key]);
+                    if (typeof data[key] === 'object' && data[key] !== null) {
+                        // If the value is an object, serialize it
+                        formData.append(key, JSON.stringify(data[key]));
+                    } else {
+                        // Otherwise, append the value as is
+                        formData.append(key, data[key]);
+                    }
                 }
             });
+            
     
             // Append signatures
             formData.append('authorSignature', authorSignature);
@@ -85,38 +90,19 @@ const TaskArrangementForm = () => {
             });
     
             if (response.ok) {
-                 // eslint-disable-next-line
-                const responseData = await response.json();
+                // Handle successful response
                 alert('Success: Operation completed successfully.');
+                window.history.back(); // Navigate back on success
             } else {
+                // Handle server errors
                 console.error('Server error:', response.status);
                 alert('Error: Operation failed. Status code: ' + response.status);
             }
         } catch (error) {
+            // Handle network errors
             console.error('Network error:', error);
         }
     };
-
-    useEffect(() => {
-        fetchRaData();
-    }, []);
-
-    const raOptions = raData.map(item => ({
-        value: item['RA Ref. No.'],
-        label: item['RA Ref. No.'],
-        topic: item['INVENTORY OF WORK ACTIVITIES - CRITCAL']
-    }));
-
-    // Watch the RA number value
-    const selectedRa = watch('raNumber');
-
-    // Effect to update the topic when RA number changes
-    useEffect(() => {
-        const ra = raData.find(ra => ra['RA Ref. No.'] === selectedRa);
-        if (ra) {
-        setValue('topic', ra['INVENTORY OF WORK ACTIVITIES - CRITCAL']);
-        }
-    }, [selectedRa, raData, setValue]);
 
     return (
         <Container  style={{ minHeight: '100vw', minWidth: '100vw', backgroundColor: '#E5ECF4', color:"#331832" }}>
@@ -172,20 +158,24 @@ const TaskArrangementForm = () => {
 
                 <Row>
                     <Col>
-                    <Form.Group>
-                        <Form.Label>RA.No:</Form.Label>
-                        <Controller
-                        name="raNumber"
-                        control={control}
-                        render={({ field }) => (
-                            <Select
-                            {...field}
-                            options={raOptions}
-                            onChange={(selected) => field.onChange(selected.value)}
+                        <Form.Group>
+                            <Form.Label>RA.No:</Form.Label>
+                                <Controller
+                                name="raNumber"
+                                control={control}
+                                render={({ field }) => (
+                                        <Select
+                                            {...field}
+                                            options={raOptions}
+                                            value={raOptions.find(option => option.value === field.value)}
+                                            onChange={(selected) => {
+                                                field.onChange(selected.value);
+                                                setValue('topic', selected.topic); // Set the topic when RA number changes
+                                            }}
+                                        />
+                                )}
                             />
-                        )}
-                        />
-                    </Form.Group>
+                        </Form.Group>
                     </Col>
                 </Row>
 
