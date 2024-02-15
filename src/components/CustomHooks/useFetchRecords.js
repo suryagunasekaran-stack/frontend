@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useFetchRecords = (apiEndpoint) => {
+const useFetchRecords = (apiEndpoint, cardType) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -18,11 +18,11 @@ const useFetchRecords = (apiEndpoint) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ author: authorUsername })
+                body: JSON.stringify({ author: authorUsername, type: cardType })
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response}`);
             }
 
             const data = await response.json();

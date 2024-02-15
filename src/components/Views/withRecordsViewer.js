@@ -5,7 +5,7 @@ import useFetchRecords from '../CustomHooks/useFetchRecords';
 
 const withRecordsViewer = (apiEndpoint, cardType) => {
     return (props) => {
-        const { records, isLoading, error, setRecords } = useFetchRecords(apiEndpoint);
+        const { records, isLoading, error, setRecords } = useFetchRecords(apiEndpoint, cardType);
 
         if (isLoading) return <p>Loading...</p>;
         if (error) return <p>Error loading data: {error}</p>;
