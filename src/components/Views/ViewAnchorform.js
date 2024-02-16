@@ -1,7 +1,7 @@
 import React from "react";
 import withRecordsViewer from '../Views/withRecordsViewer';
 
-const AnchorView = withRecordsViewer('/getanchorrecords', 'anchor');
+const AnchorView = withRecordsViewer('/getrecords', 'anchor');
 const AnchorageViewer = () => {
     return (
         <AnchorView />

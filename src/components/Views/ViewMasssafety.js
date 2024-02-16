@@ -1,7 +1,7 @@
 import React from "react";
 import withRecordsViewer from '../Views/withRecordsViewer';
 
-const MassSafetyView = withRecordsViewer('/getmasssafetyrecords', 'masssafety');
+const MassSafetyView = withRecordsViewer('/getrecords', 'masssafety');
 const MassViewer = () => {
     return (
         <MassSafetyView />

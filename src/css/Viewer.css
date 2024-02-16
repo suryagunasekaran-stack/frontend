@@ -1,19 +1,64 @@
 .gradient-pending {
-    background: linear-gradient(to bottom, #F8E077, #E5ECF4); /* Light yellow to white */
-    border: white;
+    background-color: #FAF4C0; /* Light pastel yellow */
+    border: 1px solid black; /* Light border */
 }
 
 .gradient-rejected {
-    background: linear-gradient(to bottom, #FF784F, #E5ECF4); /* Light red to white */
-    border: white;
+    background-color: #FFC2A1; /* Light pastel red */
+    border: 1px solid black;
 }
 
 .gradient-approved {
-    background: linear-gradient(to bottom, #73956F, #E5ECF4); /* Light green to white */
-    border: white;
+    background-color: #A3C4A8; /* Light pastel green */
+    border: 1px solid black;
 }
 
 .custom-dropdown .btn {
     background-color: #383631;
     border-color: #383631;
 }
+
+.card {
+    box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.3); /* Softer shadow */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Additional styling for text and buttons inside the card, if needed */
+.card-body h4 {
+    color: white; /* Softer text color */
+}
+
+.card-body .btn {
+    background-color: #E0E0E0; /* Soft button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.card-body {
+    padding: 20px; /* Adjust as needed */
+}
+
+.info-rows, .approval-buttons, .pdf-component {
+    margin: 10px 0; /* Even spacing between elements */
+}
+
+/* Additional adjustments as needed for specific elements */
+.info-row, .approval-buttons, .pdf-component {
+    text-align: center;
+}
+
+.info-row {
+    display: flex;
+    justify-content: center; /* Center the label and value group */
+    padding: 10px 0;
+    width: 100%;
+}
+
+.info-row-label, .info-row-value {
+    text-align: center; /* Align text to left within each column */
+    flex-basis: 50%; /* Each takes up 50% of the .info-row width */
+
+}
+
+

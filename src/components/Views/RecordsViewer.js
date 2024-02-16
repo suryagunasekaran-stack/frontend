@@ -7,11 +7,10 @@ import { FilterRow, cardTitle } from './ViewMisc';
 import useRecordFilter from '../CustomHooks/useRecordFilter';
 import '../../css/Viewer.css';
 
-const RecordsViewer = ({ records, setRecords, cardType, ...otherProps }) => {
+const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, totalPages, cardType, ...otherProps }) => {
     const navigate = useNavigate();
     const handleApprove = useApproveRecord();
     const { filteredRecords, filtersConfig, clearFilters } = useRecordFilter(records);
-    
     const updateRecords = useCallback((recordId, updatedStatus) => {
         setRecords(records.map(rec => rec._id === recordId ? { ...rec, status: updatedStatus } : rec));
     }, [records, setRecords]);
@@ -20,6 +19,30 @@ const RecordsViewer = ({ records, setRecords, cardType, ...otherProps }) => {
         const naviroute = cardRoutes[cardType]
         navigate(naviroute);
     }, [navigate, cardType]);
+
+    const handlePrevious = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const paginationControls = (
+        <div>
+            <Button onClick={handlePrevious} disabled={currentPage === 1}>
+                Previous
+            </Button>
+            <Button onClick={handleNext} disabled={currentPage === totalPages}>
+                Next
+            </Button>
+        </div>
+    );
+
 
     if (!records) return <p>Loading...</p>;
     if (otherProps.error) return <p>Error loading data: {otherProps.error}</p>;
@@ -55,7 +78,9 @@ const RecordsViewer = ({ records, setRecords, cardType, ...otherProps }) => {
                     ))}
                 </Row>
             </div>
+            {paginationControls}
         </Container>
+        
     );
 };
 

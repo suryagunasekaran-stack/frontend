@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-
-const useFetchRecords = (apiEndpoint, cardType) => {
+const useFetchRecords = (apiEndpoint, cardType, currentPage, limit = 30) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [totalPages, setTotalPages] = useState(0); // State for total pages
 
     const fetchData = async () => {
         try {
@@ -18,15 +18,21 @@ const useFetchRecords = (apiEndpoint, cardType) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ author: authorUsername, type: cardType })
+                body: JSON.stringify({ 
+                    author: authorUsername, 
+                    type: cardType, 
+                    limit: limit, 
+                    page: currentPage // Use the currentPage passed from the HOC
+                })
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
             const data = await response.json();
-            setRecords(data);
+            setRecords(data.records || []);
+            setTotalPages(data.totalPages || 0);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -37,9 +43,11 @@ const useFetchRecords = (apiEndpoint, cardType) => {
     useEffect(() => {
         fetchData();
         // eslint-disable-next-line
-    }, [apiEndpoint]);
+    }, [apiEndpoint, currentPage, limit]); // Use currentPage in the dependency array
 
-    return { records, isLoading, error, setRecords };
+    return { records, isLoading, error, setRecords, totalPages };
 };
 
 export default useFetchRecords;
+
+

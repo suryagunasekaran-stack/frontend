@@ -22,6 +22,7 @@ const useRecordFilter = (records) => {
         ).sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
     }, [records, departmentFilter, authorFilter, vesselFilter, raNumberFilter]);
 
+
     const filtersConfig = useMemo(() => {
         return [
             { title: "Department", uniqueItems: [...new Set(records.map(record => record.department))], setFilter: setDepartmentFilter },

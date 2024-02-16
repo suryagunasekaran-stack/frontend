@@ -18,9 +18,9 @@ export const InfoRow = ({ label, value }) => {
   }
 
   return (
-    <Row style={{ fontFamily: "'Teko', sans-serif", fontSize: "20px" }} className="card-text">
-      <Col xs={6} className="text-left">{capitalizedLabel}:</Col>
-      <Col xs={6} className="text-left">{capitalizedValue}</Col>
+    <Row style={{ fontFamily: "'Teko', sans-serif", fontSize: "25px" }} className="card-text">
+      <Col xs={6} className="info-row-label">{capitalizedLabel}:</Col>
+      <Col xs={6} className="info-row-label">{capitalizedValue}</Col>
     </Row>
   );
 };
@@ -78,7 +78,7 @@ export const renderApprovalButtons = ({condition, onApprove, onReject, record}) 
       const approverName = record.finalApprover ? record.finalApprover.toUpperCase() : localStorage.getItem('username').toUpperCase();
       return (
           <>
-              <Col xs={4} className="d-flex align-items-center justify-content-end">
+              <Col xs={4}>
                   <Badge bg="success">Approved By: {approverName}</Badge>
               </Col>
           </>
