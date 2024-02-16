@@ -68,9 +68,9 @@ export const renderApprovalButtons = ({condition, onApprove, onReject, record}) 
     if (condition === 'supervisorAndPending') {
         return (
             <>
-                <Col xs={4} className="d-flex align-items-center justify-content-end">
-                    <Button variant="success" onClick={onApprove} >Approve</Button>
-                    <Button variant="danger" onClick={onReject} >Reject</Button>
+                <Col xs={4} className="align-items-center ">
+                  <Button className="button-approve" onClick={onApprove}>Approve</Button>
+                  <Button className="button-reject" onClick={onReject}>Reject</Button>
                 </Col>
             </>
         );

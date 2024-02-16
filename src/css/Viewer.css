@@ -29,8 +29,6 @@
 }
 
 .card-body .btn {
-    background-color: #E0E0E0; /* Soft button color */
-    color: white;
     border: none;
     border-radius: 5px;
 }
@@ -59,6 +57,23 @@
     text-align: center; /* Align text to left within each column */
     flex-basis: 50%; /* Each takes up 50% of the .info-row width */
 
+}
+
+.button-approve {
+    background-color: #5ee6b6; /* Pastel green for approve button */
+    border: none;
+    color: #333; /* Choose a color for the text that ensures readability */
+}
+
+.button-reject {
+    background-color: #ea6f92; /* Pastel red for reject button */
+    border: none;
+    color: #333;
+}
+
+/* Add hover effects if needed */
+.button-approve:hover, .button-reject:hover {
+    opacity: 0.8;
 }
 
 

@@ -48,7 +48,7 @@ const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, total
     if (otherProps.error) return <p>Error loading data: {otherProps.error}</p>;
 
     return (
-        <Container style={{ minHeight: '100vw', minWidth: '100vw', backgroundColor: '#E5ECF4' }}>
+        <Container style={{minWidth: '100vw', backgroundColor: '#E5ECF4' }}>
             <div className="d-flex justify-content-between align-items-center p-3" style={{ paddingTop: "25px", paddingBottom: "25px" }}>
                 <h2 className="text-left" style={{ marginLeft: "100px" }}>
                  {cardTitle[cardType]}
