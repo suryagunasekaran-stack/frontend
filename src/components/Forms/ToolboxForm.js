@@ -29,9 +29,19 @@ const ToolboxForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
 
+    const isDuplicateEmployee = (newEmployee) => {
+        return employees.some(employee => 
+            employee.permitNumber === newEmployee.permitNumber || 
+            employee.name === newEmployee.name
+        );
+    };
+
     const addEmployee = (newEmployeeData) => {
+        if (isDuplicateEmployee(newEmployeeData)) {
+            alert("Duplicate permit number or name found.");
+            return;
+        }
         setEmployees(currentEmployees => [...currentEmployees, newEmployeeData]);
-        console.log(employees)
     };
 
     useEffect(() => {

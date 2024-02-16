@@ -21,6 +21,7 @@
 .card {
     box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.3); /* Softer shadow */
     border-radius: 10px; /* Rounded corners */
+    min-height: 575px;
 }
 
 /* Additional styling for text and buttons inside the card, if needed */
@@ -62,13 +63,13 @@
 .button-approve {
     background-color: #5ee6b6; /* Pastel green for approve button */
     border: none;
-    color: #333; /* Choose a color for the text that ensures readability */
+    color: black; /* Choose a color for the text that ensures readability */
 }
 
 .button-reject {
     background-color: #ea6f92; /* Pastel red for reject button */
     border: none;
-    color: #333;
+    color: black;
 }
 
 /* Add hover effects if needed */

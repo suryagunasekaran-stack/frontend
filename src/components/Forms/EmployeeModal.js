@@ -38,8 +38,14 @@ const EmployeeModal = ({ show, handleClose, onEmployeeSubmit, employeeMap  }) =>
             ? sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png')
             : '';
     
-        // Create the updatedEmployeeData object directly using the current state
-        console.log(signatureData)
+        const blankSignatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAAD5Ip3+AAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=';
+    
+        // Check if the signature is empty (matches the blank canvas data URL)
+        if (signatureData === blankSignatureData) {
+            alert("Signature cannot be empty.");
+            return;
+        }
+    
         const updatedEmployeeData = {
             permitNumber: employeeData.permitNumber,
             name: employeeData.name,
@@ -50,7 +56,6 @@ const EmployeeModal = ({ show, handleClose, onEmployeeSubmit, employeeMap  }) =>
         onEmployeeSubmit(updatedEmployeeData);  // Submitting the data
         handleClose();  // Closing the modal
     };
-    
     
 
     return (
@@ -79,7 +84,7 @@ const EmployeeModal = ({ show, handleClose, onEmployeeSubmit, employeeMap  }) =>
                 <Form.Group>
                 <Form.Label>PPE:</Form.Label>
                     <div className="d-flex flex-wrap">
-                        {['Life Jacket', 'Body Harness', 'Safety Gear', 'Face Shield', 'Hand Gear', 'Others'].map(ppe => (
+                        {['HG - Hand Gloves', 'SG - Safety goggles', 'FS - Face shield', 'BH - Body Harness', 'LJ - Life Jacket', 'Others'].map(ppe => (
                             <div
                                 key={ppe}
                                 className={`ppe-box ${employeeData.ppe[ppe] ? 'checked' : ''}`}

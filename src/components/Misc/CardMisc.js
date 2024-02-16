@@ -18,7 +18,7 @@ export const InfoRow = ({ label, value }) => {
   }
 
   return (
-    <Row style={{ fontFamily: "'Teko', sans-serif", fontSize: "25px" }} className="card-text">
+    <Row style={{ fontFamily: "'Teko', sans-serif", fontSize: "30px" }} className="card-text">
       <Col xs={6} className="info-row-label">{capitalizedLabel}:</Col>
       <Col xs={6} className="info-row-label">{capitalizedValue}</Col>
     </Row>
