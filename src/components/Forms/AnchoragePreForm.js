@@ -7,6 +7,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import useFetchData from '../CustomHooks/useFetchData';
 
+
 const TaskArrangementForm = () => {
     // eslint-disable-next-line
 
@@ -148,8 +149,15 @@ const TaskArrangementForm = () => {
                     <Form.Group>
                             <Form.Label>Department:</Form.Label>
                             <Form.Control as="select" {...register('department', { required: true })}>
-                                <option value="electrical">Electrical</option>
-                                <option value="mechanical">Mechanical</option>
+                                    <option value="Electrical">Electrical</option>
+                                    <option value="Mechanical">Mechanical</option>
+                                    <option value="Engine Recon">Engine Recon</option>
+                                    <option value="Machine Shop">Machine Shop</option>
+                                    <option value="Office">Office</option>
+                                    <option value="Afloat Repair">Afloat Repair</option>
+                                    <option value="Engine Overhauling">Engine Overhauling</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="EDLC">EDLC</option>
                             </Form.Control>
                             {errors.department && <p>This field is required</p>}
                         </Form.Group>

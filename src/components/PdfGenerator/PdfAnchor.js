@@ -288,6 +288,23 @@ const PdfAnchor = (props) => {
             color: rgb(0, 0, 0)
         });
 
+        // Assuming 'padding', 'width', and 'height' are defined
+        const boxWidth = width - 2 * padding;
+        const boxHeight = height - 2 * padding;
+        const imageMargin = 20;
+
+        // Function to draw a box
+        function drawBox(page) {
+            page.drawRectangle({
+                x: padding,
+                y: padding,
+                width: boxWidth,
+                height: boxHeight,
+                borderColor: rgb(0, 0, 0),
+                borderWidth: 1
+            });
+        }
+
         for (const imageUrl of props.images) {
             try {
                 const imageBytes = await fetchImageAsUint8Array(imageUrl);
@@ -304,11 +321,23 @@ const PdfAnchor = (props) => {
                 }
         
                 // Determine image size and position
-                const scale = 0.7; // Adjust scale to your needs
+                let scale = Math.min(
+                    (boxWidth - 2 * imageMargin) / image.width, 
+                    (boxHeight - 2 * imageMargin) / image.height
+                );
                 const imageDims = image.scale(scale);
-                const imageX = 50; // Adjust X position as needed
-                let imageY = y - imageDims.height - 30; // Adjust Y position as needed
+                const imageX = padding + imageMargin; // X position with margin
+                let imageY = y - imageDims.height - 30;
         
+               // Check if the image fits in the remaining space
+                if (imageY < padding) {
+                    // Add a new page and reset Y position
+                    page = pdfDoc.addPage();
+                    drawBox(page);
+                    y = height - padding;
+                    imageY = y - imageDims.height - 30;
+                }
+
                 // Draw the image on the page
                 page.drawImage(image, {
                     x: imageX,
@@ -316,9 +345,9 @@ const PdfAnchor = (props) => {
                     width: imageDims.width,
                     height: imageDims.height,
                 });
-        
-                // Update the Y position for the next image
-                y = imageY - 20; // Adjust the gap between images as needed
+
+                // Update Y position for the next image
+                y = imageY - 20;
             } catch (error) {
                 console.error(`Error embedding image: ${imageUrl}`, error);
             }
