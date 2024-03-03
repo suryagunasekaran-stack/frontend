@@ -17,6 +17,7 @@ const ToolboxForm = () => {
     const navigate = useNavigate();
     const { data: raData } = useFetchData('getRaNumbers');
     const { data: employeeData } = useFetchData('getallname');
+    const { data: ipcData } = useFetchData('getIpcNumbers');
     const raOptions = useMemo(() => raData.map(item => ({
         value: item['RA Ref. No.'],
         label: `${item['RA Ref. No.']} - ${item['INVENTORY OF WORK ACTIVITIES - CRITCAL']}`,
@@ -60,6 +61,19 @@ const ToolboxForm = () => {
         employeeData.forEach(emp => map.set(emp['EMP NO.'], emp));
         return map;
     }, [employeeData]);
+
+    const ipcOptions = useMemo(() => ipcData.map(item => ({
+        value: item['IPC Ref. No.'],
+        label: `${item['IPC Ref. No.']} - ${item['Description']}`,
+        description: item['Description']
+    })), [ipcData]);
+    const selectedIpc = watch('ipcNumber');
+    useEffect(() => {
+        const ipc = ipcData.find(ipc => ipc['IPC Ref. No.'] === selectedIpc);
+        if (ipc) {
+            setValue('description', ipc['Description']);
+        }
+    }, [selectedIpc, ipcData, setValue]);
 
     
     const onSubmit = async (data) => {
@@ -186,6 +200,29 @@ const ToolboxForm = () => {
                         </Form.Group>
                     </Col>
                 </Row>
+
+                <Row>
+                <Col>
+                    <Form.Group>
+                        <Form.Label>IPC No:</Form.Label>
+                        <Controller
+                            name="ipcNumber"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    options={ipcOptions}
+                                    value={ipcOptions.find(option => option.value === field.value)}
+                                    onChange={(selected) => {
+                                        field.onChange(selected.value);
+                                        setValue('description', selected.description); // Set the description when IPC number changes
+                                    }}
+                                />
+                            )}
+                        />
+                    </Form.Group>
+                </Col>
+            </Row>
 
                 <Row>
                     <Col>
