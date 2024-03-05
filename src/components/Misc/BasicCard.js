@@ -25,12 +25,20 @@ export const BasicCard = ({record, cardType, onApprove, onReject}) => {
                         {recordTitles[record.type]}
                     </h4>
                     <div className="info-rows">
-                        {rowsToRender.map(row => {
-                            const value = row === 'date' ? formatDate(record[row]) :
-                                            row === 'dateTime' ? formatDateTime(record[row]) :
-                                            record[row];
-                            return <InfoRow label={row} value={value} key={row} />
-                        })}
+                    {rowsToRender.map(row => {
+                        let value;
+                        if (row === 'ipcNumber' && record['ipcNumber']) {
+                            value = record['ipcNumber'];
+                        } else if (row === 'date') {
+                            value = formatDate(record[row]);
+                        } else if (row === 'dateTime') {
+                            value = formatDateTime(record[row]);
+                        } else {
+                            value = record[row];
+                        }
+                        return value ? <InfoRow label={row} value={value} key={row} /> : null;
+                    })}
+
                     </div>
                     <Row className="card-actions">
                         <Col className="approval-buttons">

@@ -21,6 +21,7 @@ const PdfGenerator = ({
   author,
   nameSupervisor,
   items,
+  ipcNumber,
   authorSignature,
   supervisorSignature
 }) => {
@@ -298,6 +299,30 @@ const PdfGenerator = ({
               color: rgb(0, 0, 0),
               thickness: 1
           });
+          const ipcNumberExists = Boolean(ipcNumber);
+          if (ipcNumberExists) {
+            const ipcNumberText = "IPC Number: " + ipcNumber;
+            const rightAlignFontSize = 12; // Font size for right-aligned text
+            const pageWidth = page.getSize().width;
+        
+            // Calculate the width of the IPC number text
+            const ipcNumberTextWidth = font.widthOfTextAtSize(ipcNumberText, rightAlignFontSize);
+        
+            // Calculate the X position for right alignment
+            const ipcNumberTextX = pageWidth - ipcNumberTextWidth - padding - 10; // Adjust the right padding as needed
+        
+            // Draw the IPC number text
+            page.drawText(ipcNumberText, {
+                x: ipcNumberTextX,
+                y: raNoTextY, // Adjust vertical position as needed
+                size: rightAlignFontSize,
+                font: font,
+                color: rgb(0, 0, 0)
+            });
+        
+            // Adjust raNoTextY if needed based on the presence of IPC number
+            raNoTextY -= 30; // Additional spacing, adjust as necessary
+        }
         
         var y = lineYBelowRaNo - 10; // Adjust the space above the line as needed
 

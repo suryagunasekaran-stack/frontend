@@ -10,6 +10,7 @@ import FeedItemForm from '../Forms/CreateFeed';
 import ToolboxForm from '../Forms/ToolboxForm';
 import TaskArrangementForm from '../Forms/AnchoragePreForm';
 import ViewToolbox from '../Views/ViewToolbox';
+import ExcelUploadComponent from '../Forms/IpcForm';
 // ... other component imports
 
 const AppRoutes = () => {
@@ -24,6 +25,7 @@ const AppRoutes = () => {
               <Route path="/MassSafetyForm" element={<ProtectedRoute><MassSafetyForm /></ProtectedRoute>} />
               <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
               <Route path="/CreateFeeditem" element={<SupervisorProtectedRoute><FeedItemForm/></SupervisorProtectedRoute>} />
+              <Route path="/ipc" element={<SupervisorProtectedRoute><ExcelUploadComponent/></SupervisorProtectedRoute>} />
     </Routes>
   );
 };

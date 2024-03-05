@@ -104,6 +104,12 @@ const Sidebaru = ({ isOpen, onClose}) => {
     </motion.div>
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
+    <div onClick={() => handleLinkClick('/ipc')} style={{ textDecoration: 'none', color: 'inherit' }}>
+       IPC
+    </div>
+    </motion.div>
+
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
     <Link to="/" onClick={handleLogout}  style={{ textDecoration: 'none', color: 'inherit' }}>
         <IoLogOut/> Logout
     </Link>

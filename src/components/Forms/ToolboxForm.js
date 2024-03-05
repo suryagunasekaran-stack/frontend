@@ -17,7 +17,7 @@ const ToolboxForm = () => {
     const navigate = useNavigate();
     const { data: raData } = useFetchData('getRaNumbers');
     const { data: employeeData } = useFetchData('getallname');
-    const { data: ipcData } = useFetchData('getIpcNumbers');
+    const { data: ipcData } = useFetchData('getipc');
     const raOptions = useMemo(() => raData.map(item => ({
         value: item['RA Ref. No.'],
         label: `${item['RA Ref. No.']} - ${item['INVENTORY OF WORK ACTIVITIES - CRITCAL']}`,
@@ -61,19 +61,20 @@ const ToolboxForm = () => {
         employeeData.forEach(emp => map.set(emp['EMP NO.'], emp));
         return map;
     }, [employeeData]);
-
-    const ipcOptions = useMemo(() => ipcData.map(item => ({
-        value: item['IPC Ref. No.'],
-        label: `${item['IPC Ref. No.']} - ${item['Description']}`,
-        description: item['Description']
+    const ipcOptions = useMemo(() => ipcData.map(ipcNumber => ({
+        value: ipcNumber,
+        label: ipcNumber.toString()
     })), [ipcData]);
+    
     const selectedIpc = watch('ipcNumber');
     useEffect(() => {
-        const ipc = ipcData.find(ipc => ipc['IPC Ref. No.'] === selectedIpc);
+        // Assuming 'ipcNumber' is a state or form field that holds the selected IPC number
+        const ipc = ipcData.includes(selectedIpc);
         if (ipc) {
-            setValue('description', ipc['Description']);
+            setValue('ipcNumber', selectedIpc);
         }
     }, [selectedIpc, ipcData, setValue]);
+    
 
     
     const onSubmit = async (data) => {
