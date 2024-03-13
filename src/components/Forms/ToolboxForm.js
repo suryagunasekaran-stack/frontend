@@ -176,7 +176,7 @@ const ToolboxForm = () => {
                     <Col>
                         <Form.Group>
                             <Form.Label>Vessel:</Form.Label>
-                                <Form.Control type="text" {...register('vessel', { required: true })} />
+                                <Form.Control type="text" {...register('vessel', { required: true })} disabled />
                             {errors.vessel && <p>This field is required</p>}
                         </Form.Group>
                     </Col>
