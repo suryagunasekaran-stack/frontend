@@ -1,0 +1,32 @@
+/* ExcelUploadComponent.css */
+
+
+.excel-upload-body {
+    background-color: #f2f2f2; /* Light pastel background */
+    min-height: 100vh;
+    min-width: 100vw;
+}
+
+.excel-upload-card {
+    background-color: #f8ecd1; /* Pastel color for the card */
+    border-color: #f3d2c1; /* Pastel border color */
+}
+
+.excel-upload-card-title {
+    color: #6a8caf; /* Pastel color for the text */
+}
+
+.excel-upload-form-control {
+    background-color: #eae4e9; /* Pastel input background */
+    border-color: #f3d2c1;
+}
+
+.excel-upload-btn-primary {
+    background-color: #784a0a; /* Pastel button color */
+    border-color: #a2d2ff;
+    color: white;
+}
+
+.excel-upload-btn-primary:hover {
+    background-color: #6f4629; /* Lighter shade for hover */
+}

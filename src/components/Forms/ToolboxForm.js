@@ -56,26 +56,29 @@ const ToolboxForm = () => {
         navigate(-1);
     };
 
+    const ipcOptions = useMemo(() => {
+        return Object.entries(ipcData).map(([ipcNumber, vesselName]) => ({
+            value: ipcNumber,
+            label: `${ipcNumber} - ${vesselName}`
+        }));
+    }, [ipcData]);
+    
+
     const employeeMap = useMemo(() => {
         const map = new Map();
         employeeData.forEach(emp => map.set(emp['EMP NO.'], emp));
         return map;
     }, [employeeData]);
-    const ipcOptions = useMemo(() => ipcData.map(ipcNumber => ({
-        value: ipcNumber,
-        label: ipcNumber.toString()
-    })), [ipcData]);
+
     
     const selectedIpc = watch('ipcNumber');
     useEffect(() => {
-        // Assuming 'ipcNumber' is a state or form field that holds the selected IPC number
-        const ipc = ipcData.includes(selectedIpc);
-        if (ipc) {
+        // Check if ipcData object has the selectedIpc as a key
+        if (ipcData && (selectedIpc in ipcData)) {
             setValue('ipcNumber', selectedIpc);
+            setValue('vessel', ipcData[selectedIpc]);
         }
     }, [selectedIpc, ipcData, setValue]);
-    
-
     
     const onSubmit = async (data) => {
         // Confirmation step
@@ -205,7 +208,7 @@ const ToolboxForm = () => {
                 <Row>
                 <Col>
                     <Form.Group>
-                        <Form.Label>IPC No:</Form.Label>
+                        <Form.Label>IPC Number:</Form.Label>
                         <Controller
                             name="ipcNumber"
                             control={control}
@@ -216,7 +219,8 @@ const ToolboxForm = () => {
                                     value={ipcOptions.find(option => option.value === field.value)}
                                     onChange={(selected) => {
                                         field.onChange(selected.value);
-                                        setValue('description', selected.description); // Set the description when IPC number changes
+                                        setValue('ipcNumber', selected.value); // Set the IPC number
+                                        setValue('vessel', ipcData[selected.value]); // Set the vessel name based on the selected IPC number
                                     }}
                                 />
                             )}
