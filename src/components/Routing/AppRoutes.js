@@ -11,6 +11,7 @@ import ToolboxForm from '../Forms/ToolboxForm';
 import TaskArrangementForm from '../Forms/AnchoragePreForm';
 import ViewToolbox from '../Views/ViewToolbox';
 import ExcelUploadComponent from '../Forms/IpcForm';
+import UserDataFetcher from '../UserRelated/UserDataFetcher';
 // ... other component imports
 
 const AppRoutes = () => {
@@ -26,6 +27,7 @@ const AppRoutes = () => {
               <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
               <Route path="/CreateFeeditem" element={<SupervisorProtectedRoute><FeedItemForm/></SupervisorProtectedRoute>} />
               <Route path="/ipc" element={<ProtectedRoute><ExcelUploadComponent/> </ProtectedRoute>} />
+              <Route path="/metausers" element={<ProtectedRoute><UserDataFetcher/> </ProtectedRoute>} />
     </Routes>
   );
 };
