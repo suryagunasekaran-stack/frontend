@@ -8,6 +8,7 @@ import { IoLogOut } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
 import { AuthContext } from '../Routing/AuthContext';
 import { FaFileAlt } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 
 const sidebarVariants = {
     open: {
@@ -83,32 +84,43 @@ const Sidebaru = ({ isOpen, onClose}) => {
                     HomePage
         </div>
     </motion.div>
+    
+    {(localStorage.getItem("role") !== 'userindia') && (
+    <><motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+          <div onClick={() => handleLinkClick('/ToolboxView')} style={{ textDecoration: 'none', color: 'inherit' }}>
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px'}}>
-    <div onClick={() => handleLinkClick('/ToolboxView')} style={{ textDecoration: 'none', color: 'inherit' }}>
-        
-        <FaTools />
-        Toolbox Risk Assessment
-        </div>
-    </motion.div>
+            <FaTools />
+            Toolbox Risk Assessment
+          </div>
+        </motion.div><motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+            <div onClick={() => handleLinkClick('/AnchorView')} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <FaAnchor /> Anchorage Forms
+            </div>
+          </motion.div><motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+            <div onClick={() => handleLinkClick('/MassSafetyView')} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <FaHelmetSafety /> Mass Safety Briefing
+            </div>
+          </motion.div></>
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
-    <div onClick={() => handleLinkClick('/AnchorView')} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <FaAnchor/> Anchorage Forms
-    </div>
-    </motion.div>
+    )}
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
-    <div onClick={() => handleLinkClick('/MassSafetyView')} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <FaHelmetSafety/> Mass Safety Briefing
-    </div>
-    </motion.div>
+    {(localStorage.getItem("role") === 'supervisor' || localStorage.getItem("role") === 'userindia') && (
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+          <div onClick={() => handleLinkClick('/ipc')} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <FaFileAlt /> IPC
+          </div>
+        </motion.div>
+      )}
 
-    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
-    <div onClick={() => handleLinkClick('/ipc')} style={{ textDecoration: 'none', color: 'inherit' }}>
-    <FaFileAlt /> IPC
-    </div>
-    </motion.div>
+      {(localStorage.getItem("role") !== 'userindia') && (
+        <>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+            <div onClick={() => handleLinkClick('/metausers')} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <FaUsers /> View Users
+            </div>
+          </motion.div>
+        </>
+      )}
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
     <Link to="/" onClick={handleLogout}  style={{ textDecoration: 'none', color: 'inherit' }}>
