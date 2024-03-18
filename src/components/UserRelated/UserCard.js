@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { FaEdit } from 'react-icons/fa'; // Make sure react-icons is installed
 
-const UserCard = ({ user, onSave }) => {
+const UserCard = ({ user}) => {
     const [isEditingFields, setIsEditingFields] = useState(false);
     const [isEditingImage, setIsEditingImage] = useState(false);
     const [editableUser, setEditableUser] = useState({ ...user });
@@ -22,16 +22,46 @@ const UserCard = ({ user, onSave }) => {
         }
     };
 
-    const handleSave = async () => {
-        // Handle image upload logic
-        // ...
+    useEffect(() => {
+        setEditableUser({ ...user });
+    }, [user]);
 
-        onSave(editableUser);
-        setIsEditingFields(false);
-        setIsEditingImage(false);
-        setImageFile(null);
+    const onSave = async (updatedUser) => {
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${apiUrl}/updateUser`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedUser)
+        });
+
+        const responseData = await response.json();
+        if (response.ok) {
+            console.log('User updated successfully');
+            return responseData
+        } else {
+            console.error('Failed to update user');
+            return null;
+        }
     };
 
+    const handleSave = async () => {
+        const updatedUserData = await onSave(editableUser);
+        if (updatedUserData) {
+            // Update editableUser with the updated data
+            setEditableUser(updatedUserData);
+            setIsEditingFields(false);
+            setIsEditingImage(false);
+            setImageFile(null);
+        }
+    };
+    
+    
+
+    
     const handleDiscard = () => {
         setEditableUser({ ...user });
         setIsEditingFields(false);
