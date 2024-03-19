@@ -5,8 +5,11 @@ import { ToastProvider } from 'react-toast-notifications';
 import Sidebaru from './components/SidebarMenu/Sideubaru';
 import CircleButton from './components/SidebarMenu/MenuCustom';
 import { AuthContext } from './components/Routing/AuthContext';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/App.css';
+
+const queryClient = new QueryClient();
 
 function App() {
   const { theAuth } = useContext(AuthContext);
@@ -34,6 +37,7 @@ function App() {
   };
 
   return (
+    <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <Router>
           {theAuth && <CircleButton onClick={toggleSidebar} isOpen={isSidebarOpen} />}
@@ -44,6 +48,7 @@ function App() {
           <AppRoutes toggleSidebar={toggleSidebar} />
         </Router>
       </ToastProvider>
+      </QueryClientProvider>
 
   );
 }
