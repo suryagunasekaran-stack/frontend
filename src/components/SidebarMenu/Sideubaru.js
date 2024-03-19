@@ -8,6 +8,7 @@ import { IoLogOut } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
 import { AuthContext } from '../Routing/AuthContext';
 import { FaFileAlt } from "react-icons/fa";
+import { ImUsers } from "react-icons/im";
 
 const sidebarVariants = {
     open: {
@@ -107,6 +108,14 @@ const Sidebaru = ({ isOpen, onClose}) => {
         <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
           <div onClick={() => handleLinkClick('/ipc')} style={{ textDecoration: 'none', color: 'inherit' }}>
             <FaFileAlt /> IPC
+          </div>
+        </motion.div>
+      )}
+
+      {(localStorage.getItem("role") === 'supervisor' ) && (
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+          <div onClick={() => handleLinkClick('/users')} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <ImUsers /> Users
           </div>
         </motion.div>
       )}

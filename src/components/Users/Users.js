@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { Card, Container, Row, Col, Alert, Image, Button, Form, Table, InputGroup } from 'react-bootstrap';
+import { Card, Container, Row, Col, Alert, Button, Form, Table, InputGroup, Modal } from 'react-bootstrap';
+import '../../css/User.css'
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -26,14 +27,44 @@ async function updateUser(userData) {
   return response.json();
 }
 
+async function addUser(userData) {
+    const response = await fetch(`${apiUrl}/addUser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  }
+  
+  async function deleteUser(userId) {
+    const response = await fetch(`${apiUrl}/deleteUser/${userId}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  }
+
 function Users() {
   const queryClient = useQueryClient();
   const [editingUserId, setEditingUserId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [newUserFormData, setNewUserFormData] = useState({});
+  const [showAddModal, setShowAddModal] = useState(false);
+  const handleAddModalClose = () => setShowAddModal(false);
+  const handleAddModalShow = () => setShowAddModal(true);
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
     };
+
 
   const { data: users, isLoading, isError, error } = useQuery('users', fetchUsers);
 
@@ -41,6 +72,18 @@ function Users() {
     onSuccess: () => {
       queryClient.invalidateQueries('users');
       setEditingUserId(null); // Reset editing state
+    },
+  });
+
+  const addUserMutation = useMutation(addUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users');
+    },
+  });
+
+  const deleteUserMutation = useMutation(deleteUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users');
     },
   });
 
@@ -57,6 +100,21 @@ function Users() {
     setEditFormData({ ...editFormData, [event.target.name]: event.target.value });
   };
 
+  const handleNewUserFormChange = (event) => {
+    setNewUserFormData({ ...newUserFormData, [event.target.name]: event.target.value });
+  };
+
+  const handleAddUser = () => {
+    addUserMutation.mutate({ ...newUserFormData });
+    setNewUserFormData({}); // Reset the form
+  };
+
+  const handleDeleteUser = (userId) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      deleteUserMutation.mutate(userId);
+    }
+  };
+
   const handleSave = () => {
     updateUserMutation.mutate({ ...editFormData });
   };
@@ -66,15 +124,118 @@ function Users() {
 
   return (
     <Container>
+
+      <Button variant="primary" onClick={handleAddModalShow} className="mb-3">
+        Add User
+      </Button>
+
+      <Modal show={showAddModal} onHide={handleAddModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+          <Form.Group className="mb-3">
+        <Form.Label>Username</Form.Label>
+            <Form.Control
+            type="text"
+            placeholder="Enter username"
+            name="username"
+            value={newUserFormData.username || ''}
+            onChange={handleNewUserFormChange}
+            required
+            />
+        </Form.Group>
+        <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={newUserFormData.password || ''}
+            onChange={handleNewUserFormChange}
+            required
+            />
+        </Form.Group>
+        <Form.Group className="mb-3">
+            <Form.Label>Role</Form.Label>
+            <Form.Control
+            type="text"
+            placeholder="Role"
+            name="role"
+            value={newUserFormData.role || ''}
+            onChange={handleNewUserFormChange}
+            required
+            />
+        </Form.Group>
+        <Form.Group className="mb-3">
+            <Form.Label>Department</Form.Label>
+            <Form.Control
+            type="text"
+            placeholder="Department"
+            name="department"
+            value={newUserFormData.department || ''}
+            onChange={handleNewUserFormChange}
+            required
+            />
+        </Form.Group>
+        <Form.Group className="mb-3">
+            <Form.Label>Employee Number</Form.Label>
+            <Form.Control
+            type="text"
+            placeholder="Employee Number"
+            name="employeeNumber"
+            value={newUserFormData.employeeNumber || ''}
+            onChange={handleNewUserFormChange}
+            required
+            />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+            <Form.Label>First Name</Form.Label>
+            <Form.Control
+            type="text"
+            placeholder="First Name"
+            name="firstName"
+            value={newUserFormData.firstName || ''}
+            onChange={handleNewUserFormChange}
+            required
+            />
+        </Form.Group>
+        <Form.Group className="mb-3">
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control
+            type="text"
+            placeholder="Last Name"
+            name="lastName"
+            value={newUserFormData.lastName || ''}
+            onChange={handleNewUserFormChange}
+            required
+            />
+        </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleAddModalClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={() => {
+            handleAddUser();
+            handleAddModalClose();
+          }}>
+            Add User
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Row>
         {users.map(user => (
-          <Col key={user._id} md={4} className="mb-3">
+          <Col key={user._id} md={3} className="mb-3">
             <Card>
               <Card.Body>
                 {editingUserId === user._id ? (
                   // Edit Form
                   <Form>
-                    <Image src={editFormData.profileImage} roundedCircle fluid className="mb-3" />
                     <Form.Group className="mb-3">
                       <Form.Label>First Name</Form.Label>
                       <Form.Control
@@ -95,24 +256,16 @@ function Users() {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Username</Form.Label>
                     <Form.Control
-                        type="email"
-                        name="email"
-                        value={editFormData.email}
+                        type="text"
+                        name="username"
+                        value={editFormData.username}
                         onChange={handleFormChange}
                     />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                    <Form.Label>Department</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="department"
-                        value={editFormData.department}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
+
                     <Form.Group className="mb-3">
                     <Form.Label>Password</Form.Label>
                     <InputGroup>
@@ -129,6 +282,17 @@ function Users() {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
+                    <Form.Label>Department</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="department"
+                        value={editFormData.department}
+                        onChange={handleFormChange}
+                    />
+                    </Form.Group>
+                    
+
+                    <Form.Group className="mb-3">
                     <Form.Label>Role</Form.Label>
                     <Form.Control
                         type="text"
@@ -139,138 +303,47 @@ function Users() {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                    <Form.Label>Phone Number</Form.Label>
+                    <Form.Label>Employee Number</Form.Label>
                     <Form.Control
                         type="text"
-                        name="phoneNumber"
-                        value={editFormData.phoneNumber}
+                        name="employeeNumber"
+                        value={editFormData.employeeNumber}
                         onChange={handleFormChange}
                     />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="username"
-                        value={editFormData.username}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                    <Form.Label>Profile Image URL</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="profileImage"
-                        value={editFormData.profileImage}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                    <Form.Check 
-                        type="checkbox"
-                        name="isActive"
-                        label="Active User"
-                        checked={editFormData.isActive}
-                        onChange={e => setEditFormData({ ...editFormData, isActive: e.target.checked })}
-                    />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                    <Form.Label>Language Preference</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="languagePreference"
-                        value={editFormData.languagePreference}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                    <Form.Label>Country</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="country"
-                        value={editFormData.location?.country}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                    <Form.Label>State</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="state"
-                        value={editFormData.location?.state}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                    <Form.Label>City</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="city"
-                        value={editFormData.location?.city}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                    <Form.Label>Time Zone</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="timeZone"
-                        value={editFormData.location?.timeZone}
-                        onChange={handleFormChange}
-                    />
-                    </Form.Group>
-                    {/* Add other fields similar to the above */}
                     <Button variant="primary" onClick={handleSave}>Save</Button>
                     <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
                   </Form>
                 ) : (
                   // Display Card
                   <>
-                    <Image src={user.profileImage} fluid className="mb-3" />
+                    {/* <Image src={user.profileImage} fluid className="mb-3" /> */}
                     <Card.Title>{user.firstName} {user.lastName}</Card.Title>
                     <Card.Text as="div">
                     <Table borderless size="sm">
                         <tbody>
                         <tr>
-                            <td>Email:</td>
-                            <td>{user.email}</td>
+                            <td>Username:</td>
+                            <td>{user.username}</td>
                         </tr>
+                            <td>Password:</td>
+                            <td>
+                                {passwordVisible ? user.password : '••••••••'}
+                                <Button variant="link" onClick={togglePasswordVisibility}>
+                                {passwordVisible ? 'Hide' : 'Show'}
+                                </Button>
+                            </td>
                         <tr>
                             <td>Department:</td>
                             <td>{user.department}</td>
                         </tr>
                         <tr>
-                            <td>First Name:</td>
-                            <td>{user.firstName}</td>
+                            <td>Employee Number:</td>
+                            <td>{user.employeeNumber}</td>
                         </tr>
                         <tr>
-                            <td>Last Name:</td>
-                            <td>{user.lastName}</td>
-                        </tr>
-                        <tr>
-                            <td>Phone Number:</td>
-                            <td>{user.phoneNumber}</td>
-                        </tr>
-                        <tr>
-                            <td>Username:</td>
-                            <td>{user.username}</td>
-                        </tr>
-                        <tr>
-                        <td>Password:</td>
-                        <td>
-                            {passwordVisible ? user.password : '••••••••'}
-                            <Button variant="link" onClick={togglePasswordVisibility}>
-                            {passwordVisible ? 'Hide' : 'Show'}
-                            </Button>
-                        </td>
+
                         </tr>
                         </tbody>
                     </Table>
@@ -278,30 +351,21 @@ function Users() {
                     <Table borderless size="sm">
                         <tbody>
                         <tr>
-                            <td>Active:</td>
-                            <td>{user.isActive ? 'Yes' : 'No'}</td>
-                        </tr>
-                        <tr>
-                            <td>Language Preference:</td>
-                            <td>{user.languagePreference}</td>
-                        </tr>
-                        <tr>
                             <td>Role:</td>
                             <td>{user.role}</td>
-                        </tr>
-                        <tr>
-                            <td>Location:</td>
-                            <td>{`${user.location?.country}, ${user.location?.state}, ${user.location?.city}`}</td>
-                        </tr>
-                        <tr>
-                            <td>Time Zone:</td>
-                            <td>{user.location?.timeZone}</td>
                         </tr>
                         </tbody>
                     </Table>
                     </Card.Text>
 
+                    <Row className="mt-auto">
+                    <Col className="d-flex justify-content-start">
                     <Button variant="primary" onClick={() => handleEdit(user)}>Edit</Button>
+                    </Col>
+                    <Col className="d-flex justify-content-end">
+                    <Button variant="danger" onClick={() => handleDeleteUser(user._id)}>Delete</Button>
+                    </Col>
+                </Row>
                   </>
                 )}
               </Card.Body>

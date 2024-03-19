@@ -27,7 +27,7 @@ const AppRoutes = () => {
               <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
               <Route path="/CreateFeeditem" element={<SupervisorProtectedRoute><FeedItemForm/></SupervisorProtectedRoute>} />
               <Route path="/ipc" element={<ProtectedRoute><ExcelUploadComponent/> </ProtectedRoute>} />
-              <Route path="/users" element={<ProtectedRoute><Users/> </ProtectedRoute>} />
+              <Route path="/users" element={<SupervisorProtectedRoute><Users/> </SupervisorProtectedRoute>} />
     </Routes>
   );
 };
