@@ -12,7 +12,8 @@ import TaskArrangementForm from '../Forms/AnchoragePreForm';
 import ViewToolbox from '../Views/ViewToolbox';
 import ExcelUploadComponent from '../Forms/IpcForm';
 import Users from '../Users/Users';
-// ... other component imports
+import Metausers from '../MetaUsers/Metauser';
+
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
               <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
               <Route path="/CreateFeeditem" element={<SupervisorProtectedRoute><FeedItemForm/></SupervisorProtectedRoute>} />
               <Route path="/ipc" element={<ProtectedRoute><ExcelUploadComponent/> </ProtectedRoute>} />
+              <Route path="/metausers" element={<ProtectedRoute><Metausers/> </ProtectedRoute>} />
               <Route path="/users" element={<SupervisorProtectedRoute><Users/> </SupervisorProtectedRoute>} />
     </Routes>
   );
