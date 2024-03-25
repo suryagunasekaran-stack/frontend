@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
+import { Card, Button, Form } from 'react-bootstrap';
+
 
 function Metauser() {
   const [items, setItems] = useState([]);
@@ -20,6 +22,25 @@ function Metauser() {
   const isExpiryDate = (header) => {
     // Determine if the header implies an expiry date
     return header.toLowerCase().includes('expiry date');
+  };
+
+  const saveMetaData = async () => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const response = await fetch(`${apiUrl}/saveMetaData`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(items),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      alert('Data saved successfully');
+    } catch (error) {
+      alert('Error saving data: ' + error.message);
+    }
   };
 
   const readExcelFile = (file) => {
@@ -67,16 +88,29 @@ function Metauser() {
   };
 
   return (
-    <div>
-      <input
-        type="file"
-        onChange={(e) => {
-          const file = e.target.files[0];
-          readExcelFile(file);
-        }}
-      />
-      {items.length > 0 && <pre>{JSON.stringify(items, null, 2)}</pre>}
-    </div>
+    <Card style={{ width: '50rem', margin: 'auto', backgroundColor: '#f0f8ff' }}>
+      <Card.Body>
+        <Card.Title>Upload Employee Meta Data</Card.Title>
+        <Form>
+          <Form.Group controlId="formFile" className="mb-3">
+            <Form.Label>Select File:</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                readExcelFile(file);
+              }}
+            />
+          </Form.Group>
+          {items.length > 0 && (
+            <>
+              <Button variant="primary" onClick={saveMetaData}>Save Data</Button>
+              <pre>{JSON.stringify(items, null, 2)}</pre>
+            </>
+          )}
+        </Form>
+      </Card.Body>
+    </Card>
   );
 }
 

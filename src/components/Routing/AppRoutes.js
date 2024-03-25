@@ -13,6 +13,7 @@ import ViewToolbox from '../Views/ViewToolbox';
 import ExcelUploadComponent from '../Forms/IpcForm';
 import Users from '../Users/Users';
 import Metausers from '../MetaUsers/Metauser';
+import Retmetauser from '../MetaUsers/Retmetauser';
 
 
 const AppRoutes = () => {
@@ -29,6 +30,7 @@ const AppRoutes = () => {
               <Route path="/CreateFeeditem" element={<SupervisorProtectedRoute><FeedItemForm/></SupervisorProtectedRoute>} />
               <Route path="/ipc" element={<ProtectedRoute><ExcelUploadComponent/> </ProtectedRoute>} />
               <Route path="/metausers" element={<ProtectedRoute><Metausers/> </ProtectedRoute>} />
+              <Route path="/retmetausers" element={<ProtectedRoute><Retmetauser/> </ProtectedRoute>} />
               <Route path="/users" element={<SupervisorProtectedRoute><Users/> </SupervisorProtectedRoute>} />
     </Routes>
   );
