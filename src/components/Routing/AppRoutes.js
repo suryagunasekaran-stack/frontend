@@ -28,10 +28,10 @@ const AppRoutes = () => {
               <Route path="/MassSafetyForm" element={<ProtectedRoute><MassSafetyForm /></ProtectedRoute>} />
               <Route path="/MassSafetyView" element={<ProtectedRoute><MassViewer/></ProtectedRoute>} />
               <Route path="/CreateFeeditem" element={<SupervisorProtectedRoute><FeedItemForm/></SupervisorProtectedRoute>} />
-              <Route path="/ipc" element={<ProtectedRoute><ExcelUploadComponent/> </ProtectedRoute>} />
-              <Route path="/metausers" element={<ProtectedRoute><Metausers/> </ProtectedRoute>} />
-              <Route path="/retmetausers" element={<ProtectedRoute><Retmetauser/> </ProtectedRoute>} />
-              <Route path="/users" element={<SupervisorProtectedRoute><Users/> </SupervisorProtectedRoute>} />
+              <Route path="/Ipc" element={<ProtectedRoute><ExcelUploadComponent/> </ProtectedRoute>} />
+              <Route path="/Uploadmetausers" element={<ProtectedRoute><Metausers/> </ProtectedRoute>} />
+              <Route path="/Viewmetausers" element={<ProtectedRoute><Retmetauser/> </ProtectedRoute>} />
+              <Route path="/Brightsafeusers" element={<SupervisorProtectedRoute><Users/> </SupervisorProtectedRoute>} />
     </Routes>
   );
 };

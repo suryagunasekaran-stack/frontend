@@ -15,7 +15,13 @@ const limit = 12; // You can make this configurable
 async function fetchmetadata() {
     
   const apiUrl = process.env.REACT_APP_API_URL;
-  const response = await fetch(`${apiUrl}/getMetaData?page=${page}&limit=${limit}`);
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${apiUrl}/getMetaData?page=${page}&limit=${limit}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`, // Include the authorization token
+    },
+  });
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
