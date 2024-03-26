@@ -85,6 +85,14 @@ const Sidebaru = ({ isOpen, onClose}) => {
                     HomePage
         </div>
     </motion.div>
+
+    {(localStorage.getItem("role") === 'supervisor' ) && (
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+          <div onClick={() => handleLinkClick('/Viewmetausers')} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <HiOfficeBuilding /> Brightsun Employee Details
+          </div>
+        </motion.div>
+      )}
     
     {(localStorage.getItem("role") !== 'userindia') && (
     <><motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
@@ -121,13 +129,7 @@ const Sidebaru = ({ isOpen, onClose}) => {
         </motion.div>
       )}
 
-      {(localStorage.getItem("role") === 'supervisor' ) && (
-        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
-          <div onClick={() => handleLinkClick('/Viewmetausers')} style={{ textDecoration: 'none', color: 'inherit' }}>
-          <HiOfficeBuilding /> Brightsun Employee Details
-          </div>
-        </motion.div>
-      )}
+
 
 
     <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color:'black', opacity:'0.5', borderRadius:'10px' }} >
