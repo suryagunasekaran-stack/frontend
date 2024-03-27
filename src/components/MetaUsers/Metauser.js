@@ -27,10 +27,12 @@ function Metauser() {
   const saveMetaData = async () => {
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
+      const token = localStorage.getItem("token")
       const response = await fetch(`${apiUrl}/saveMetaData`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(items),
       });

@@ -148,7 +148,7 @@ const { data: queryData, isLoading, isError, error } = useQuery(['fileData', pag
                     <tbody>
                     <tr>
                     <td>Employee Number:</td>
-                    <td>{item['EMP NO.']}</td>
+                    <td>{item['EMP NO']}</td>
                     </tr>
                     <tr>
                     <td>Department:</td>
