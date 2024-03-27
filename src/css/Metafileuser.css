@@ -127,3 +127,74 @@
 .pagination span {
   margin: 0 15px; /* Space around the page number */
 }
+
+.carousel-controls {
+  display: flex;
+  justify-content: space-between; /* Space out the left and right controls */
+  padding: 10px; /* Add some padding */
+  align-items: center;
+}
+
+.slider-container {
+  position: static !important;
+}
+
+/* General Styles - Keep these as they are, they're fine for both desktop and mobile */
+
+/* Mobile-specific Styles */
+@media (max-width: 768px) { /* Adjust this breakpoint as needed */
+  .metaFileUsersCard {
+    padding: 10px; /* Smaller padding for mobile */
+    font-size: 0.8em; /* Smaller font size */
+  }
+
+  .metaFileUsersCardBody {
+    height: auto; /* Dynamic height for different contents */
+  }
+
+  .metaFileUsersCardContent, .metaFileUsersCard .card-img, .metaFileUsersCard .card-title {
+    width: auto; /* Full width on mobile */
+    height: auto; /* Auto height for responsive design */
+    margin-bottom: 5px; /* Less space between elements */
+  }
+
+  .metaFileUsersCard .card-img {
+    width: 100px; /* Smaller image size */
+    height: 100px;
+  }
+
+  .metaFileUsersCard .card-title {
+    font-size: 1.2rem; /* Smaller font size */
+  }
+
+  .scrollableContainer {
+    padding: 20px; /* Less padding */
+  }
+
+  .metafilecustomtable td:last-child, .metafilecustomtable td:first-child {
+    width: auto; /* Full width for table cells */
+    text-align: left; /* Uniform text alignment */
+  }
+
+  .carousel-arrow-left, .carousel-arrow-right {
+    font-size: 18px; /* Smaller arrow size for carousel */
+  }
+
+  .pagination {
+    padding: 5px; /* Less padding */
+  }
+
+  /* Additional styles for better touch interaction */
+  button, .carousel-arrow-left, .carousel-arrow-right {
+    min-width: 44px; /* Minimum touch target size */
+    min-height: 44px;
+    padding: 10px; /* Larger padding for easier touch */
+  }
+
+  .carousel-controls {
+    position: absolute;
+    width: 100%;
+    bottom: 10px; /* Position at the bottom of the card */
+    left: 0;
+  }
+}
