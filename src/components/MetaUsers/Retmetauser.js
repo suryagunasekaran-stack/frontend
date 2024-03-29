@@ -66,16 +66,6 @@ const { data: queryData, isLoading, isError, error } = useQuery(['fileData', pag
     setPage(currentPage => Math.max(1, currentPage - 1));
   };
 
-//   const handleSearchChange = (event) => {
-//     setSearchTerm(event.target.value);
-//   };
-
-//   // Handler for search submission
-//   const handleSearchSubmit = () => {
-//     setPage(1); // Reset to first page on new search
-
-//   };
-
   const renderCoursesTable = (courses, withExpiry = false) => (
     <Table borderless size="sm">
       <thead>
