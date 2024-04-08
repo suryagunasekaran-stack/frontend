@@ -18,6 +18,19 @@ const Retmetauser = () => {
         setPage(currentPage => Math.max(1, currentPage - 1));
     };
 
+    // const createIndex = async () => {
+    //     try {
+    //         const apiUrl = process.env.REACT_APP_API_URL;
+    //         const response = await fetch(`${apiUrl}/createIndex`, { method: 'GET' });
+    //         const data = await response.json();
+    //         // You can add more UI feedback here, such as displaying a success message
+    //         console.log(data);
+    //     } catch (error) {
+    //         console.error('Error creating index:', error);
+    //         // Handle any errors, possibly updating the UI to inform the user
+    //     }
+    // };
+
     const metaData = data?.data || [];
 
     return (
@@ -37,6 +50,9 @@ const Retmetauser = () => {
                         </Form>
                     </Col>
                 </Row>
+
+                {/* <Button variant="info" onClick={createIndex}>Create Index</Button> */}
+
                 {isLoading && <Spinner animation="border" />}
                 {isError && <Alert variant="danger">Error: {error.message}</Alert>}
             <Row xs={1} md={2} lg={3}>
