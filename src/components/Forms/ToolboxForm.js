@@ -142,6 +142,7 @@ const ToolboxForm = () => {
                                     <option value="Tuas">Tuas</option>
                                     <option value="Yard">Yard</option>
                                     <option value="Changi">Changi</option>
+                                    <option value="Anchorage">Anchorage</option>
                                 </Form.Control>
                             {errors.location && <p>This field is required</p>}
                         </Form.Group>
