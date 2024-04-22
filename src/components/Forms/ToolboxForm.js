@@ -139,10 +139,30 @@ const ToolboxForm = () => {
                         <Form.Group>
                             <Form.Label>Location:</Form.Label>
                                 <Form.Control as="select" {...register('location', { required: true })}>
-                                    <option value="Tuas">Tuas</option>
-                                    <option value="Yard">Yard</option>
+                                    <option value="Keppel Tuas">Keppel Tuas</option>
+                                    <option value="Kim Heng">Kim Heng</option>
                                     <option value="Changi">Changi</option>
                                     <option value="Anchorage">Anchorage</option>
+                                    <option value="Baker Engineering">Baker Engineering</option>
+                                    <option value="Changi Naval Base">Changi Naval Base</option>
+                                    <option value="GOM">GOM</option>
+                                    <option value="Keppel Benoi">Keppel Benoi</option>
+                                    <option value="Loyang">Loyang</option>
+                                    <option value="Megayard - TBY">Megayard - TBY</option>
+                                    <option value="Mencast">Mencast</option>
+                                    <option value="Mooreast">Mooreast</option>
+                                    <option value="Pandan - ASL ">Pandan - ASL </option>
+                                    <option value="Pandan - Pacific radiance ">Pandan - Pacific radiance </option>
+                                    <option value="Pax ocean">Pax ocean</option>
+                                    <option value="PSA">PSA</option>
+                                    <option value="Sembawang ">Sembawang </option>
+                                    <option value="Smit yard">Smit yard</option>
+                                    <option value="SSE Yard">SSE Yard</option>
+                                    <option value="ST Benoi">ST Benoi</option>
+                                    <option value="ST Tuas">ST Tuas</option>
+                                    <option value="ST Tuas Gul">ST Tuas Gul</option>
+                                    <option value="Workshop - Tuas">Workshop - Tuas</option>
+                                    <option value="Overseas">Overseas</option>
                                 </Form.Control>
                             {errors.location && <p>This field is required</p>}
                         </Form.Group>
