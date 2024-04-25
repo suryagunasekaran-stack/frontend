@@ -51,8 +51,6 @@ const Retmetauser = () => {
                     </Col>
                 </Row>
 
-                {/* <Button variant="info" onClick={createIndex}>Create Index</Button> */}
-
                 {isLoading && <Spinner animation="border" />}
                 {isError && <Alert variant="danger">Error: {error.message}</Alert>}
             <Row xs={1} md={2} lg={3}>

@@ -3,14 +3,12 @@ import { Container, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { BasicCard } from '../Misc/BasicCard';
 import { useApproveRecord, cardRoutes } from '../Misc/CardMisc';
-import { FilterRow, cardTitle } from './ViewMisc';
-import useRecordFilter from '../CustomHooks/useRecordFilter';
+import { cardTitle } from './ViewMisc';
 import '../../css/Viewer.css';
 
 const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, totalPages, cardType, ...otherProps }) => {
     const navigate = useNavigate();
     const handleApprove = useApproveRecord();
-    const { filteredRecords, filtersConfig, clearFilters } = useRecordFilter(records);
     const updateRecords = useCallback((recordId, updatedStatus) => {
         setRecords(records.map(rec => rec._id === recordId ? { ...rec, status: updatedStatus } : rec));
     }, [records, setRecords]);
@@ -58,15 +56,10 @@ const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, total
                 </Button>
             </div>
 
-            <div className='pb-3'>
-                <Row className="justify-content-end">
-                    <FilterRow filters={filtersConfig} onClearFilters={clearFilters} />
-                </Row>
-            </div>
 
-            <div style={{ overflowY: 'scroll', maxHeight: '100vh', border: '1px solid #ddd', padding: '15px', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'}}>
+            <div style={{ maxHeight: '100vh'}}>
                 <Row>
-                    {filteredRecords.map(record => (
+                    {records.map(record => (
                         <BasicCard
                             key={record._id}
                             record={record} 
@@ -77,8 +70,8 @@ const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, total
                         />
                     ))}
                 </Row>
+                {paginationControls}
             </div>
-            {paginationControls}
         </Container>
         
     );
