@@ -1,27 +1,61 @@
-// withRecordsViewer.js
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { Container, Row, Col, Form, Spinner, Alert } from 'react-bootstrap';
 import RecordsViewer from './RecordsViewer';
 import useFetchRecords from '../CustomHooks/useFetchRecords';
+import { cardTitle } from './ViewMisc';
 
 const withRecordsViewer = (apiEndpoint, cardType) => {
-    return (props) => {
-        const [currentPage, setCurrentPage] = useState(1);
-        const { records, isLoading, error, setRecords, totalPages } = useFetchRecords(apiEndpoint, cardType, currentPage, 30);
-        if (isLoading) return <p>Loading...</p>;
-        if (error) return <p>Error loading data: {error}</p>;
+  return (props) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState(''); // State for the search term
 
-        return (
-            <RecordsViewer 
+    // Fetch records based on current page and search term
+    const { records, isLoading, isError, error, totalPages } = useFetchRecords(
+      apiEndpoint,
+      cardType,
+      currentPage,
+      30,
+      searchTerm
+    );
+
+    return (
+        <Container fluid style={{ backgroundColor: '#E5ECF4', minHeight: '100vh', overflow: 'auto' }} >
+        <div style={{ marginLeft: '25px'}}>
+          <h2 style={{ marginTop: '95px' }}>{cardTitle[cardType]}</h2>
+          <Row className="mb-3">
+            <Col md={4} lg={3}>
+              <Form>
+                <Form.Group controlId="searchInput">
+                  <Form.Control
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+          </Row>
+          </div>
+
+          {/* Conditional Loading and Error Handling */}
+          {isLoading && <Spinner animation="border" />}
+          {isError && <Alert variant="danger">Error: {error.message}</Alert>}
+
+          {/* Display Records */}
+          <RecordsViewer
             records={records}
-            setRecords={setRecords}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             totalPages={totalPages}
             cardType={cardType}
-            {...props} // Pass down additional props
-        />
-        );
-    };
+            {...props}
+          />
+
+        </Container>
+    );
+  };
 };
 
 export default withRecordsViewer;
+

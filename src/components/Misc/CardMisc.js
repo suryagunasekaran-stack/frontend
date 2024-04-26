@@ -11,16 +11,20 @@ export const InfoRow = ({ label, value }) => {
   };
 
   const capitalizedLabel = capitalizeFirstLetter(label);
-  let capitalizedValue = value;
-
-  if (typeof value === 'string') {
-    capitalizedValue = capitalizeFirstLetter(value);
-  }
+  const capitalizedValue = typeof value === 'string' ? capitalizeFirstLetter(value) : value;
 
   return (
-    <Row style={{ fontFamily: "'Teko', sans-serif", fontSize: "30px" }} className="card-text">
-      <Col xs={6} className="info-row-label">{capitalizedLabel}:</Col>
-      <Col xs={6} className="info-row-label">{capitalizedValue}</Col>
+    <Row className="info-row" style={{ fontFamily: "'Teko', sans-serif", fontSize: "30px" }}>
+      {/* Adjusted column widths for better distribution */}
+      <Col xs={3} style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+        {capitalizedLabel} {/* Right-aligned label */}
+      </Col>
+      <Col xs={1} style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
+        : {/* Separator, centered */}
+      </Col>
+      <Col xs={8} style={{ textAlign: 'left', whiteSpace: 'nowrap' }}>
+        {capitalizedValue} {/* Left-aligned value */}
+      </Col>
     </Row>
   );
 };
@@ -69,8 +73,8 @@ export const renderApprovalButtons = ({condition, onApprove, onReject, record}) 
         return (
             <>
                 <Col xs={4} className="align-items-center ">
-                  <Button className="button-approve" onClick={onApprove}>Approve</Button>
-                  <Button className="button-reject" onClick={onReject}>Reject</Button>
+                  <Button style={{ marginBottom: '10px' }} className="button-approve" onClick={onApprove}>Approve</Button>
+                  <Button style={{width: "100%"}} className="button-reject" onClick={onReject}>Reject</Button>
                 </Col>
             </>
         );
@@ -87,7 +91,7 @@ export const renderApprovalButtons = ({condition, onApprove, onReject, record}) 
     const approverName = record.finalApprover ? record.finalApprover.toUpperCase() : localStorage.getItem('username').toUpperCase();
     return (
         <>
-            <Col xs={4} className="d-flex align-items-center justify-content-end">
+            <Col xs={4}>
                 <Badge bg="danger">Rejected By: {approverName}</Badge>
             </Col>
         </>

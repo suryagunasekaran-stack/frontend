@@ -77,4 +77,36 @@
     opacity: 0.8;
 }
 
+.approval-buttons {
 
+    display: flex;          /* Enable Flexbox */
+    justify-content: center;  /* Center items horizontally */
+    align-items: center;
+
+}
+
+.pdf-component{
+
+    display: flex;          /* Enable Flexbox */
+    justify-content: center;  /* Center items horizontally */
+    align-items: center;
+}
+
+.info-rows {
+    margin-left: 30px;
+    white-space: normal;       /* Allow text to wrap naturally */
+    overflow-wrap: break-word; /* Enable word wrapping for long words */
+    word-wrap: break-word;     /* Alternative for older browsers */
+    overflow: hidden;          /* Prevent text from overflowing the div */
+    text-overflow: ellipsis;   /* Optional: Indicate text overflow with ellipsis */
+  }
+  
+  
+  .info-row-label {
+    text-align: right; /* Right-align the key (label) */
+  }
+  
+  .info-row-value {
+    text-align: left; /* Left-align the value */
+  }
+  

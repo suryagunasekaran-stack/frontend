@@ -3,7 +3,6 @@ import { Container, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { BasicCard } from '../Misc/BasicCard';
 import { useApproveRecord, cardRoutes } from '../Misc/CardMisc';
-import { cardTitle } from './ViewMisc';
 import '../../css/Viewer.css';
 
 const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, totalPages, cardType, ...otherProps }) => {
@@ -46,10 +45,9 @@ const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, total
     if (otherProps.error) return <p>Error loading data: {otherProps.error}</p>;
 
     return (
-        <Container style={{minWidth: '100vw', backgroundColor: '#E5ECF4' }}>
+        <Container style={{minWidth: '95vw'}}>
             <div className="d-flex justify-content-between align-items-center p-3" style={{ paddingTop: "25px", paddingBottom: "25px" }}>
                 <h2 className="text-left" style={{ marginLeft: "100px" }}>
-                 {cardTitle[cardType]}
                 </h2>
                 <Button style={{ backgroundColor: '#383631', borderColor: '#383631' }} onClick={navigateToToolboxCreate}>
                     Create Record

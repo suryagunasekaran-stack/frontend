@@ -1,24 +1,31 @@
 import { useQuery } from 'react-query';
 
-const useFetchRecords = (apiEndpoint, cardType, currentPage, limit = 30) => {
+const useFetchRecords = (apiEndpoint, cardType, currentPage, limit = 30, searchTerm = '') => {
   const fetchRecords = async () => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     const username = localStorage.getItem('username');
 
-    // Determine if the user is a supervisor
-    const isSupervisor = role === 'supervisor';
-    console.log(isSupervisor)
+    const isSupervisor = role === 'supervisor'; // Determine if the user is a supervisor
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
-    // Construct URL with query parameters
-    const url = new URL(`${apiUrl}${apiEndpoint}`);
+    // Construct the base URL
+    let url = new URL(`${apiUrl}${apiEndpoint}`);
     url.searchParams.append('type', cardType);
     url.searchParams.append('page', currentPage);
     url.searchParams.append('limit', limit);
     url.searchParams.append('authorId', username);
     url.searchParams.append('isSupervisor', isSupervisor);
+
+    // Modify the URL if there's a search term
+    if (searchTerm.trim() !== '') {
+      url = new URL(`${apiUrl}/searchrecords`);
+      url.searchParams.append('term', encodeURIComponent(searchTerm));
+      url.searchParams.append('page', currentPage);
+      url.searchParams.append('limit', limit);
+      url.searchParams.append('type', cardType);
+    }
 
     const response = await fetch(url, {
       headers: {
@@ -27,23 +34,18 @@ const useFetchRecords = (apiEndpoint, cardType, currentPage, limit = 30) => {
       },
     });
 
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const data = await response.json();
-
     return data;
   };
 
   const { data, isLoading, isError, error } = useQuery(
-    ['fetchRecords', apiEndpoint, cardType, currentPage, limit],
+    ['fetchRecords', apiEndpoint, cardType, currentPage, limit, searchTerm],
     fetchRecords,
-    {
-      staleTime: 300000, // 5 minutes to avoid unnecessary re-fetching
-      cacheTime: 600000, // 10 minutes caching
-      keepPreviousData: true, // Retain data while fetching new records
-    }
   );
 
   const records = data?.records ?? [];
@@ -53,5 +55,3 @@ const useFetchRecords = (apiEndpoint, cardType, currentPage, limit = 30) => {
 };
 
 export default useFetchRecords;
-
-
