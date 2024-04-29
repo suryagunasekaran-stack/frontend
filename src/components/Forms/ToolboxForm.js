@@ -90,7 +90,7 @@ const ToolboxForm = () => {
         setIsSubmitting(true);
         const combinedData = {
             ...data,
-            items: employees
+            items: employees,
         };
     
         try {

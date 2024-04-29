@@ -16,7 +16,10 @@ const submitFormData = async (data, authorSigRef, supervisorSigRef) => {
             ...data,
             items: transformedData,
             authorSignature,
-            supervisorSignature
+            supervisorSignature,
+            rejections: [], // Adding an empty array for rejections
+            version: 1,
+            status: "pending"
         };
 
         // Submit the form data

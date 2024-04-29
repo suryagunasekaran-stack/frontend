@@ -1,8 +1,8 @@
 import React from "react";
-import { Row, Col, Button, Badge } from "react-bootstrap";
 import PdfAnchor from "../PdfGenerator/PdfAnchor";
 import PdfGenerator from "../PdfGenerator/Pdfgenarator";
 import PdfSafety from "../PdfGenerator/PdfSafety";
+import { Button, Badge, Row, Col } from 'react-bootstrap';
 import '../../css/Viewer.css'
 
 export const InfoRow = ({ label, value }) => {
@@ -68,36 +68,37 @@ export const pdfComponents = {
 };
 
 
-export const renderApprovalButtons = ({condition, onApprove, onReject, record}) => {
-    if (condition === 'supervisorAndPending') {
-        return (
-            <>
-                <Col xs={4} className="align-items-center ">
-                  <Button style={{ marginBottom: '10px' }} className="button-approve" onClick={onApprove}>Approve</Button>
-                  <Button style={{width: "100%"}} className="button-reject" onClick={onReject}>Reject</Button>
-                </Col>
-            </>
-        );
-    } else if (condition === 'supervisorAndApproved') {
-      const approverName = record.finalApprover ? record.finalApprover.toUpperCase() : localStorage.getItem('username').toUpperCase();
-      return (
-          <>
-              <Col xs={4}>
-                  <Badge bg="success">Approved By: {approverName}</Badge>
-              </Col>
-          </>
-      );
-  } else if (condition === 'supervisorAndRejected') {
-    const approverName = record.finalApprover ? record.finalApprover.toUpperCase() : localStorage.getItem('username').toUpperCase();
-    return (
-        <>
-            <Col xs={4}>
-                <Badge bg="danger">Rejected By: {approverName}</Badge>
-            </Col>
-        </>
-    );
-}
-    return null;
+// Revised renderApprovalButtons function
+export const renderApprovalButtons = ({ condition, onApprove, onReject, record, onViewRejectionHistory }) => {
+  return (
+      <>
+          {condition === 'supervisorAndPending' && (
+              <Row>
+                  <Col xs={4}>
+                      <Button style={{ marginBottom: '10px' }} className="button-approve" onClick={onApprove}>
+                          Approve
+                      </Button>
+                      <Button className="button-reject" onClick={onReject}>
+                          Reject
+                      </Button>
+                  </Col>
+                  {record.rejections && record.rejections.length > 0 && (
+                      <Col xs={4}>
+                          <Button onClick={onViewRejectionHistory}>
+                              View Rejection History
+                          </Button>
+                      </Col>
+                  )}
+              </Row>
+          )}
+          {condition === 'supervisorAndApproved' && (
+              <Badge bg="success">Approved By: {record.finalApprover || localStorage.getItem('username').toUpperCase()}</Badge>
+          )}
+          {condition === 'supervisorAndRejected' && (
+              <Badge bg="danger">Rejected By: {record.finalApprover || localStorage.getItem('username').toUpperCase()}</Badge>
+          )}
+      </>
+  );
 };
 
 export const useApproveRecord = () => {

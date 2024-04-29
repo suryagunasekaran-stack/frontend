@@ -2,18 +2,14 @@ import React, { useCallback } from 'react';
 import { Container, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { BasicCard } from '../Misc/BasicCard';
-import { useApproveRecord, cardRoutes } from '../Misc/CardMisc';
+import { cardRoutes } from '../Misc/CardMisc';
 import '../../css/Viewer.css';
 
-const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, totalPages, cardType, ...otherProps }) => {
+const RecordsViewer = ({ records, currentPage, setCurrentPage, totalPages, cardType, ...otherProps }) => {
     const navigate = useNavigate();
-    const handleApprove = useApproveRecord();
-    const updateRecords = useCallback((recordId, updatedStatus) => {
-        setRecords(records.map(rec => rec._id === recordId ? { ...rec, status: updatedStatus } : rec));
-    }, [records, setRecords]);
 
     const navigateToToolboxCreate = useCallback(() => {
-        const naviroute = cardRoutes[cardType]
+        const naviroute = cardRoutes[cardType];
         navigate(naviroute);
     }, [navigate, cardType]);
 
@@ -40,30 +36,24 @@ const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, total
         </div>
     );
 
-
     if (!records) return <p>Loading...</p>;
     if (otherProps.error) return <p>Error loading data: {otherProps.error}</p>;
 
     return (
-        <Container style={{minWidth: '95vw'}}>
+        <Container style={{ minWidth: '95vw' }}>
             <div className="d-flex justify-content-between align-items-center p-3" style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-                <h2 className="text-left" style={{ marginLeft: "100px" }}>
-                </h2>
                 <Button style={{ backgroundColor: '#383631', borderColor: '#383631' }} onClick={navigateToToolboxCreate}>
                     Create Record
                 </Button>
             </div>
 
-
-            <div style={{ maxHeight: '100vh'}}>
+            <div style={{ maxHeight: '100vh' }}>
                 <Row>
                     {records.map(record => (
                         <BasicCard
                             key={record._id}
-                            record={record} 
+                            record={record}
                             cardType={cardType}
-                            onApprove={() => handleApprove(record._id, "approved", updateRecords, cardType)}
-                            onReject={() => handleApprove(record._id, "rejected", updateRecords, cardType)}
                             {...otherProps}
                         />
                     ))}
@@ -71,7 +61,6 @@ const RecordsViewer = ({ records, setRecords, currentPage, setCurrentPage, total
                 {paginationControls}
             </div>
         </Container>
-        
     );
 };
 
