@@ -4,18 +4,26 @@ import { useMutation, useQueryClient   } from 'react-query';
 import { InfoRow, recordTitles, cardConfigurations, pdfComponents, renderApprovalButtons, determineCondition, gradientClasses } from "./CardMisc";
 import { RejectionModal } from './Modals/RejectionModal';
 import { RejectionHistoryModal } from './Modals/RejectionHistoryModal';
+import { AmendmentsModal } from "./Modals/AmendmentsModal";
 import '../../css/Viewer.css'
 
 export const BasicCard = ({ record, cardType }) => {
     // States for the rejection modals
     const [showRejectModal, setShowRejectModal] = useState(false);
     const [showRejectionHistoryModal, setShowRejectionHistoryModal] = useState(false);
+    const [showAmendmentsModal, setShowAmendmentsModal] = useState(false);
     const apiUrl = process.env.REACT_APP_API_URL
     const queryClient = useQueryClient();
 
     const handleSaveReject = (comments, dateTime, signature, username) => {
         // Now you can use these values to perform any logic, such as an API call or local state update
         rejectMutation.mutate({ comments, dateTime, signature, username });
+    };
+
+    const handleSaveAmendment = (data, amendedBy, signatureData) => {
+        console.log(data); // This will now contain all the record-related fields
+        console.log(amendedBy, signatureData); // Separate logging for clarity
+        updateAmendments.mutate({data,amendedBy,signatureData, record})
     };
 
     // Mutation for approving a record
@@ -31,6 +39,8 @@ export const BasicCard = ({ record, cardType }) => {
             queryClient.invalidateQueries(['fetchRecords']);
         }
     });
+
+    const usr = localStorage.getItem('username');
 
     // Mutation for rejecting a record
     const rejectMutation = useMutation(({ comments, dateTime, signature, username }) => fetch(`${apiUrl}/updateRejection`, {
@@ -50,12 +60,34 @@ export const BasicCard = ({ record, cardType }) => {
         }
     });
 
+    const updateAmendments = useMutation(({ data,amendedBy,signatureData, record}) => fetch(`${apiUrl}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ data,amendedBy,signatureData, record })
+    }), {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['fetchRecords']);
+            handleCloseShowAmendmentsModal();
+        },
+        onError: (error) => {
+            alert('Error processing rejection: ' + error.message);
+        }
+    });
+
     const handleApprove = () => {
         approveMutation.mutate('approved');
     };
 
     const handleCloseRejectModal = () => {
         setShowRejectModal(false);
+    };
+
+    const formatDateTime = (dateTimeString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateTimeString).toLocaleString(undefined, options);
     };
 
     const gradientClass = gradientClasses[record.status] || '';
@@ -65,6 +97,9 @@ export const BasicCard = ({ record, cardType }) => {
 
     const handleShowRejectionHistoryModal = () => setShowRejectionHistoryModal(true);
     const handleCloseRejectionHistoryModal = () => setShowRejectionHistoryModal(false);
+
+    const handleShowAmendmentsModal = () => setShowAmendmentsModal(true);
+    const handleCloseShowAmendmentsModal = () => setShowAmendmentsModal(false);
     
     return (
         <Col sm={12} md={6} lg={4} className="mb-4" key={record._id}>
@@ -73,8 +108,15 @@ export const BasicCard = ({ record, cardType }) => {
                     <h4 className="card-title text-center">{recordTitles[record.type]}</h4>
                     <div className="info-rows">
                         {rowsToRender.map(row => {
-                            let value = record[row] || '';
-                            return <InfoRow label={row} value={value} key={row} />;
+                            let value;
+                        if (row === 'ipcNumber' && record['ipcNumber']) {
+                            value = record['ipcNumber'];
+                        } else if (row === 'dateTime') {
+                            value = formatDateTime(record[row]);
+                        } else {
+                            value = record[row];
+                        }
+                        return value ? <InfoRow label={row} value={value} key={row} /> : null;
                         })}
                     </div>
                     <Row className="card-actions">
@@ -102,8 +144,9 @@ export const BasicCard = ({ record, cardType }) => {
                             )}
                         </Col>
                         <Col>
-                            {record.status === 'rejected' && (
-                                <Button 
+                            {(record.status === 'rejected' && record.author === usr) && (
+                                <Button
+                                    onClick={handleShowAmendmentsModal}
                                     style={{ backgroundColor: '#5E807F', borderColor: '#5E807F' }} >
                                     Make Amendments
                                 </Button>
@@ -125,6 +168,14 @@ export const BasicCard = ({ record, cardType }) => {
                 handleCloseRejectionHistoryModal={handleCloseRejectionHistoryModal}
                 record={record}
             />
+
+            <AmendmentsModal 
+            showAmendmentsModal = {showAmendmentsModal}
+            handleCloseAmendments = {handleCloseShowAmendmentsModal}
+            onSaveAmendments = {handleSaveAmendment}
+            record={record}
+             />
+
         </Col>
     );
 };
