@@ -10,29 +10,14 @@ async function fetchImageAsUint8Array(imageUrl) {
     return new Uint8Array(arrayBuffer);
   }
 
-const PdfGenerator = ({
-  department,
-  location,
-  type,
-  dateTime,
-  vessel,
-  topic,
-  raNumber,
-  author,
-  nameSupervisor,
-  items,
-  ipcNumber,
-  authorSignature,
-  supervisorSignature
-}) => {
-  const createPdf = async () => {
+const PdfGenerator = (props) => {
 
-
-    const pdfDoc = await PDFDocument.create();
-    var page = pdfDoc.addPage(PageSizes.A4);
-    const width = page.getWidth();
-    const height = page.getHeight();
-    const padding = 30;
+const createPdf = async () => {
+const pdfDoc = await PDFDocument.create();
+var page = pdfDoc.addPage(PageSizes.A4);
+const width = page.getWidth();
+const height = page.getHeight();
+const padding = 30;
 
 
     page.drawRectangle({
@@ -107,7 +92,7 @@ const PdfGenerator = ({
             "Transport Meeting": "TRANSPORT MEETING RECORD"
         };
 
-        const sectionTitle = optionMapping[type];
+        const sectionTitle = optionMapping[props.type];
         const sectionFontSize = 14; // Adjust the section font size as needed
 
         // Calculate the width of the text and position it
@@ -152,8 +137,8 @@ const PdfGenerator = ({
             thickness: 1
         });
         // Define the texts for the left and right aligned parts
-          const leftText = "Department: " + department;
-          const rightText = "Location: " + location;
+          const leftText = "Department: " + props.department;
+          const rightText = "Location: " + props.location;
           const infoFontSize = 12; // Adjust the font size for these texts as needed
 
           // Calculate the Y position for these texts, positioned below the previous section
@@ -183,7 +168,7 @@ const PdfGenerator = ({
               color: rgb(0, 0, 0)
           });
 
-          const dateObject = new Date(dateTime);
+          const dateObject = new Date(props.dateTime);
 
         // Format the date and time in a readable format
         // Example: 'February 16, 2024, 07:32 AM'
@@ -197,7 +182,7 @@ const PdfGenerator = ({
         });
 
           const leftTextLine2 = "Date/Time: " + formattedDateTime;
-          const rightTextLine2 = "Vessel: " + vessel;
+          const rightTextLine2 = "Vessel: " + props.vessel;
           // We can reuse infoFontSize for these texts as well
           
           // Calculate the Y position for these texts, positioned below the previous line
@@ -233,8 +218,8 @@ const PdfGenerator = ({
           });
           
           // Define the left aligned texts
-          const topicText = "Topic: " + topic;
-            const raNoText = "RA Number: " + raNumber;
+          const topicText = "Topic: " + props.topic;
+            const raNoText = "RA Number: " + props.raNumber;
             const leftAlignFontSize = 12; // Adjust the font size for these texts as needed
 
             // Calculate the Y position for "Topic:", positioned with ample space below the line
@@ -299,9 +284,9 @@ const PdfGenerator = ({
               color: rgb(0, 0, 0),
               thickness: 1
           });
-          const ipcNumberExists = Boolean(ipcNumber);
+          const ipcNumberExists = Boolean(props.ipcNumber);
           if (ipcNumberExists) {
-            const ipcNumberText = "IPC Number: " + ipcNumber;
+            const ipcNumberText = "IPC Number: " + props.ipcNumber;
             const rightAlignFontSize = 12; // Font size for right-aligned text
             const pageWidth = page.getSize().width;
         
@@ -382,7 +367,7 @@ const PdfGenerator = ({
             });
         };
 
-        for (const [index, item] of items.entries()) {
+        for (const [index, item] of props.items.entries()) {
             // Add the item text
             if (y - 30 < bottomMargin) { // Check for new page before adding text
                 addNewPage();
@@ -412,62 +397,63 @@ const PdfGenerator = ({
 
         // Now add the footer on the current page (which might be a new page if one was just added)
         const footerText1 = "The above employees have attended the toolbox meeting and provided with the PPE as mentioned. (mandatory PPE such as Safety Helmet, Safety Shoes, Safety Belt, Safety Spectacles & Ear Plug were Permanently provided)";
-const footerFontSize = 9; // Adjust the font size for the footer text as needed
+        const footerFontSize = 9; // Adjust the font size for the footer text as needed
 
-// Calculate the Y position for the footer, positioned towards the bottom of the rectangle
-const footerTextY1 = padding + 100; // Adjust the vertical position as needed. Ensure it's within your rectangle
+        // Calculate the Y position for the footer, positioned towards the bottom of the rectangle
+        const footerTextY1 = padding + 100; // Adjust the vertical position as needed. Ensure it's within your rectangle
 
-// Draw a line above the footer text
-const lineYAboveFooter1 = footerTextY1 + 15; // Adjust the space above the line as needed
-page.drawLine({
-    start: { x: padding, y: lineYAboveFooter1 },
-    end: { x: width - padding, y: lineYAboveFooter1 },
-    color: rgb(0, 0, 0),
-    thickness: 1
-});
-
-// Function to split text into lines and draw them
-const drawWrappedText = (text, x, y, fontSize, maxWidth) => {
-    let lines = [];
-    let currentLine = '';
-    text.split(' ').forEach(word => {
-        let testLine = currentLine + word + ' ';
-        let testWidth = font.widthOfTextAtSize(testLine, fontSize);
-        if (testWidth > maxWidth && currentLine !== '') {
-            lines.push(currentLine);
-            currentLine = word + ' ';
-        } else {
-            currentLine = testLine;
-        }
-    });
-    lines.push(currentLine); // Push the last line
-
-    let currentY = y;
-    lines.forEach(line => {
-        page.drawText(line, {
-            x: x,
-            y: currentY,
-            size: fontSize,
-            font: font,
-            color: rgb(0, 0, 0)
+        // Draw a line above the footer text
+        const lineYAboveFooter1 = footerTextY1 + 15; // Adjust the space above the line as needed
+        page.drawLine({
+            start: { x: padding, y: lineYAboveFooter1 },
+            end: { x: width - padding, y: lineYAboveFooter1 },
+            color: rgb(0, 0, 0),
+            thickness: 1
         });
-        currentY -= fontSize + 2; // Adjust line spacing as needed
+
+        // Function to split text into lines and draw them
+        const drawWrappedText = (text, x, y, fontSize, maxWidth) => {
+            let lines = [];
+            let currentLine = '';
+            text.split(' ').forEach(word => {
+                let testLine = currentLine + word + ' ';
+                let testWidth = font.widthOfTextAtSize(testLine, fontSize);
+                if (testWidth > maxWidth && currentLine !== '') {
+                    lines.push(currentLine);
+                    currentLine = word + ' ';
+                } else {
+                    currentLine = testLine;
+                }
+            });
+
+        lines.push(currentLine); // Push the last line
+
+        let currentY = y;
+        lines.forEach(line => {
+            page.drawText(line, {
+                x: x,
+                y: currentY,
+                size: fontSize,
+                font: font,
+                color: rgb(0, 0, 0)
+            });
+            currentY -= fontSize + 2; // Adjust line spacing as needed
+        });
+
+        return currentY; // Return the Y position after the last line
+    };
+
+    // Draw the wrapped footer text and get the new Y position
+    const newFooterTextY1 = drawWrappedText(footerText1, padding + 10, footerTextY1, footerFontSize, width - 2 * (padding + 10));
+
+    // Draw a line below the footer text
+    const lineYBelowFooter1 = newFooterTextY1 - 5; // Adjust the space below the line as needed
+    page.drawLine({
+        start: { x: padding, y: lineYBelowFooter1 },
+        end: { x: width - padding, y: lineYBelowFooter1 },
+        color: rgb(0, 0, 0),
+        thickness: 1
     });
-
-    return currentY; // Return the Y position after the last line
-};
-
-// Draw the wrapped footer text and get the new Y position
-const newFooterTextY1 = drawWrappedText(footerText1, padding + 10, footerTextY1, footerFontSize, width - 2 * (padding + 10));
-
-// Draw a line below the footer text
-const lineYBelowFooter1 = newFooterTextY1 - 5; // Adjust the space below the line as needed
-page.drawLine({
-    start: { x: padding, y: lineYBelowFooter1 },
-    end: { x: width - padding, y: lineYBelowFooter1 },
-    color: rgb(0, 0, 0),
-    thickness: 1
-});
 
 
     const conductedByText = "Conducted by:";
@@ -507,94 +493,91 @@ page.drawLine({
     };
 
     // Define the text for "Name:" and "Signature:"
-const nameText2 = "Name: " + nameSupervisor;
-const signatureText = "Signature:";
+    const nameText2 = "Name: " + props.nameSupervisor;
+    const signatureText = "Signature:";
 
-// Calculate the Y position for "Name:" and "Signature:", positioned below "Conducted by:"
-const nameSignatureTextY = conductedByTextY - 20; // Adjust the vertical position as needed
+    // Calculate the Y position for "Name:" and "Signature:", positioned below "Conducted by:"
+    const nameSignatureTextY = conductedByTextY - 20; // Adjust the vertical position as needed
 
-// Draw the left aligned "Name:"
-page.drawText("Name:", {
-    x: padding + 10,
-    y: nameSignatureTextY,
-    size: infoFontSize,
-    font: font,
-    color: rgb(0, 0, 0)
-});
+    // Draw the left aligned "Name:"
+    page.drawText("Name:", {
+        x: padding + 10,
+        y: nameSignatureTextY,
+        size: infoFontSize,
+        font: font,
+        color: rgb(0, 0, 0)
+    });
 
-// Draw the author's name next to "Name:"
-const authorNameX = padding + 10 + font.widthOfTextAtSize("Name: ", infoFontSize);
-page.drawText(author, {
-    x: authorNameX,
-    y: nameSignatureTextY,
-    size: infoFontSize,
-    font: font,
-    color: rgb(0, 0, 0)
-});
+    // Draw the author's name next to "Name:"
+    const authorNameX = padding + 10 + font.widthOfTextAtSize("Name: ", infoFontSize);
+    page.drawText(props.author, {
+        x: authorNameX,
+        y: nameSignatureTextY,
+        size: infoFontSize,
+        font: font,
+        color: rgb(0, 0, 0)
+    });
 
-// Draw the right aligned "Name:" for supervisor
-const supervisorLabelX = width - padding - 65 - font.widthOfTextAtSize(nameText2, infoFontSize);
-page.drawText("Name:", {
-    x: supervisorLabelX,
-    y: nameSignatureTextY,
-    size: infoFontSize,
-    font: font,
-    color: rgb(0, 0, 0)
-});
+    // Draw the right aligned "Name:" for supervisor
+    const supervisorLabelX = width - padding - 65 - font.widthOfTextAtSize(nameText2, infoFontSize);
+    page.drawText("Name:", {
+        x: supervisorLabelX,
+        y: nameSignatureTextY,
+        size: infoFontSize,
+        font: font,
+        color: rgb(0, 0, 0)
+    });
 
-// Draw the supervisor's name next to their "Name:"
-const supervisorNameX = supervisorLabelX + font.widthOfTextAtSize("Name: ", infoFontSize);
-page.drawText(nameSupervisor, {
-    x: supervisorNameX,
-    y: nameSignatureTextY,
-    size: infoFontSize,
-    font: font,
-    color: rgb(0, 0, 0)
-});
+    // Draw the supervisor's name next to their "Name:"
+    const supervisorNameX = supervisorLabelX + font.widthOfTextAtSize("Name: ", infoFontSize);
+    page.drawText(props.nameSupervisor, {
+        x: supervisorNameX,
+        y: nameSignatureTextY,
+        size: infoFontSize,
+        font: font,
+        color: rgb(0, 0, 0)
+    });
 
-// Position "Signature:" below "Name:"
-const signatureTextY = nameSignatureTextY - 20; // Adjust as needed
+    // Position "Signature:" below "Name:"
+    const signatureTextY = nameSignatureTextY - 20; // Adjust as needed
 
-// Draw the left aligned "Signature:"
-page.drawText(signatureText, {
-    x: padding + 10,
-    y: signatureTextY,
-    size: infoFontSize,
-    font: font,
-    color: rgb(0, 0, 0)
-});
+    // Draw the left aligned "Signature:"
+    page.drawText(signatureText, {
+        x: padding + 10,
+        y: signatureTextY,
+        size: infoFontSize,
+        font: font,
+        color: rgb(0, 0, 0)
+    });
 
-// Draw the right aligned "Signature:"
-const signatureLabelX = width - padding - 70 - font.widthOfTextAtSize(signatureText, infoFontSize);
-page.drawText(signatureText, {
-    x: signatureLabelX,
-    y: signatureTextY,
-    size: infoFontSize,
-    font: font,
-    color: rgb(0, 0, 0)
-});
+    // Draw the right aligned "Signature:"
+    const signatureLabelX = width - padding - 70 - font.widthOfTextAtSize(signatureText, infoFontSize);
+    page.drawText(signatureText, {
+        x: signatureLabelX,
+        y: signatureTextY,
+        size: infoFontSize,
+        font: font,
+        color: rgb(0, 0, 0)
+    });
 
-// Place author signature after "Signature:"
-// Define standard dimensions for signatures
-const signatureWidth = 50; // Example width, adjust as needed
-const signatureHeight = 20; // Example height, adjust as needed
+    // Place author signature after "Signature:"
+    // Define standard dimensions for signatures
+    const signatureWidth = 50; // Example width, adjust as needed
+    const signatureHeight = 20; // Example height, adjust as needed
 
-// Calculate X and Y positions for the author's signature
-const authorSignatureX = padding + 10 + font.widthOfTextAtSize(signatureText + " ", infoFontSize);
-const authorSignatureY = signatureTextY + 20; // Adjust Y position as needed
+    // Calculate X and Y positions for the author's signature
+    const authorSignatureX = padding + 10 + font.widthOfTextAtSize(signatureText + " ", infoFontSize);
+    const authorSignatureY = signatureTextY + 20; // Adjust Y position as needed
 
-// Place author signature after "Signature:"
-await addSignature2(authorSignature, authorSignatureX, authorSignatureY, signatureWidth, signatureHeight);
+    // Place author signature after "Signature:"
+    await addSignature2(props.authorSignature, authorSignatureX, authorSignatureY, signatureWidth, signatureHeight);
 
-// Calculate X and Y positions for the supervisor's signature
-const supervisorSignatureX = signatureLabelX + font.widthOfTextAtSize(signatureText + " ", infoFontSize);
-const supervisorSignatureY = signatureTextY + 20; // Adjust Y position as needed
+    // Calculate X and Y positions for the supervisor's signature
+    const supervisorSignatureX = signatureLabelX + font.widthOfTextAtSize(signatureText + " ", infoFontSize);
+    const supervisorSignatureY = signatureTextY + 20; // Adjust Y position as needed
 
-// Place supervisor signature after their "Signature:"
-await addSignature2(supervisorSignature, supervisorSignatureX, supervisorSignatureY, signatureWidth, signatureHeight);
-
-
-
+    // Place supervisor signature after their "Signature:"
+    await addSignature2(props.supervisorSignature, supervisorSignatureX, supervisorSignatureY, signatureWidth, signatureHeight);
 
     // Define the centered message
     const centerMessage = "Safety Starts With Me - Together We Care";
@@ -615,6 +598,90 @@ await addSignature2(supervisorSignature, supervisorSignatureX, supervisorSignatu
         color: rgb(0, 0, 0)
     });
 
+    /**
+     * 
+     * 
+     * 
+     * This is after the pdf has been completed, now check if the pdf has amendments and corrections, if it has then do what you do best
+     * 
+     * 
+     */
+    const corrections = () => {
+        addNewPage();
+        page.drawImage(pngImage, {
+            x: imageX,
+            y: imageY - padding,
+            width: pngDims.width,
+            height: pngDims.height,
+        });
+        // Draw the text on the page
+        page.drawText(title, {
+            x: textX,
+            y: textY,
+            size: fontSize,
+            font: font,
+            color: rgb(0, 0, 0) // You can change the color if needed
+        });
+        page.drawText(subtitle, {
+            x: subtitleX,
+            y: subtitleY,
+            size: subtitleFontSize,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
+
+        // page.drawRectangle({
+        //     x: padding + 1, // Move rightwards by the border width
+        //     y: sectionY - (backgroundHeight / 2) + 1, // Adjust vertical position
+        //     width: width - 2 * padding - 2 * 1, // Reduce width to fit inside the border
+        //     height: backgroundHeight - 2 * 1, // Reduce height to fit inside the border
+        //     color: rgb(0.9, 0.9, 0.9) // Light grey color
+        // });
+        // Draw lines above and below the text
+        const lineYTop = sectionY + (backgroundHeight / 2);
+        // const lineYBottom = sectionY - (backgroundHeight / 2);
+        page.drawLine({
+            start: { x: padding, y: lineYTop },
+            end: { x: width - padding, y: lineYTop },
+            color: rgb(0, 0, 0),
+            thickness: 1
+        });
+
+        // page.drawLine({
+        //     start: { x: padding, y: lineYBottom },
+        //     end: { x: width - padding, y: lineYBottom },
+        //     color: rgb(0, 0, 0),
+        //     thickness: 1
+        // });
+        for (const [index, item] of props.rejections.entries()) {
+            // Add the item text
+            if (y - 30 < bottomMargin) { // Check for new page before adding text
+                addNewPage();
+            }
+            addText(`${index + 1}: ${item.commentedby} - ${item.comments}`, 30);
+            addSignature(item.signature, 30, 40)
+        
+            if (item.signature) {
+                // Update currentYPos to the last y position used in addText
+                currentYPos = y - 15; // Adjust this based on the height of the signature
+        
+                // Check if we need a new page before adding signature
+                if (currentYPos < bottomMargin) {
+                    addNewPage();
+                    currentYPos = y - 15; // Reset currentYPos on the new page
+                }
+    
+                y = currentYPos - (yPosIncrement - 15); // Adjust y for the next item
+            }
+        }
+
+
+    }
+
+    corrections();
+
+
+
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
@@ -628,7 +695,7 @@ await addSignature2(supervisorSignature, supervisorSignatureX, supervisorSignatu
     if (isMobileDevice()) {
         // For mobile devices, trigger a direct download
         const a = document.createElement("a");
-        const formattedDateTime = new Date(dateTime).toLocaleDateString('en-US', {
+        const formattedDateTime = new Date(props.dateTime).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',

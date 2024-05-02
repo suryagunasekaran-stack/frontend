@@ -21,8 +21,6 @@ export const BasicCard = ({ record, cardType }) => {
     };
 
     const handleSaveAmendment = (data, amendedBy, signatureData) => {
-        console.log(data); // This will now contain all the record-related fields
-        console.log(amendedBy, signatureData); // Separate logging for clarity
         updateAmendments.mutate({data,amendedBy,signatureData, record})
     };
 
@@ -60,7 +58,7 @@ export const BasicCard = ({ record, cardType }) => {
         }
     });
 
-    const updateAmendments = useMutation(({ data,amendedBy,signatureData, record}) => fetch(`${apiUrl}/`, {
+    const updateAmendments = useMutation(({ data,amendedBy,signatureData, record}) => fetch(`${apiUrl}/updateAmendment`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -134,16 +132,16 @@ export const BasicCard = ({ record, cardType }) => {
                     </Row>
 
                     <Row>
-                        <Col>
-                            {record.status === 'rejected' && (
+                        <Col className="d-flex justify-content-center align-items-center">
+                            {(record.rejections && record.rejections.length > 0) && (
                                 <Button 
-                                    style={{ backgroundColor: '#F15156', borderColor: '#F15156' }} 
+                                    style={{ backgroundColor: '#774936', borderColor: '#774936' }} 
                                     onClick={handleShowRejectionHistoryModal}>
                                     View Rejection History
                                 </Button>
                             )}
                         </Col>
-                        <Col>
+                        <Col className="d-flex justify-content-center align-items-center">
                             {(record.status === 'rejected' && record.author === usr) && (
                                 <Button
                                     onClick={handleShowAmendmentsModal}

@@ -73,23 +73,22 @@ export const renderApprovalButtons = ({ condition, onApprove, onReject, record, 
   return (
       <>
           {condition === 'supervisorAndPending' && (
+            <>
               <Row>
                   <Col xs={4}>
-                      <Button style={{ marginBottom: '10px' }} className="button-approve" onClick={onApprove}>
+                      <Button style={{ marginRight: '10px'  }} className="button-approve" onClick={onApprove}>
                           Approve
                       </Button>
+                  </Col>
+              </Row>
+              <Row>
+                <Col>
                       <Button className="button-reject" onClick={onReject}>
                           Reject
                       </Button>
-                  </Col>
-                  {record.rejections && record.rejections.length > 0 && (
-                      <Col xs={4}>
-                          <Button onClick={onViewRejectionHistory}>
-                              View Rejection History
-                          </Button>
-                      </Col>
-                  )}
+                </Col>
               </Row>
+              </>
           )}
           {condition === 'supervisorAndApproved' && (
               <Badge bg="success">Approved By: {record.finalApprover || localStorage.getItem('username').toUpperCase()}</Badge>
