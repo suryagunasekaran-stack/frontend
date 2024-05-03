@@ -100,7 +100,7 @@ export const BasicCard = ({ record, cardType }) => {
     const handleCloseShowAmendmentsModal = () => setShowAmendmentsModal(false);
     
     return (
-        <Col sm={12} md={6} lg={6} xl={4} xxl={3} className="mb-4" key={record._id}>
+        <Col sm={12} md={6} lg={6} xl={6} xxl={3} className="mb-4" key={record._id}>
             <div className={`card ${gradientClass}`}>
                 <div className="card-body d-flex flex-column justify-content-around">
                     <h4 className="card-title text-center">{recordTitles[record.type]}</h4>
