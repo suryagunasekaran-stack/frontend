@@ -718,8 +718,18 @@ const padding = 30;
         for (const [ _ , item] of props.corrections.entries()) {
             // Set y for the current text line, adding before each text to counter the decrement in addText
             // Add the item text on a new line
+            const formattedDateTime = new Date(item.timestamp).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true // Set to false for 24-hour format
+            });
             addText2(`Corrected By: ${item.amendedBy}`, yOffset + 5);
             addText2(`Comment: ${item.commentedBy}`, yOffset );
+            addText2(`Comment: ${formattedDateTime}`, yOffset );
             // Assuming addSignature does not alter y, we adjust manually
             addSignature(item.signatureData, 30, y); // Ensure the y position matches where the text was drawn
 
