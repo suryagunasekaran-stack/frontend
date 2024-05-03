@@ -16,15 +16,21 @@ export const InfoRow = ({ label, value }) => {
   return (
     <Row className="info-row" style={{ fontFamily: "'Teko', sans-serif", fontSize: "30px" }}>
       {/* Adjusted column widths for better distribution */}
-      <Col xs={3} style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-        {capitalizedLabel} {/* Right-aligned label */}
+      <Col xs={5} style={{ textAlign: 'left', whiteSpace: 'nowrap' }} >
+    {capitalizedLabel}
       </Col>
       <Col xs={1} style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
-        : {/* Separator, centered */}
+          :
       </Col>
-      <Col xs={8} style={{ textAlign: 'left', whiteSpace: 'nowrap' }}>
-        {capitalizedValue} {/* Left-aligned value */}
-      </Col>
+      <Col xs={6} style={{
+    textAlign: 'right',
+    whiteSpace: 'nowrap',
+    overflowX: 'auto',  // Enables horizontal scrolling
+    maxWidth: '100%'    // Ensures the column doesn't exceed its container
+}}>
+    {capitalizedValue}
+</Col>
+
     </Row>
   );
 };

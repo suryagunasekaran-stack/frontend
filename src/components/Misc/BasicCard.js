@@ -21,7 +21,7 @@ export const BasicCard = ({ record, cardType }) => {
     };
 
     const handleSaveAmendment = (data, amendedBy,commentedBy, signatureData) => {
-        updateAmendments.mutate({data,amendedBy, commentedBy, signatureData, record})
+        updateAmendments.mutate({data,amendedBy, commentedBy, signatureData, record, cardType})
     };
 
     // Mutation for approving a record
@@ -58,13 +58,13 @@ export const BasicCard = ({ record, cardType }) => {
         }
     });
 
-    const updateAmendments = useMutation(({ data,amendedBy,commentedBy, signatureData,record}) => fetch(`${apiUrl}/updateAmendment`, {
+    const updateAmendments = useMutation(({ data,amendedBy,commentedBy, signatureData,record, cardType}) => fetch(`${apiUrl}/updateAmendment`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ data,amendedBy,commentedBy, signatureData, record })
+        body: JSON.stringify({ data,amendedBy,commentedBy, signatureData, record, cardType })
     }), {
         onSuccess: () => {
             queryClient.invalidateQueries(['fetchRecords']);
@@ -100,7 +100,7 @@ export const BasicCard = ({ record, cardType }) => {
     const handleCloseShowAmendmentsModal = () => setShowAmendmentsModal(false);
     
     return (
-        <Col sm={12} md={6} lg={4} className="mb-4" key={record._id}>
+        <Col sm={12} md={6} lg={6} xl={4} xxl={3} className="mb-4" key={record._id}>
             <div className={`card ${gradientClass}`}>
                 <div className="card-body d-flex flex-column justify-content-around">
                     <h4 className="card-title text-center">{recordTitles[record.type]}</h4>
@@ -133,22 +133,27 @@ export const BasicCard = ({ record, cardType }) => {
 
                     <Row>
                         <Col className="d-flex justify-content-center align-items-center">
-                            {(record.rejections && record.rejections.length > 0) && (
-                                <Button 
-                                    style={{ backgroundColor: '#774936', borderColor: '#774936' }} 
-                                    onClick={handleShowRejectionHistoryModal}>
-                                    View Rejection History
-                                </Button>
-                            )}
+                        <Button 
+                            style={{
+                                backgroundColor: record.rejections && record.rejections.length > 0 ? '#774936' : 'transparent',
+                                borderColor: record.rejections && record.rejections.length > 0 ? '#774936' : 'transparent',
+                                visibility: record.rejections && record.rejections.length > 0 ? 'visible' : 'hidden'
+                            }} 
+                            onClick={handleShowRejectionHistoryModal}>
+                            View Rejection History
+                        </Button>
                         </Col>
                         <Col className="d-flex justify-content-center align-items-center">
-                            {(record.status === 'rejected' && record.author === usr) && (
-                                <Button
-                                    onClick={handleShowAmendmentsModal}
-                                    style={{ backgroundColor: '#5E807F', borderColor: '#5E807F' }} >
-                                    Make Amendments
-                                </Button>
-                            )}
+                        <Button
+                            onClick={handleShowAmendmentsModal}
+                            style={{
+                                backgroundColor: (record.status === 'rejected' && record.author === usr) ? '#5E807F' : 'transparent',
+                                borderColor: (record.status === 'rejected' && record.author === usr) ? '#5E807F' : 'transparent',
+                                visibility: (record.status === 'rejected' && record.author === usr) ? 'visible' : 'hidden',
+                                color: (record.status === 'rejected' && record.author === usr) ? '#ffffff' : 'transparent'  // Ensure text is also hidden
+                            }}>
+                            Make Amendments
+                        </Button>
                         </Col>
                     </Row>
                 </div>
