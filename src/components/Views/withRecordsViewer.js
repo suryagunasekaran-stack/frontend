@@ -19,7 +19,13 @@ const withRecordsViewer = (apiEndpoint, cardType) => {
     );
 
     return (
-        <Container fluid style={{ backgroundColor: '#E5ECF4', minHeight: '100vh', overflow: 'auto' }} >
+        <Container fluid style={{ backgroundColor: '#E5ECF4', minHeight: '100vh', overflowY: 'auto',  // Enables vertical scrolling
+        maxHeight: '100%',  // Optionally limits the height
+        scrollbarWidth: 'none',  // For Firefox
+        msOverflowStyle: 'none',  // For Internet Explorer 10+
+        '&::-webkit-scrollbar': {
+            display: 'none'  // For Chrome, Safari, and Opera
+        } }} >
         <div style={{ marginLeft: '25px'}}>
           <h2 style={{ marginTop: '95px' }}>{cardTitle[cardType]}</h2>
           <Row className="mb-3">

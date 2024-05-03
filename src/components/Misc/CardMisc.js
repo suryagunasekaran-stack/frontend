@@ -23,11 +23,16 @@ export const InfoRow = ({ label, value }) => {
           :
       </Col>
       <Col xs={6} style={{
-    textAlign: 'right',
-    whiteSpace: 'nowrap',
-    overflowX: 'auto',  // Enables horizontal scrolling
-    maxWidth: '100%'    // Ensures the column doesn't exceed its container
-}}>
+          textAlign: 'right',
+          whiteSpace: 'nowrap',
+          overflowX: 'auto',  // Enables horizontal scrolling
+
+          scrollbarWidth: 'none',  // For Firefox
+          msOverflowStyle: 'none',  // For Internet Explorer 10+
+          '&::-webkit-scrollbar': {
+              display: 'none'  // For Chrome, Safari, and Opera
+          }
+      }}>
     {capitalizedValue}
 </Col>
 
