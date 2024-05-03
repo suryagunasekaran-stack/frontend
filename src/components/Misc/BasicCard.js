@@ -20,8 +20,8 @@ export const BasicCard = ({ record, cardType }) => {
         rejectMutation.mutate({ comments, dateTime, signature, username });
     };
 
-    const handleSaveAmendment = (data, amendedBy, signatureData) => {
-        updateAmendments.mutate({data,amendedBy,signatureData, record})
+    const handleSaveAmendment = (data, amendedBy,commentedBy, signatureData) => {
+        updateAmendments.mutate({data,amendedBy, commentedBy, signatureData, record})
     };
 
     // Mutation for approving a record
@@ -58,13 +58,13 @@ export const BasicCard = ({ record, cardType }) => {
         }
     });
 
-    const updateAmendments = useMutation(({ data,amendedBy,signatureData, record}) => fetch(`${apiUrl}/updateAmendment`, {
+    const updateAmendments = useMutation(({ data,amendedBy,commentedBy, signatureData,record}) => fetch(`${apiUrl}/updateAmendment`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ data,amendedBy,signatureData, record })
+        body: JSON.stringify({ data,amendedBy,commentedBy, signatureData, record })
     }), {
         onSuccess: () => {
             queryClient.invalidateQueries(['fetchRecords']);

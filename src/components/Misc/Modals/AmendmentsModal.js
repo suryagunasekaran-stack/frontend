@@ -12,7 +12,9 @@ export const AmendmentsModal = ({ showAmendmentsModal, handleCloseAmendments, on
     const [vessel, setVessel] = useState(record.vessel);
     const [topic, setTopic] = useState(record.topic);
     const [raNumber, setRaNumber] = useState(record.raNumber);
-    const [amendedBy, setAmendedBy] = useState('');
+    const [commentedBy, setcommentedBy] = useState('');
+    const username = localStorage.getItem('username');
+    const [amendedBy, setAmendedBy] = useState(username);
     const sigCanvas = useRef({});
 
     const clearSignature = () => {
@@ -31,7 +33,7 @@ export const AmendmentsModal = ({ showAmendmentsModal, handleCloseAmendments, on
             raNumber,
         };
     
-        onSaveAmendments(amendmentsData, amendedBy, signatureData);
+        onSaveAmendments(amendmentsData, amendedBy, commentedBy, signatureData);
         handleCloseAmendments(); // Close the modal after saving
     };
     
@@ -110,8 +112,20 @@ export const AmendmentsModal = ({ showAmendmentsModal, handleCloseAmendments, on
                         <Form.Label>Amended By</Form.Label>
                         <Form.Control
                             type="text"
-                            value={amendedBy}
-                            onChange={e => setAmendedBy(e.target.value)}
+                            value={username}
+                        />
+                            <input
+                                type="hidden"
+                                value={username}
+                                name="amendedBy"
+                            />
+                    </Form.Group>
+                    <Form.Group controlId="commentedBy">
+                        <Form.Label>Comments</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={commentedBy}
+                            onChange={e => setcommentedBy(e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group controlId="rejectionSignature" className="mt-3">

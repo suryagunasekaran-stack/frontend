@@ -606,7 +606,7 @@ const padding = 30;
      * 
      * 
      */
-    const corrections = () => {
+    const rejections = () => {
         addNewPage();
         page.drawImage(pngImage, {
             x: imageX,
@@ -630,13 +630,22 @@ const padding = 30;
             color: rgb(0, 0, 0)
         });
 
-        // page.drawRectangle({
-        //     x: padding + 1, // Move rightwards by the border width
-        //     y: sectionY - (backgroundHeight / 2) + 1, // Adjust vertical position
-        //     width: width - 2 * padding - 2 * 1, // Reduce width to fit inside the border
-        //     height: backgroundHeight - 2 * 1, // Reduce height to fit inside the border
-        //     color: rgb(0.9, 0.9, 0.9) // Light grey color
-        // });
+        page.drawRectangle({
+            x: padding + 1, // Move rightwards by the border width
+            y: sectionY - (backgroundHeight / 2) + 1, // Adjust vertical position
+            width: width - 2 * padding - 2 * 1, // Reduce width to fit inside the border
+            height: backgroundHeight - 2 * 1, // Reduce height to fit inside the border
+            color: rgb(0.9, 0.9, 0.9) // Light grey color
+        });
+
+        // Draw the text on the page
+        page.drawText("Corrections and Amendments", {
+            x: (width - sectionTextWidth) / 2, // Center the text horizontally
+            y: sectionY - (sectionFontSize / 2), // Adjust vertical position
+            size: sectionFontSize,
+            font: font,
+            color: rgb(0, 0, 0)
+        });
         // Draw lines above and below the text
         const lineYTop = sectionY + (backgroundHeight / 2);
         // const lineYBottom = sectionY - (backgroundHeight / 2);
@@ -646,39 +655,88 @@ const padding = 30;
             color: rgb(0, 0, 0),
             thickness: 1
         });
+        page.drawLine({
+            start: { x: padding, y: lineYBottom },
+            end: { x: width - padding, y: lineYBottom },
+            color: rgb(0, 0, 0),
+            thickness: 1
+        });
 
-        // page.drawLine({
-        //     start: { x: padding, y: lineYBottom },
-        //     end: { x: width - padding, y: lineYBottom },
-        //     color: rgb(0, 0, 0),
-        //     thickness: 1
-        // });
+        var y = lineYBottom - 10; // Modify this as necessary to fit your page layout
+        const yOffset = 20; // The offset used in addText function, also controls spacing between lines
+        const addText2 = (text, yOffset = 20) => {
+            page.drawText(text, {
+                x: 50,
+                y: y -= yOffset,
+                size: 12,
+                font,
+                color: rgb(0, 0, 0)
+            });
+        };
+        addText2(`Review:`, 10);
         for (const [index, item] of props.rejections.entries()) {
-            // Add the item text
-            if (y - 30 < bottomMargin) { // Check for new page before adding text
-                addNewPage();
-            }
-            addText(`${index + 1}: ${item.commentedby} - ${item.comments}`, 30);
-            addSignature(item.signature, 30, 40)
-        
-            if (item.signature) {
-                // Update currentYPos to the last y position used in addText
-                currentYPos = y - 15; // Adjust this based on the height of the signature
-        
-                // Check if we need a new page before adding signature
-                if (currentYPos < bottomMargin) {
-                    addNewPage();
-                    currentYPos = y - 15; // Reset currentYPos on the new page
-                }
-    
-                y = currentYPos - (yPosIncrement - 15); // Adjust y for the next item
-            }
+            // Set y for the current text line, adding before each text to counter the decrement in addText
+            const formattedDateTime = new Date(item.dateTime).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true // Set to false for 24-hour format
+            });
+            // Add the item text on a new line
+            addText2(`Author - ${item.commentedby}`, yOffset + 5);
+            addText2(`Comment - ${item.comments}`, yOffset);
+            addText2(`Date/Time - ${formattedDateTime}`, yOffset);
+            // Assuming addSignature does not alter y, we adjust manually
+            addSignature(item.signature, 30, y); // Ensure the y position matches where the text was drawn
+
+            // No need to adjust y here as addText already decreases it by yOffset
         }
 
-
+        return y
     }
 
-    corrections();
+
+    const corrections = (z) => {
+
+        var y = z - 10; // Modify this as necessary to fit your page layout
+        const yOffset = 20; // The offset used in addText function, also controls spacing between lines
+        const addText2 = (text, yOffset = 20) => {
+            page.drawText(text, {
+                x: 50,
+                y: y -= yOffset,
+                size: 12,
+                font,
+                color: rgb(0, 0, 0)
+            });
+        };
+        
+        addText2(`Corrections:`, yOffset);
+
+        for (const [ _ , item] of props.corrections.entries()) {
+            // Set y for the current text line, adding before each text to counter the decrement in addText
+            // Add the item text on a new line
+            addText2(`Corrected By: ${item.amendedBy}`, yOffset + 5);
+            addText2(`Comment: ${item.commentedBy}`, yOffset );
+            // Assuming addSignature does not alter y, we adjust manually
+            addSignature(item.signatureData, 30, y); // Ensure the y position matches where the text was drawn
+
+            // No need to adjust y here as addText already decreases it by yOffset
+        }
+    }
+
+// Check if 'props.rejections' exists and has at least one item
+if (props.rejections && props.rejections.length >= 1) {
+    var z = rejections();
+    // Ensure 'props.corrections' also exists and has at least one item before calling corrections(z)
+    if (props.corrections && props.corrections.length >= 1) {
+        corrections(z);
+    }
+}
+
+
 
 
 

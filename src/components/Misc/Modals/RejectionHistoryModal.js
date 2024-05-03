@@ -15,7 +15,7 @@ export const RejectionHistoryModal = ({ showRejectionHistoryModal, handleCloseRe
                         {record.rejections.map((rejection, index) => (
                             <li key={index}>
                                 <p><strong>Date:</strong> {(rejection.dateTime)}</p>
-                                <p><strong>Comments:</strong> {rejection.commentedby}</p>
+                                <p><strong>Author:</strong> {rejection.commentedby}</p>
                                 <p><strong>Comments:</strong> {rejection.comments}</p>
                                 <img src={rejection.signature} alt="Signature" style={{ width: '100%', height: 'auto' }} />
                             </li>
