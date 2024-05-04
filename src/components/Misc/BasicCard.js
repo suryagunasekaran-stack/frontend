@@ -4,7 +4,10 @@ import { useMutation, useQueryClient   } from 'react-query';
 import { InfoRow, recordTitles, cardConfigurations, pdfComponents, renderApprovalButtons, determineCondition, gradientClasses } from "./CardMisc";
 import { RejectionModal } from './Modals/RejectionModal';
 import { RejectionHistoryModal } from './Modals/RejectionHistoryModal';
+import { RiFileUploadFill } from "react-icons/ri";
 import { AmendmentsModal } from "./Modals/AmendmentsModal";
+import UploadComponent from "./Modals/UploadComponent";
+
 import '../../css/Viewer.css'
 
 export const BasicCard = ({ record, cardType }) => {
@@ -12,6 +15,7 @@ export const BasicCard = ({ record, cardType }) => {
     const [showRejectModal, setShowRejectModal] = useState(false);
     const [showRejectionHistoryModal, setShowRejectionHistoryModal] = useState(false);
     const [showAmendmentsModal, setShowAmendmentsModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const apiUrl = process.env.REACT_APP_API_URL
     const queryClient = useQueryClient();
 
@@ -156,8 +160,15 @@ export const BasicCard = ({ record, cardType }) => {
                         </Button>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col className="d-flex justify-content-end">
+                            <RiFileUploadFill size={32} style={{ cursor: 'pointer' }} onClick={() => setShowModal(true)}/>
+                        </Col>
+                    </Row>
                 </div>
             </div>
+
+            <UploadComponent showModal={showModal} setShowModal={setShowModal} />
 
             <RejectionModal
                 showRejectModal={showRejectModal}
