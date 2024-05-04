@@ -14,7 +14,7 @@ export const AmendmentsModal = ({ showAmendmentsModal, handleCloseAmendments, on
     const [raNumber, setRaNumber] = useState(record.raNumber);
     const [commentedBy, setcommentedBy] = useState('');
     const username = localStorage.getItem('username');
-    const [amendedBy, setAmendedBy] = useState(username);
+    const [amendedBy] = useState(username);
     const sigCanvas = useRef({});
 
     const clearSignature = () => {

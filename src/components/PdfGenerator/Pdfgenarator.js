@@ -674,7 +674,7 @@ const padding = 30;
             });
         };
         addText2(`Review:`, 10);
-        for (const [index, item] of props.rejections.entries()) {
+        for (const [, item] of props.rejections.entries()) {
             // Set y for the current text line, adding before each text to counter the decrement in addText
             const formattedDateTime = new Date(item.dateTime).toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -715,7 +715,7 @@ const padding = 30;
         
         addText2(`Corrections:`, yOffset);
 
-        for (const [ _ , item] of props.corrections.entries()) {
+        for (const [  , item] of props.corrections.entries()) {
             // Set y for the current text line, adding before each text to counter the decrement in addText
             // Add the item text on a new line
             const formattedDateTime = new Date(item.timestamp).toLocaleDateString('en-US', {

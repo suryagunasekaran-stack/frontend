@@ -168,7 +168,7 @@ export const BasicCard = ({ record, cardType }) => {
                 </div>
             </div>
 
-            <UploadComponent showModal={showModal} setShowModal={setShowModal} />
+            <UploadComponent showModal={showModal} setShowModal={setShowModal} cardType={cardType} recordId={record._id} />
 
             <RejectionModal
                 showRejectModal={showRejectModal}

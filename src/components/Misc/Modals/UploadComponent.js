@@ -3,15 +3,45 @@ import { useDropzone } from 'react-dropzone';
 import { useMutation } from 'react-query';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import imageCompression from 'browser-image-compression';
 
-function UploadComponent({ showModal, setShowModal }) {
+function UploadComponent({ showModal, setShowModal, cardType, recordId }) {
     const [file, setFile] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const maxFileSize = 5 * 1024 * 1024; // 5 MB
 
-    const onDrop = useCallback(acceptedFiles => {
-        setFile(acceptedFiles[0]);
+    const onDrop = useCallback(async (acceptedFiles) => {
+        const file = acceptedFiles[0];
+        setErrorMessage('');
+
+        if (file.size > maxFileSize) {
+            setErrorMessage('File size exceeds 5 MB limit');
+            return;
+        }
+
+        // Compress the image
+        const compressedFile = await imageCompression(file, {
+            maxSizeMB: 1, // Adjust this value based on your needs
+            maxWidthOrHeight: 1024,
+            useWebWorker: true,
+        });
+        setFile(compressedFile);
+        // eslint-disable-next-line
     }, []);
 
-    const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'image/*' });
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop,
+        accept: {
+            'image/jpeg': [],
+            'image/png': [],
+            'image/gif': [],
+            'image/bmp': [],
+            'image/webp': [],
+            'image/tiff': [],
+            'image/svg+xml': []
+        },
+        maxFiles: 10,
+    });
 
     const { mutate, isLoading } = useMutation(uploadImage, {
         onSuccess: () => {
@@ -20,6 +50,7 @@ function UploadComponent({ showModal, setShowModal }) {
         },
         onError: (error) => {
             console.error("Upload failed:", error);
+            setErrorMessage('Upload failed, please try again.');
         }
     });
 
@@ -37,8 +68,10 @@ function UploadComponent({ showModal, setShowModal }) {
             <Modal.Body>
                 <div {...getRootProps()} style={{ border: '2px dashed gray', padding: '20px', cursor: 'pointer' }}>
                     <input {...getInputProps()} />
-                    Drag 'n' drop some files here, or click to select files
+                    Drag 'n' drop an image here, or click to select one
                 </div>
+                {file && <p>Selected file: {file.name}</p>}
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={() => setShowModal(false)}>
@@ -52,12 +85,24 @@ function UploadComponent({ showModal, setShowModal }) {
     );
 }
 
-// Function to simulate image upload to backend
-async function uploadImage(file) {
+async function uploadImage(files, cardType, recordId) {
     const formData = new FormData();
-    formData.append('image', file);
 
-    const response = await fetch('/api/upload', {
+    // Convert the FileList to an array
+    Array.from(files).forEach((file) => {
+        formData.append('images', file); // Use the 'images' field to align with the backend
+    });
+
+    formData.append('cardType', cardType);
+    formData.append('recordId', recordId);
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const token = localStorage.getItem('token');
+    console.log(cardType, recordId)
+
+    const response = await fetch(`${apiUrl}/cardpermit`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
         method: 'POST',
         body: formData,
     });
@@ -68,4 +113,6 @@ async function uploadImage(file) {
     return response.json();
 }
 
-export default UploadComponent;  // Exporting the component
+
+
+export default UploadComponent;
