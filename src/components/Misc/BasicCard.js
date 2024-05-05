@@ -6,6 +6,7 @@ import { RejectionModal } from './Modals/RejectionModal';
 import { RejectionHistoryModal } from './Modals/RejectionHistoryModal';
 import { RiFileUploadFill } from "react-icons/ri";
 import { AmendmentsModal } from "./Modals/AmendmentsModal";
+import { FaFileImage } from "react-icons/fa";
 import UploadComponent from "./Modals/UploadComponent";
 
 import '../../css/Viewer.css'
@@ -102,6 +103,24 @@ export const BasicCard = ({ record, cardType }) => {
 
     const handleShowAmendmentsModal = () => setShowAmendmentsModal(true);
     const handleCloseShowAmendmentsModal = () => setShowAmendmentsModal(false);
+
+    const handleOpeningPicture = async (recordId, index) => {
+        const token = localStorage.getItem('token');
+        const apiUrl = process.env.REACT_APP_API_URL; 
+        const response = await fetch(`${apiUrl}/getSignedUrl/${recordId}/${cardType}/${index}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+    
+        const data = await response.json();
+        if (response.ok) {
+            window.open(data.signedUrl, '_blank');
+        } else {
+            console.error('Failed to get signed URL', data);
+        }
+    };
+    
     
     return (
         <Col sm={12} md={6} lg={6} xl={6} xxl={3} className="mb-4" key={record._id}>
@@ -160,9 +179,14 @@ export const BasicCard = ({ record, cardType }) => {
                         </Button>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col className="d-flex justify-content-end">
-                            <RiFileUploadFill size={32} style={{ cursor: 'pointer' }} onClick={() => setShowModal(true)}/>
+                    <Row className="justify-content-end">
+                        {(record.images && record.images.length > 0) && (
+                            <Col xs="auto">
+                                <FaFileImage size={29} style={{ cursor: 'pointer' }} onClick={() => handleOpeningPicture(record._id, 0)} />
+                            </Col>
+                        )}
+                        <Col xs="auto">
+                            <RiFileUploadFill size={32} style={{ cursor: 'pointer' }} onClick={() => setShowModal(true)} />
                         </Col>
                     </Row>
                 </div>

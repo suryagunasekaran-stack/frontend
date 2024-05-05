@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import imageCompression from 'browser-image-compression';
@@ -9,6 +9,7 @@ function UploadComponent({ showModal, setShowModal, cardType, recordId }) {
     const [file, setFile] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const maxFileSize = 5 * 1024 * 1024; // 5 MB
+    const queryClient = useQueryClient();
 
     const onDrop = useCallback(async (acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -45,18 +46,17 @@ function UploadComponent({ showModal, setShowModal, cardType, recordId }) {
 
     const { mutate, isLoading } = useMutation(uploadImage, {
         onSuccess: () => {
-            console.log("Upload successful!");
+            queryClient.invalidateQueries(['fetchRecords']);
             setShowModal(false); // Close modal after upload
         },
-        onError: (error) => {
-            console.error("Upload failed:", error);
+        onError: (error) => {       
             setErrorMessage('Upload failed, please try again.');
         }
     });
 
     const handleUpload = () => {
         if (file) {
-            mutate(file);
+            mutate({ files: file, cardType, recordId });
         }
     };
 
@@ -85,25 +85,34 @@ function UploadComponent({ showModal, setShowModal, cardType, recordId }) {
     );
 }
 
-async function uploadImage(files, cardType, recordId) {
+async function uploadImage({ files, cardType, recordId }) {
+    console.log('Files:', files); // Debugging statement
+
     const formData = new FormData();
 
-    // Convert the FileList to an array
-    Array.from(files).forEach((file) => {
-        formData.append('images', file); // Use the 'images' field to align with the backend
-    });
+    if (files instanceof Blob) {
+        // Handle single Blob or File
+        formData.append('images', files);
+    } else if (Array.isArray(files) || files instanceof FileList) {
+        // Handle array or FileList
+        Array.from(files).forEach(file => {
+            formData.append('images', file);
+        });
+    } else {
+        console.warn('Unexpected file input:', files);
+    }
 
     formData.append('cardType', cardType);
     formData.append('recordId', recordId);
     const apiUrl = process.env.REACT_APP_API_URL;
     const token = localStorage.getItem('token');
-    console.log(cardType, recordId)
 
     const response = await fetch(`${apiUrl}/cardpermit`, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
         method: 'POST',
+        mode: 'cors',
         body: formData,
     });
 
