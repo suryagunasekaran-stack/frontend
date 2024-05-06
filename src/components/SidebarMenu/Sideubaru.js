@@ -3,7 +3,6 @@ import { motion, useAnimation } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaTools } from "react-icons/fa";
 import { FaAnchor } from "react-icons/fa";
-import { FaHelmetSafety } from "react-icons/fa6";
 import { IoLogOut } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
 import { AuthContext } from '../Routing/AuthContext';
@@ -101,15 +100,14 @@ const Sidebaru = ({ isOpen, onClose}) => {
             <FaTools />
             Toolbox Risk Assessment
           </div>
-        </motion.div><motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
+        </motion.div>
+        
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
             <div onClick={() => handleLinkClick('/AnchorView')} style={{ textDecoration: 'none', color: 'inherit' }}>
               <FaAnchor /> Anchorage Forms
             </div>
-          </motion.div><motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ padding: '20px', marginTop: '20px', color: 'black', opacity: '0.5', borderRadius: '10px' }}>
-            <div onClick={() => handleLinkClick('/MassSafetyView')} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <FaHelmetSafety /> Mass Safety Briefing
-            </div>
-          </motion.div></>
+        </motion.div>
+          </>
 
     )}
 

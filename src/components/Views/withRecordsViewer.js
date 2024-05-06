@@ -23,7 +23,7 @@ const withRecordsViewer = (apiEndpoint, cardType) => {
         maxHeight: '100%',  // Optionally limits the height
         scrollbarWidth: 'none',  // For Firefox
         msOverflowStyle: 'none',  // For Internet Explorer 10+
-        '&::-webkit-scrollbar': {
+        '&::WebkitScrollbar': {
             display: 'none'  // For Chrome, Safari, and Opera
         } }} >
         <div style={{ marginLeft: '25px'}}>

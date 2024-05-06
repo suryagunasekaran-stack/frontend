@@ -10,6 +10,28 @@ async function fetchImageAsUint8Array(imageUrl) {
     return new Uint8Array(arrayBuffer);
   }
 
+async function fetchAndParseRAFile(raNumber) {
+    const formData = new FormData();
+    formData.append("raNumber", raNumber);
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${apiUrl}/get-pdf`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    return PDFDocument.load(arrayBuffer);
+}
+
 const PdfGenerator = (props) => {
 
 const createPdf = async () => {
@@ -312,14 +334,39 @@ const padding = 30;
         var y = lineYBelowRaNo - 10; // Adjust the space above the line as needed
 
         const addText = (text, yOffset = 20) => {
-            page.drawText(text, {
-                x: 50,
-                y: y -= yOffset,
-                size: 12,
-                font,
-                color: rgb(0, 0, 0)
+            const maxLineWidth = width - 2 * padding - 50; // Adjusted width inside the rectangle
+            const words = text.split(' ');
+            let line = '';
+            const lines = [];
+        
+            for (const word of words) {
+                const testLine = line ? `${line} ${word}` : word;
+                const { width: lineWidth } = font.widthOfTextAtSize(testLine, 12);
+        
+                if (lineWidth > maxLineWidth) {
+                    lines.push(line);
+                    line = word;
+                } else {
+                    line = testLine;
+                }
+            }
+            if (line) lines.push(line);
+        
+            lines.forEach(line => {
+                if (y - yOffset < bottomMargin) {
+                    addNewPage();
+                    y = height - padding;
+                }
+                page.drawText(line, {
+                    x: 50,
+                    y: y -= yOffset,
+                    size: 12,
+                    font,
+                    color: rgb(0, 0, 0)
+                });
             });
         };
+        
         
         const addSignature = async (base64String, xOffset = 50, yPos) => {
             // Convert Base64 signature to Uint8Array
@@ -745,8 +792,17 @@ if (props.rejections && props.rejections.length >= 1) {
         corrections(z);
     }
 }
-
-
+    try {
+        // Fetch the RA file as a PDFDocument
+        const raDoc = await fetchAndParseRAFile(props.raNumber);
+        const copiedPages = await pdfDoc.copyPages(raDoc, raDoc.getPageIndices());
+        // Add all pages from the RA document to the current document
+        copiedPages.forEach((copiedPage) => {
+            pdfDoc.addPage(copiedPage);
+        });
+    } catch (error) {
+        console.log("error")
+    }
 
 
 

@@ -25,12 +25,11 @@ export const InfoRow = ({ label, value }) => {
       <Col xs={6} style={{
           textAlign: 'right',
           whiteSpace: 'nowrap',
-          overflowX: 'auto',  // Enables horizontal scrolling
-
-          scrollbarWidth: 'none',  // For Firefox
-          msOverflowStyle: 'none',  // For Internet Explorer 10+
-          '&::-webkit-scrollbar': {
-              display: 'none'  // For Chrome, Safari, and Opera
+          overflowX: 'auto',
+          scrollbarWidth: 'none',  // Firefox
+          msOverflowStyle: 'none',  // Internet Explorer 10+
+          '::-webkit-scrollbar': {  // Chrome, Safari, Opera
+              display: 'none'
           }
       }}>
     {capitalizedValue}

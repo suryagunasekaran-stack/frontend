@@ -12,7 +12,7 @@
     overflow-y: auto; /* Make content scrollable */
     -webkit-overflow-scrolling: touch;
     /* Hide scrollbar for Webkit browsers */
-    &::-webkit-scrollbar {
+    &::WebkitScrollbar {
       display: none;
   }
 

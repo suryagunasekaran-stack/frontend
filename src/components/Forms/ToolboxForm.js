@@ -28,6 +28,8 @@ const ToolboxForm = () => {
     const [showModal, setShowModal] = useState(false);
     const [employees, setEmployees] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [raUrl, setRaUrl] = useState(null);
+    const [raExists, setRaExists] = useState(false);
 
 
     const isDuplicateEmployee = (newEmployee) => {
@@ -49,8 +51,52 @@ const ToolboxForm = () => {
         const ra = raData.find(ra => ra['RA Ref. No.'] === selectedRa);
         if (ra) {
         setValue('topic', ra['INVENTORY OF WORK ACTIVITIES - CRITCAL']);
+        checkRaExists(ra['RA Ref. No.']);
         }
     }, [selectedRa, raData, setValue]);
+
+    const checkRaExists = async (raNumber) => {
+        try {
+            const apiUrl = process.env.REACT_APP_API_URL;
+            const token = localStorage.getItem("token");
+            
+            console.log(raNumber)
+            // Prepare form data
+            const formData = new FormData();
+            formData.append("raNumber", raNumber);
+    
+            const response = await fetch(`${apiUrl}/generate-url`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            setRaExists(data.exists);
+            setRaUrl(data.url);
+        } catch (error) {
+            console.error("Error checking RA file:", error);
+            setRaExists(false);
+            setRaUrl(null);
+        }
+    };
+    
+    
+    
+    
+    
+
+    const openRa = () => {
+        if (raUrl) {
+            window.open(raUrl, '_blank');
+        }
+    };
 
     const goBack = () => {
         navigate(-1);
@@ -260,7 +306,7 @@ const ToolboxForm = () => {
                 </Row>
 
                 <Button onClick={() => setShowModal(true)}>Add Employee</Button>
-                <Button disabled> View RA </Button>
+                <Button style={{margin: "10px"}} disabled={!raExists} onClick={openRa}> View RA </Button>
                 <EmployeeModal
                     show={showModal}
                     handleClose={() => setShowModal(false)}
