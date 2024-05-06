@@ -260,6 +260,7 @@ const ToolboxForm = () => {
                 </Row>
 
                 <Button onClick={() => setShowModal(true)}>Add Employee</Button>
+                <Button disabled> View RA </Button>
                 <EmployeeModal
                     show={showModal}
                     handleClose={() => setShowModal(false)}
