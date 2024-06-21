@@ -19,8 +19,8 @@ const ToolboxForm = () => {
     const { data: employeeData } = useFetchData('getallname');
     const { data: ipcData } = useFetchData('getipc');
     const raOptions = useMemo(() => raData.map(item => ({
-        value: item['RA Ref. No.'],
-        label: `${item['RA Ref. No.']} - ${item['INVENTORY OF WORK ACTIVITIES - CRITCAL']}`,
+        value: item['RA Ref'],
+        label: `${item['RA Ref']} - ${item['INVENTORY OF WORK ACTIVITIES - CRITCAL']}`,
         topic: item['INVENTORY OF WORK ACTIVITIES - CRITCAL']
     })), [raData]);
 
@@ -48,10 +48,10 @@ const ToolboxForm = () => {
     };
 
     useEffect(() => {
-        const ra = raData.find(ra => ra['RA Ref. No.'] === selectedRa);
+        const ra = raData.find(ra => ra['RA Ref'] === selectedRa);
         if (ra) {
         setValue('topic', ra['INVENTORY OF WORK ACTIVITIES - CRITCAL']);
-        checkRaExists(ra['RA Ref. No.']);
+        checkRaExists(ra['RA Ref']);
         }
     }, [selectedRa, raData, setValue]);
 
